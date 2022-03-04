@@ -47,11 +47,11 @@ export default function Home() {
               </Flex>
             </Box>
 
-            <Heading size="sm" mb="2">Here's how it works</Heading>
+            <Heading size="sm" mb="2">Here’s how it works</Heading>
             <UnorderedList>
               <ListItem mb="1">By default, your staking position will be managed by the <Link>Spartan Council</Link>, a DAO elected by SNX token holders.  <NextLink href={"/dao"} passHref>
                 <Link fontWeight="semibold" color="blue.400">Go vote</Link></NextLink></ListItem>
-              <ListItem mb="1">Currently, your projected rewards are <strong>33% APY in sUSD plus 64% APY in SNX</strong> and you'll need to maintain a c-ratio of at least 300%.</ListItem>
+              <ListItem mb="1">Currently, your projected rewards are <strong>33% APY in sUSD plus 64% APY in SNX</strong> and you’ll need to maintain a c-ratio of at least 300%.</ListItem>
               <ListItem mb="1">Once you stake, we’ll walk you through c-ratio maintenance.</ListItem>
             </UnorderedList>
           </>

@@ -43,7 +43,7 @@ export default function Create() {
             <FormLabel htmlFor='minCRatio'>Minimum C-Ratio</FormLabel>
             <InputGroup>
               <Input id='minCRatio' defaultValue="100" min="100" type="number" />
-              <InputRightAddon color="black" children="%" />
+              <InputRightAddon color="black">%</InputRightAddon>
             </InputGroup>
             <FormHelperText>Stakers can be liquidated if their c-ratio drops below this amount.</FormHelperText>
           </FormControl>

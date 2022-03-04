@@ -49,7 +49,7 @@ export default function SynthOption({ name, ticker }) {
           </Text>
           <InputGroup size="sm">
             <Input htmlSize={4} width="auto" defaultValue="100" />
-            <InputRightAddon color="black" children="%" />
+            <InputRightAddon color="black">%</InputRightAddon>
           </InputGroup>
         </Box>
         <Box pl="4">
@@ -58,7 +58,7 @@ export default function SynthOption({ name, ticker }) {
           </Text>
           <InputGroup size="sm">
             <Input htmlSize={4} width="auto" defaultValue="0" />
-            <InputRightAddon color="black" children={ticker} />
+            <InputRightAddon color="black">{ticker}</InputRightAddon>
           </InputGroup>
         </Box>
       </Flex>

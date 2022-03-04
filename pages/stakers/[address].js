@@ -40,7 +40,7 @@ export default function Synth() {
 
           <Box bg="gray.900" mb="6" p="6" borderRadius="12px">
             <Heading size="sm" mb="2">Maintain Your C-Ratio</Heading>
-            <Text fontSize="sm" mb="2">As a staker, you’re enabling the creation of synthetic assets by staking collateral (in the form of SNX tokens) to back them. The ratio of the value of staked collateral and the value of synths can vary as market rates fluctuates. It's important for the system to keep a high c-ratio, ensuring that the synths are properly backed.</Text>
+            <Text fontSize="sm" mb="2">As a staker, you’re enabling the creation of synthetic assets by staking collateral (in the form of SNX tokens) to back them. The ratio of the value of staked collateral and the value of synths can vary as market rates fluctuates. It’s important for the system to keep a high c-ratio, ensuring that the synths are properly backed.</Text>
             <Text fontSize="sm" mb="4">The higher your c-ratio, the greater your share of the fees and rewards. <strong>If your c-ratio drops below your minimum, you may be liquidated and lose your collateral.</strong> There are two ways to increase your c-ratio:</Text>
 
             <Grid mb="3" templateColumns='repeat(2, 1fr)' gap={3}>
@@ -68,7 +68,7 @@ export default function Synth() {
           <Heading size="md" mb="1">Staking Position</Heading>
           <Position />
 
-          <Text mt="4" fontSize="sm">If the connect wallet doesn't own this LP token, remove the c-ratio maintenance component, unstake component, and hedging component. The edit component should be a read component and add a button that opens the edit ui when the connect wallet owns the LP token. Also, editable version here for 'easy mode' need to be rethought. Also, informing the user how changing their position will effect the c-ratio and rewards. This whole view probably needs and advanced mode to handle burning on a per pool basis.</Text>
+          <Text mt="4" fontSize="sm">If the connect wallet doesn’t own this LP token, remove the c-ratio maintenance component, unstake component, and hedging component. The edit component should be a read component and add a button that opens the edit ui when the connect wallet owns the LP token. Also, editable version here for easy mode need to be rethought. Also, informing the user how changing their position will effect the c-ratio and rewards. This whole view probably needs and advanced mode to handle burning on a per pool basis.</Text>
         </Box>
       </Container >
     </Box >
