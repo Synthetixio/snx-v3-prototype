@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Container, Box, Heading, Text, Link, Input, Flex, Button, Badge, UnorderedList, ListItem } from '@chakra-ui/react'
 import { InfoOutlineIcon, AddIcon } from '@chakra-ui/icons'
 import Router from 'next/router'
-import Position from '../components/stakers/Position/index'
+import EditPosition from '../components/stakers/EditPosition/index'
 
 
 export default function Home() {
@@ -69,7 +69,7 @@ export default function Home() {
               </Box>
 
               <Text mb="2">Delegate management of your staking position to others or manually configure it:</Text>
-              <Position />
+              <EditPosition />
 
               <Flex mt="8">
                 <NextLink href={"/synths/create"} passHref><Button size="xs" colorScheme="green"><AddIcon w="2" h="2" />&nbsp;&nbsp;Create a synth</Button></NextLink>
