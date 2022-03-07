@@ -74,6 +74,9 @@ export default function Synth() {
             <Text fontSize="xs">Something about c-ratio notification system here.</Text>
           </Box>
 
+          <Heading size="md" mb="1">Claim Fees &amp; Rewards</Heading>
+          <Text fontSize="sm" mb="8">...</Text>
+
           <Flex mb="2">
             <Heading size="md" mb="1">Staking Position</Heading>
             <Button size="xs" colorScheme="green" ml="auto" onClick={onOpen}><EditIcon mr="1.5" />Edit</Button>
