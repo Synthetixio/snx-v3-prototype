@@ -99,11 +99,19 @@ export default function Synth() {
 
           <Position />
 
-          <Heading size="md" mb="1">Hedging</Heading>
-          <Text fontSize="sm" mb="8">Short explainer, instructing how to read the component above.</Text>
+          <Heading size="sm" mb="1">Hedging Your Staking Position</Heading>
+          <Text fontSize="sm" mb="12">Short explainer, instructing how to read the component above.</Text>
 
-          <Heading size="md" mb="1">Unstake</Heading>
-          <Text fontSize="sm" mb="8">Burn synths to redeem your SNX tokens</Text>
+          <Grid mb="4" templateColumns='repeat(2, 1fr)' gap={3}>
+            <GridItem mb="4">
+              <Heading size="md" mb="1">Unstake</Heading>
+              <Text fontSize="sm" mb="8">Burn synths to redeem your SNX tokens</Text>
+            </GridItem>
+            <GridItem mb="4">
+              <Heading size="md" mb="1">Mint More sUSD</Heading>
+              <Text fontSize="sm" mb="8">Create more sUSD. <strong>This will reduce your c-ratio.</strong></Text>
+            </GridItem>
+          </Grid>
 
         </Box>
       </Container >

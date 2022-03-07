@@ -17,7 +17,7 @@ import { ExternalLinkIcon, InfoOutlineIcon } from "@chakra-ui/icons";
 
 export default function Position() {
   return (
-    <Box mb="8">
+    <Box mb="2">
       <Table size="sm" variant="simple">
         <TableCaption color="white">
           <InfoOutlineIcon d="inline-block" transform="translateY(-1px)" /> Your
