@@ -37,16 +37,16 @@ export default function Position() {
             <Th color="white" pb="2">
               Minimum C-Ratio
             </Th>
-            <Th color="white" pb="2" isNumeric>
+            <Th color="white" pb="2">
               Fees APY
             </Th>
-            <Th color="white" pb="2" isNumeric>
+            <Th color="white" pb="2">
               Rewards APY
             </Th>
-            <Th color="white" pb="2" isNumeric>
+            <Th color="white" pb="2">
               Position
             </Th>
-            <Th color="white" pb="2" isNumeric>
+            <Th color="white" pb="2">
               Maximum Exposure
             </Th>
           </Tr>
@@ -69,25 +69,21 @@ export default function Position() {
                 </NextLink>
               </Text>
             </Td>
-            <Td isNumeric fontSize="lg">
-              250%
-            </Td>
-            <Td isNumeric>
+            <Td fontSize="lg">250%</Td>
+            <Td>
               25.4%
               <Text fontSize="xs" opacity="0.8">
                 sUSD
               </Text>
             </Td>
-            <Td isNumeric>
+            <Td>
               70.4%
               <Text fontSize="xs" opacity="0.8">
                 SNX
               </Text>
             </Td>
-            <Td isNumeric fontSize="lg">
-              100%
-            </Td>
-            <Td isNumeric>
+            <Td fontSize="lg">100%</Td>
+            <Td>
               10
               <Text fontSize="xs" opacity="0.8">
                 sBTC
