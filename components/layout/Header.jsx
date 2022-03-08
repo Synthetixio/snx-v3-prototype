@@ -39,11 +39,14 @@ export default function Header() {
               DAO
             </Link>
           </NextLink>
-          <NextLink href={"/"} passHref>
-            <Link mx="3" fontWeight="semibold">
-              Developers
-            </Link>
-          </NextLink>
+          <Link
+            mx="3"
+            fontWeight="semibold"
+            href={"https://docs.synthetix.io/"}
+            isExternal
+          >
+            Developers
+          </Link>
           <Popover trigger="hover">
             <PopoverTrigger>
               <Link mx="3" fontWeight="semibold">
