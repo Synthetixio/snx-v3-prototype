@@ -109,7 +109,7 @@ export default function Synth() {
             </GridItem>
             <GridItem mb="4">
               <Heading size="md" mb="1">Mint More sUSD</Heading>
-              <Text fontSize="sm" mb="8">Create more sUSD. <strong>This will reduce your c-ratio.</strong></Text>
+              <Text fontSize="sm" mb="8"><strong>This will reduce your c-ratio.</strong></Text>
             </GridItem>
           </Grid>
 
