@@ -222,7 +222,7 @@ export default function Synth() {
           <Position />
 
           <Heading size="sm" mb="1">Hedging Your Staking Position</Heading>
-          <Text fontSize="sm" mb="12">If you’re concerned about maintaining your c-ratio, you can hedge your debt position. To become fully hedged, hold your position of your staked value in each of the assets above or their non-synthetic equivalent. (For example, if you have $2,000 staked and only a 50% position on sBTC, you would hold $1,000 BTC.) This will change in value by the amount that you need to restore your c-ratio to its current value.</Text>
+          <Text fontSize="sm" mb="12">If you’re concerned about maintaining your c-ratio, you can hedge your debt position. To become fully hedged, hold your position of your staked value in each of the assets above or their non-synthetic equivalent. (For example, if you have $2,000 staked and a 50% position on sBTC, you would hold $1,000 BTC.) This will change in value by the amount that you need to restore your c-ratio to its current value.</Text>
 
           <Grid mb="4" templateColumns='repeat(2, 1fr)' gap={8}>
             <GridItem mb="4">

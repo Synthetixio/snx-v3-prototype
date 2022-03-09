@@ -27,7 +27,7 @@ export default function Home() {
             <Heading size="md" mb="2" mr="auto">Stake SNX</Heading>
             <Button size="xs" fontWeight="semibold" colorScheme="white" variant="outline" onClick={() => setEasyMode(!easyMode)}>Switch to {easyMode ? "advanced" : "easy"} mode</Button>
           </Flex>
-          <Text mb="3" fontSize="sm">By staking SNX tokens, you enable the creation of synthetic assets on the blockchain. You earn rewards but must also maintain your c-ratio. You can unstake at any time. <Link fontWeight="semibold" color="blue.400">Learn more</Link></Text>
+          <Text mb="3" fontSize="sm">By staking SNX tokens, you enable the creation of synthetic assets on the blockchain. You earn yield but must also maintain your c-ratio. You can unstake at any time. <Link fontWeight="semibold" color="blue.400">Learn more</Link></Text>
           {easyMode ? <>
             <Box bg="gray.900" mb="6" p="4" borderRadius="12px">
               <Flex mb="2">
