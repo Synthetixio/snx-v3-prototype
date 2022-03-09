@@ -61,20 +61,18 @@ export default function Synth() {
             <Text fontSize="sm" mb="2">As a staker, you’re enabling the creation of synthetic assets by staking collateral (in the form of SNX tokens) to back them. The ratio of the value of staked collateral and the value of synths can vary as market rates fluctuate. It’s important for the system to keep a high c-ratio, ensuring that the synths are properly backed.</Text>
             <Text fontSize="sm" mb="4">The higher your c-ratio, the greater your share of the fees and rewards. <strong>If your c-ratio drops below your minimum, you may be liquidated and lose your collateral.</strong> There are two ways to increase your c-ratio:</Text>
 
-            <Grid mb="3" templateColumns='repeat(2, 1fr)' gap={3}>
-              <GridItem mb="3">
+            <Grid templateColumns='repeat(2, 1fr)' gap={3}>
+              <GridItem>
                 <Heading size="sm" mb="1">Increase Your Stake</Heading>
                 <Text fontSize="xs" mb="1">Provide more collateral to the system.</Text>
                 <em>Form here accepts anything and will trade for SNX via 1inch</em>
               </GridItem>
-              <GridItem mb="3">
+              <GridItem>
                 <Heading size="sm" mb="1">Burn Synths</Heading>
                 <Text fontSize="xs" mb="1">Reduce the amount of synths in circulation.</Text>
                 <em>Form here accepts anything and will trade for sUSD via 1inch</em>
               </GridItem>
             </Grid>
-
-            <Text fontSize="xs">Something about c-ratio notification system here.</Text>
           </Box>
 
           <Text fontSize="lg" mb="8">You’ve earned a total of <strong>$2,230</strong> in exchange fees. <Tooltip label="Your fees, earned when the synths in your staking position are exchanged, are automatically included in your staking position. This passively improves the rewards you're earning. You can retrieve the earned fees by minting sUSD."><InfoOutlineIcon
@@ -94,7 +92,7 @@ export default function Synth() {
             <GridItem mb="4">
               <Heading size="md" mb="1">Lock SNX</Heading>
               <Text fontSize="sm" mb="2">Receive greater rewards, fees, and voting power by locking your SNX tokens as staked. This scales up the longer you lock.</Text>
-              <Button size="sm" colorScheme="blue">Manage Token Locks</Button>
+              <Button size="sm" colorScheme="blue">Manage Locks</Button>
             </GridItem>
           </Grid>
 
@@ -121,7 +119,7 @@ export default function Synth() {
           <Position />
 
           <Heading size="sm" mb="1">Hedging Your Staking Position</Heading>
-          <Text fontSize="sm" mb="12">Short explainer, instructing how to read the component above.</Text>
+          <Text fontSize="sm" mb="12">If you’re concerned about maintaining your c-ratio, you can hedge your debt position. To become fully hedged, hold your position of your staked value in each of the assets above or their non-synthetic equivalent. (For example, if you have $2,000 staked and only a 50% position on sBTC, you would hold $1,000 BTC.) This will change in value by the amount that you need to restore your c-ratio to its current value.</Text>
 
           <Grid mb="4" templateColumns='repeat(2, 1fr)' gap={8}>
             <GridItem mb="4">
