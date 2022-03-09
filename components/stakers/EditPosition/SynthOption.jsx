@@ -52,15 +52,6 @@ export default function SynthOption({ name, ticker }) {
             <InputRightAddon color="black">%</InputRightAddon>
           </InputGroup>
         </Box>
-        <Box pl="4">
-          <Text fontSize="xs" mb="1" opacity="0.6">
-            Max Exposure
-          </Text>
-          <InputGroup size="sm">
-            <Input htmlSize={4} width="auto" defaultValue="0" />
-            <InputRightAddon color="black">{ticker}</InputRightAddon>
-          </InputGroup>
-        </Box>
       </Flex>
     </Box>
   );

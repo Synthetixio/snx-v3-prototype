@@ -10,17 +10,32 @@ import {
   Tooltip,
   ModalBody,
   ModalCloseButton,
-  Divider,
-  Link
+  Progress,
+  Link,
+  Table,
+  Thead,
+  Tr,
+  Th,
+  Tbody,
+  Td,
+  FormControl,
+  FormLabel,
+  InputRightAddon,
+  InputGroup,
+  Input,
+  ButtonGroup,
+  IconButton
 } from '@chakra-ui/react'
 import Position from '../../components/stakers/Position/index'
 import EditPosition from '../../components/stakers/EditPosition/index'
-import { EditIcon, InfoOutlineIcon } from '@chakra-ui/icons'
+import { EditIcon, InfoOutlineIcon, CalendarIcon } from '@chakra-ui/icons'
 
 export default function Synth() {
   // If the connect wallet doesn’t own this LP token, remove the c-ratio maintenance component, unstake component, and hedging component. The edit component should be a read component and add a button that opens the edit ui when the connect wallet owns the LP token. Also, editable version here for easy mode need to be rethought. Also, informing the user how changing their position will effect the c-ratio and rewards. This whole view probably needs and advanced mode to handle burning on a per pool basis.
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen: isOpenPosition, onOpen: onOpenPosition, onClose: onClosePosition } = useDisclosure()
+  const { isOpen: isOpenLocks, onOpen: onOpenLocks, onClose: onCloseLocks } = useDisclosure()
+
   return (
     <Box>
       <Head>
@@ -92,15 +107,103 @@ export default function Synth() {
             <GridItem mb="4">
               <Heading size="md" mb="1">Lock SNX</Heading>
               <Text fontSize="sm" mb="2">Receive greater rewards, fees, and voting power by locking your SNX tokens as staked. This scales up the longer you lock.</Text>
-              <Button size="sm" colorScheme="blue">Manage Locks</Button>
+              <Button size="sm" colorScheme="blue" onClick={onOpenLocks}>Manage Locks</Button>
+
+              <Modal size="2xl" isOpen={isOpenLocks} onClose={onCloseLocks}>
+                <ModalOverlay />
+                <ModalContent bg="black" color="white">
+                  <ModalHeader>Manage Locks</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>
+                    <Grid templateColumns='repeat(2, 1fr)' gap={6} alignItems="center">
+                      <GridItem mb="4">
+                        Lock your staked SNX tokens to increase your rewards, fees, and voting power. Benefits scale the longer you lock.
+                      </GridItem>
+                      <GridItem mb="4">
+                        <Heading mb="1.5" size="sm">Locked SNX</Heading>
+                        <Progress mb="1" value="23" colorScheme="green" size="sm" borderRadius="4" />
+                        <Text fontSize="xs">
+                          Total Locked SNX: 2.3MM<br />
+                          SNX Floating Supply: 8.2MM
+                        </Text>
+                      </GridItem>
+                    </Grid>
+
+                    <Table size="sm" variant="simple" mb="8">
+                      <Thead>
+                        <Tr>
+                          <Th color="white" pb="2">
+                            Date
+                          </Th>
+                          <Th color="white" pb="2">
+                            Amount
+                          </Th>
+                          <Th color="white" pb="2">
+                            Lock-up Duration
+                          </Th>
+                          <Th color="white" pb="2" isNumeric>
+                            Power
+                          </Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        <Tr>
+                          <Td py="4">
+                            2/2/22
+                          </Td>
+                          <Td>
+                            1,000 SNX
+                          </Td>
+                          <Td>
+                            1 year
+                            <Button colorScheme="blue" ml="2" size="xs">Unlock</Button>
+                          </Td>
+                          <Td isNumeric>10,000</Td>
+                        </Tr>
+                      </Tbody>
+                    </Table>
+
+                    <Heading mb="2" size="md">Lock SNX</Heading>
+
+                    <Grid mb="8" templateColumns='repeat(3, 1fr)' gap={4}>
+                      <GridItem mb="4">
+                        <FormControl>
+                          <FormLabel htmlFor='amount'>Amount</FormLabel>
+                          <InputGroup size="sm">
+                            <Input id='amount' type='amount' />
+                            <InputRightAddon color="black" children='SNX' />
+                          </InputGroup>
+                        </FormControl>
+                      </GridItem>
+                      <GridItem mb="4">
+                        <FormControl mb="6">
+                          <FormLabel htmlFor='name'>Lock Duration</FormLabel>
+                          <ButtonGroup size="sm" isAttached colorScheme='blue' variant="outline">
+                            <Button mr='-px'>1W</Button>
+                            <Button mr='-px'>1M</Button>
+                            <Button mr='-px'>3M</Button>
+                            <Button mr='-px'>6M</Button>
+                            <Button mr='-px'>1Y</Button>
+                            <Button mr='-px'>2Y</Button>
+                            <IconButton aria-label='Custom' icon={<CalendarIcon />} />
+                          </ButtonGroup>
+                        </FormControl>
+                      </GridItem>
+                      <GridItem mb="4">
+                        <Button size="sm" colorScheme="blue" w="100%" mt="8">Lock</Button>
+                      </GridItem>
+                    </Grid>
+                  </ModalBody>
+                </ModalContent>
+              </Modal>
             </GridItem>
           </Grid>
 
           <Flex mb="2">
             <Heading size="md" mb="1">Staking Position</Heading>
-            <Button size="xs" colorScheme="green" ml="auto" onClick={onOpen}><EditIcon mr="1.5" />Edit</Button>
+            <Button size="xs" colorScheme="green" ml="auto" onClick={onOpenPosition}><EditIcon mr="1.5" />Edit</Button>
 
-            <Modal size="2xl" isOpen={isOpen} onClose={onClose}>
+            <Modal size="2xl" isOpen={isOpenPosition} onClose={onClosePosition}>
               <ModalOverlay />
               <ModalContent bg="black" color="white">
                 <ModalHeader>Modify Staking Position</ModalHeader>

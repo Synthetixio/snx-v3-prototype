@@ -46,9 +46,6 @@ export default function Position() {
             <Th color="white" pb="2">
               Position
             </Th>
-            <Th color="white" pb="2">
-              Maximum Exposure
-            </Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -83,12 +80,6 @@ export default function Position() {
               </Text>
             </Td>
             <Td fontSize="lg">100%</Td>
-            <Td>
-              10
-              <Text fontSize="xs" opacity="0.8">
-                sBTC
-              </Text>
-            </Td>
           </Tr>
         </Tbody>
       </Table>
