@@ -231,7 +231,7 @@ export default function Synth() {
               <Text mb="8"><em>Form here</em></Text>
             </GridItem>
             <GridItem mb="4">
-              <Heading size="md" mb="1">Mint More sUSD</Heading>
+              <Heading size="md" mb="1">Mint sUSD</Heading>
               <Text fontSize="sm" mb="2"><strong>This will reduce your c-ratio.</strong></Text>
               <Text mb="8"><em>Form here</em></Text>
             </GridItem>
