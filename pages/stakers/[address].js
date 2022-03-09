@@ -171,7 +171,7 @@ export default function Synth() {
                           <FormLabel htmlFor='amount'>Amount</FormLabel>
                           <InputGroup size="sm">
                             <Input id='amount' type='amount' />
-                            <InputRightAddon color="black" children='SNX' />
+                            <InputRightAddon color="black">SNX</InputRightAddon>
                           </InputGroup>
                         </FormControl>
                       </GridItem>
