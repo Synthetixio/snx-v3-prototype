@@ -1,25 +1,23 @@
 {
-  "name": "snx-v3-prototype",
-  "version": "0.1.0",
-  "private": true,
+  "name": "v3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "chai": "^4.3.6",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.6.0",
+    "hardhat": "^2.9.1"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^1.1.7",
-    "@chakra-ui/react": "^1.8.6",
-    "@emotion/react": "^11.8.1",
-    "@emotion/styled": "^11.8.1",
-    "framer-motion": "^6.2.8",
-    "next": "12.1.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2"
-  },
-  "devDependencies": {
-    "eslint": "8.10.0",
-    "eslint-config-next": "12.1.0"
+    "@openzeppelin/contracts": "^4.5.0"
   }
 }
