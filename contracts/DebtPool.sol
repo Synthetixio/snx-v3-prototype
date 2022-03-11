@@ -13,15 +13,22 @@ contract DebtPool {
     uint256 public totalDebtInflationShares;
     mapping(address => uint256) public vsUSD;
     uint256 public totalVsUSD;
-    
     uint256 public supplyCap;
+    address[] public feeContracts;
 
     function mint(uint256 amount) public {
         IERC20(sUSD).transferFrom(msg.sender, address(this), amount);
-        uint256 exchangeRate = IPriceFeed(priceFeed).exchangeRate() // Should the pricefeed interface care about trade size or assymetric liquidity? Or is this up to a simulated liquidity fee contract? Even if we wanted this, we could really get it from anyway. Uniswap TWAP doesn't provide it, chainlink certainly doesn't
-        // Check supply cap - limit amount based on supplyCap with revert, or do fancy thing that effects price if it's going over
-        // Apply fees
+        uint256 exchangeRate = IPriceFeed(priceFeed).exchangeRate(); // Should the pricefeed interface care about trade size or assymetric liquidity? Or is this up to a simulated liquidity fee contract? Even if we wanted this, we could really get it from anyway. Uniswap TWAP doesn't provide it, chainlink certainly doesn't
+        uint256 outputAmount = amount * exchangeRate;
+        require(outputAmount + synth.totalSupply() < supplyCap); // Or do fancy thing that effects price if it's going over
+
+        for (uint i=0; i<feeContracts.length; i++) {
+            IFeeContract(feeContracts[i]); // figure out this interface and how it gets applied 
+        }
+
         IERC20(synth).mint(msg.sender, amount);
+
+        // move the exchange rate calculation inclusive of fees into a seperate function to be able to provide quotes
     }
 
     function burn(uint256 amount) public {
@@ -31,5 +38,5 @@ contract DebtPool {
         // provide (and mint if necessary) appropropriate sUSD
     }
 
-    // Do we move the above functionality to a seperate exchanger contract, and leave these as 'dumb' erc-20s? We'll need an exchanger contract (maybe peripheral) for atomic swap functions between synths and fee collection
+    // Do we move the above functionality to a seperate exchanger contract. We'll need an exchanger contract (maybe peripheral) for atomic swap functions between synths. Consider fee collection
 }

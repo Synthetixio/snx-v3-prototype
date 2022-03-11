@@ -44,7 +44,7 @@ export default function Synth() {
       </Head>
       <Container maxW='container.sm'>
         <Box>
-          <Text opacity="0.6" fontSize="sm">snxStake Token Address</Text>
+          <Text opacity="0.6" fontSize="sm">snxAccount Token Address</Text>
           <Heading size="md" mb="1" mr="auto">0x80d65Bb7b9436A86c1928F93D6E7cc186987Ac54</Heading>
           <Text mb="6" fontSize="sm" fontWeight="semibold">Owner: 0x80d65Bb7b9436A86c1928F93D6E7cc186987Ac54</Text>
 

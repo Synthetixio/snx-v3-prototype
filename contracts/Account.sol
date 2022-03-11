@@ -4,63 +4,79 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "hardhat/console.sol";
 
-contract Account is ERC721 {
-    // or ERC1155 with all the synth-level stuff in it??
+contract Account is ERC721 { // or ERC1155 with all the synth-level stuff in it??
+    
+    mapping(uint256 => uint256) public delegatedDebtPosition;
 
-    // mapping(id => address) public delegatedDebtPosition; maybe?
-
-    function mint(uint256 id) external {
+    function mint(uint256 id) external { // effectively "create account"
         // Optionally, stakes something to start, could be 0 for LP token just for delegation/fund management?
         setDebtPosition(id); // or delegate?
     }
 
-    function setDebtPositionDelegation(uint256 id, address delegatee) public {
-    }
+    function setDebtPosition(uint256 id, address debtPoolAddress, uint256 amount) public {
+        if(delegatedDebtPosition[id]){
+            delete delegatedDebtPosition[id]; // undo delegation if it's set, Also we need to make sure IDs start at 1 and not 0?
+            // but I think we need to write position for the other pools into this user's config first?
+            // Could also just prevent this before "undelegating" but I think we want this to be one transaction in the UI.
+        }
 
-    function setDebtPosition(uint256 id, bytes asset, uint256 amount) public {
-        // undo delegation if it's set
+         // All the logic below needs to be updated to account for the scenario where amount is lower than the current value
+        IDebtPool debtPool = IDebtPool(debtPoolAddress);
+        IERC20 synth = IERC20(debtPool.synth());
 
-        // getSynth(id).debtPositions[id] = amount
-        // getSynth(id).supplyCap += amount
+        debtPool.debtPositions[id] = amount;
+        debtPool.supplyCap += amount;
         
-        // exposureIncreaseValue = get market rate of amount
-        // getSynth(id).vsUSD[id] += exposureIncreaseValue
-        // getSynth(id).totalVsusd += exposureIncreaseValue
-        // getSynth(id).debtInflationShares[id] += exposureIncreaseValue
-        
-        // Update Debt Inflation Shares
+        uint256 exposureIncreaseValue = 0; //get market rate of amount, does not include exchange fees
+        debtPool.vsUSD[id] += exposureIncreaseValue;
+        debtPool.totalVsusd += exposureIncreaseValue;
+
+        debtPool.debtInflationShares[id] += exposureIncreaseValue;
+        // Line above needs to be more like
         /*
-        if (getSynth(id).totalDebtInflationShares == 0) {
-            getSynth(id).debtInflationShares[staker] = amount
+        if (debtPool.totalDebtInflationShares == 0) {
+            debtPool.debtInflationShares[staker] = amount
         } else {
-            getSynth(id).debtInflationShares[staker] = getSynth(id).debtInflationShares[staker] ? getSynth(id).debtInflationShares[staker] : 0
-            getSynth(id).debtInflationShares[staker] += amount * getSynth(id).totalDebtInflationShares / getSynth(id).totalDebtInflationShares
+            debtPool.debtInflationShares[staker] = debtPool.debtInflationShares[staker] ? debtPool.debtInflationShares[staker] : 0
+            debtPool.debtInflationShares[staker] += amount * debtPool.totalDebtInflationShares / debtPool.totalDebtInflationShares
         }
         */
 
-        // also update getSynth(id).totalDebtInflationShares: getSynth(id).totalDebtInflationShares =+ newAmount
-
+        debtPool.totalDebtInflationShares += exposureIncreaseValue; // This needs to be updated to reflect the actual change, once the logic above is corrected.
     }
 
-    function getDebtPosition(uint256 id, bytes32 asset) public {
-        // check delegated
-        // otherwise check debt position
+    function setDebtPositionDelegation(uint256 id, address delegatee) public {
+        delegatedDebtPosition[id] = delegatee;
+    }
+
+    function getDebtPosition(uint256 id, address debtPoolAddress) public {
+        if(delegatedDebtPosition[id]){
+            return getDebtPosition(delegatedDebtPosition[id], debtPoolAddress);
+        }
+        
+        IDebtPool debtPool = IDebtPool(debtPoolAddress);
+        return debtPool.debtPositions[id];
     }
 
     function getCollateralizationRatio(uint256 id) public {
+        uint totalUserDebtInflation = 0;
+        for (uint i=0; i<debtPoolAddreses.length; i++) { // This is a scary loop, at minimum we should be storing a list on the account of debt pools where the user has a non-zero position, accounting for delegation
+            IDebtPool debtPool = IDebtPool(debtPoolAddreses[i]);
+            IERC20 synth = IERC20(debtPool.synth()); 
 
-        // Can we have pool specific c-ratios?
-
-        /*
-        uint256 netDebtInflation = totalSupply() * price - sUSD.balanceOf(address(this));
-        uint256 userDebtInflation = (debtInflationShares[id] / totalDebtInflationShares) * (netDebtInflation + totalVsusd) - vsUSD[id];
-
-        // sum the above across all pools to get `totalUserDebtInflation`
+            uint256 netDebtInflation = synth.totalSupply() * debtPool.price() - sUSD.balanceOf(address(this));
+            uint256 userDebtInflation = (debtPool.debtInflationShares[id] / debtPool.totalDebtInflationShares) * (netDebtInflation + debtPool.totalVsusd) - debtPool.vsUSD[id];
+            totalUserDebtInflation += userDebtInflation;
+        }
 
         uint256 userDebt = Bank.amountMinted[stakerToken] + totalUserDebtInflation;
         uint256 stakedValue = Bank.amountDeposited[staker] * snxPrice;
         return stakedValue / userDebt;
-        */
+    }
+
+    function getMinimumCollateralizationRatio(uint256 id) public {
+        // Can we have pool specific c-ratios?
+        // Average of the pools' c-ratios, weighted by user position?
     }
 
 }

@@ -45,12 +45,12 @@ export default function Position() {
                     Custom
                   </Heading>
                   <Text fontSize="xs" d="block" color="gray.400">
-                    Follow the staking position of another snxStake token.
+                    Follow the staking position of another snxAccount token.
                   </Text>
                   {delegate == "custom" && (
                     <Box>
                       <Text opacity="0.6" fontSize="sm" mt="1.5" mb="1">
-                        snxStake Token Address
+                        snxAccount Token Address
                       </Text>
                       <Input size="sm" />
                     </Box>
@@ -141,7 +141,7 @@ export default function Position() {
         Stake
       </Button>
       <Text fontSize="xs" mb="3" textAlign="center">
-        By staking, you will receive $12,000 sUSD and an snxStake token.
+        By staking, you will receive $12,000 sUSD and an snxAccount token.
       </Text>
     </Box>
   );

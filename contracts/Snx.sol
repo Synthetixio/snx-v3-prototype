@@ -9,11 +9,11 @@ contract SNX is ERC20 {
         _mint(msg.sender, initialSupply);
     }
 
-    function mint(address recipient, uint256 amount) external onlyAdmin {
+    function mint(address recipient, uint256 amount) external onlySystem {
         _mint(recipient, amount);
     }
 
-    modifier onlyAdmin {
+    modifier onlySystem {
         // Rewards contract can mint
         _;
     }

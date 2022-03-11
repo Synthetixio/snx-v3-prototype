@@ -43,7 +43,7 @@ export default function Home() {
                     Buy SNX
                   </Badge>
                 </Text>
-                <Text fontSize="xs" textAlign="right">Receive an snxStake token and $12,000 sUSD <InfoOutlineIcon /></Text>
+                <Text fontSize="xs" textAlign="right">Receive an snxAccount token and $12,000 sUSD <InfoOutlineIcon /></Text>
               </Flex>
             </Box>
 
