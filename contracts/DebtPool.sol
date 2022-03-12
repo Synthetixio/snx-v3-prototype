@@ -19,7 +19,7 @@ contract DebtPool {
         IERC20(sUSD).transferFrom(msg.sender, address(this), amount);
         uint256 exchangeRate = IPriceFeed(priceFeed).exchangeRate(); // Should the pricefeed interface care about trade size or assymetric liquidity? Or is this up to a simulated liquidity fee contract? Even if we wanted this, we could really get it from anyway. Uniswap TWAP doesn't provide it, chainlink certainly doesn't
         uint256 outputAmount = amount * exchangeRate;
-        require(outputAmount + synth.totalSupply() < supplyCap); // Or do fancy thing that effects price if it's going over
+        require(outputAmount + synth.totalSupply() < supplyCap); // Let's do fancy thing that effects price if it's going over instead of a hard cap
 
         for (uint i=0; i<feeContracts.length; i++) {
             IFeeContract(feeContracts[i]); // figure out this interface and how it gets applied 
@@ -32,7 +32,7 @@ contract DebtPool {
 
     function supplyCap() public {
         uint256 totalSupplyCapInDollars = 0;
-        // Fix this with caching
+        // Fix this with caching, on debt position change or amount deposited
         for (uint i=0; i<stakers.length; i++) { // this isn't gonna fly
             // using getDebtPosition below gives us support for delegation
             totalSupplyCapInDollars += Account.getDebtPosition(stakers[i], address(this)) / 100 * Bank.amountDeposited[stakers[i]]; //  * snxPrice / synthExchangeRate;

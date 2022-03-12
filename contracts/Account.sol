@@ -47,6 +47,7 @@ contract Account is ERC721 { // or ERC1155 with all the synth-level stuff in it?
 
     function setDebtPositionDelegation(uint256 id, address delegatee) public {
         delegatedDebtPosition[id] = delegatee;
+        // debtshares type system to track what percentage of the the delegated funds this account is providing
     }
 
     function getDebtPosition(uint256 id, address debtPoolAddress) public {
@@ -77,6 +78,8 @@ contract Account is ERC721 { // or ERC1155 with all the synth-level stuff in it?
     function getMinimumCollateralizationRatio(uint256 id) public {
         // Can we have pool specific c-ratios?
         // Average of the pools' c-ratios, weighted by user position?
+
+        // Maybe this should just be a function of types of collateral
     }
 
 }
