@@ -157,6 +157,7 @@ export default function Synth() {
                           <Td>
                             1 year
                             <Button colorScheme="blue" ml="2" size="xs">Unlock</Button>
+                            <Button colorScheme="blue" ml="2" size="xs">Extend Lock</Button>
                           </Td>
                           <Td isNumeric>10,000</Td>
                         </Tr>

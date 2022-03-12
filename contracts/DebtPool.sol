@@ -13,7 +13,6 @@ contract DebtPool {
     uint256 public totalDebtInflationShares;
     mapping(address => uint256) public vsUSD;
     uint256 public totalVsUSD;
-    uint256 public supplyCap;
     address[] public feeContracts;
 
     function mint(uint256 amount) public {
@@ -29,6 +28,16 @@ contract DebtPool {
         IERC20(synth).mint(msg.sender, amount);
 
         // move the exchange rate calculation inclusive of fees into a seperate function to be able to provide quotes
+    }
+
+    function supplyCap() public {
+        uint256 totalSupplyCapInDollars = 0;
+        // Fix this with caching
+        for (uint i=0; i<stakers.length; i++) { // this isn't gonna fly
+            // using getDebtPosition below gives us support for delegation
+            totalSupplyCapInDollars += Account.getDebtPosition(stakers[i], address(this)) / 100 * Bank.amountDeposited[stakers[i]]; //  * snxPrice / synthExchangeRate;
+        }
+        return totalSupplyCapInDollars * snxPrice / synthExchangeRate; // return supply cap in synth unit
     }
 
     function burn(uint256 amount) public {

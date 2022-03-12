@@ -25,7 +25,7 @@ contract Account is ERC721 { // or ERC1155 with all the synth-level stuff in it?
         IERC20 synth = IERC20(debtPool.synth());
 
         debtPool.debtPositions[id] = amount;
-        debtPool.supplyCap += amount;
+        debtPool.supplyCap += amount; // We're trying to come up with a dynamic version of this in DebtPool `supplyCap()`
         
         uint256 exposureIncreaseValue = 0; //get market rate of amount, does not include exchange fees
         debtPool.vsUSD[id] += exposureIncreaseValue;

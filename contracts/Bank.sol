@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 
 // This bank loans you sUSD, accepting SNX as collateral
+// Abstract this to allow non-SNX collateral?
 contract Bank {
 
     mapping(address => uint256) public amountMinted;
@@ -31,8 +32,13 @@ contract Bank {
         // SnxToken.transferFrom(address(this), msg.sender, snxAmount)
         // burn(accountToken, sUSDAmount)
     }
+
+    // Adjust function, parameter is target sUsd. Mints/burns as necessary
+
     function liquidate(address accountToken) external {
         // get c-ratio from account
         // get minimum c-ratio from account
+
+        // Force lowest c-ratio liquidations to occur first like liquity?
     }
 }
