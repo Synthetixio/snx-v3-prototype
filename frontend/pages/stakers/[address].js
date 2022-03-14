@@ -90,7 +90,7 @@ export default function Synth() {
             </Grid>
           </Box>
 
-          <Text fontSize="lg" mb="8">You’ve earned a total of <strong>$2,230</strong> in exchange fees. <Tooltip label="Your fees, earned when the synths in your staking position are exchanged, are automatically included in your staking position. This passively improves the rewards you're earning. You can retrieve the earned fees by minting sUSD."><InfoOutlineIcon
+          <Text fontSize="lg" mb="8">You’ve earned a total of <strong>$2,230</strong> in exchange fees. <Tooltip label="Your fees, earned when the synths in your staking position are exchanged, are automatically included in the amount you’re staking. This passively improves the rewards you're earning. You can retrieve the earned fees by minting sUSD."><InfoOutlineIcon
             transform="translateY(-2px)" /></Tooltip></Text>
 
           <Grid mb="8" templateColumns='repeat(2, 1fr)' gap={8}>
