@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import NextLink from "next/link";
 import { useState } from 'react';
-import { Container, Box, Heading, Text, Link, Input, Flex, Button, Badge, UnorderedList, ListItem } from '@chakra-ui/react'
-import { InfoOutlineIcon, AddIcon } from '@chakra-ui/icons'
+import { Container, Box, Heading, Text, Link, Input, Flex, Button, Badge, UnorderedList, ListItem, Select } from '@chakra-ui/react'
+import { InfoOutlineIcon, AddIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import Router from 'next/router'
 import EditPosition from '../components/stakers/EditPosition/index'
 
@@ -24,7 +24,7 @@ export default function Home() {
       <Container maxW='container.sm'>
         <Box>
           <Flex>
-            <Heading size="md" mb="2" mr="auto">Stake SNX</Heading>
+            <Heading size="md" mb="2" mr="auto">Synthetix Staking Application</Heading>
             <Button size="xs" fontWeight="semibold" colorScheme="white" variant="outline" onClick={() => setEasyMode(!easyMode)}>Switch to {easyMode ? "advanced" : "easy"} mode</Button>
           </Flex>
           <Text mb="3" fontSize="sm">By staking SNX tokens, you enable the creation of synthetic assets on the blockchain. You earn yield but must also maintain your c-ratio. You can unstake at any time. <Link fontWeight="semibold" color="blue.400">Learn more</Link></Text>
@@ -32,18 +32,25 @@ export default function Home() {
             <Box bg="gray.900" mb="6" p="4" borderRadius="12px">
               <Flex mb="2">
                 <Input size="lg" border="none" placeholder='0.0' />
-                <Button size="lg" colorScheme='blue' ml="4" onClick={() => { Router.push('/stakers/example') }}>Stake</Button>
+                <Flex ml="4" border="1px solid rgba(255,255,255,0.33)" borderRadius="6px" alignItems="center" cursor="pointer">
+                  <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" ml="3.5" mr="1">
+                    <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png" />
+                  </Box>
+                  <Text fontWeight="600">SNX</Text>
+                  <ChevronDownIcon opacity="0.66" w="5" h="5" ml="4" mr="2" />
+                </Flex>
+                <Button size="lg" colorScheme='blue' ml="4" px="9" onClick={() => { Router.push('/stakers/example') }}>Stake</Button>
               </Flex>
               <Flex alignItems="center">
                 <Text fontSize="xs" mr="auto">Balance: 2,000
-                  <Badge ml="2" variant='outline' colorScheme='blue'>
+                  <Badge ml="2" variant='outline' colorScheme='blue' transform="translateY(-1px)">
                     Use Max
                   </Badge>
-                  <Badge ml="2" variant='outline' colorScheme='blue'>
+                  <Badge ml="2" variant='outline' colorScheme='blue' transform="translateY(-1px)">
                     Buy SNX
                   </Badge>
                 </Text>
-                <Text fontSize="xs" textAlign="right">Receive an snxAccount token and $12,000 sUSD <InfoOutlineIcon /></Text>
+                <Text fontSize="xs" textAlign="right">Receive an snxAccount token and $12,000 sUSD <InfoOutlineIcon transform="translateY(-1.5px)" /></Text>
               </Flex>
             </Box>
 

@@ -4,12 +4,14 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "hardhat/console.sol";
 
+// Is "Fund" the right name for this contract?
 contract Fund { // Make this an ERC721 and file all the data under ids?
     // Manages relationship between percentages (or "weights"), collateral amounts, and debtpool logic (vUSD, debtinflationshares, and cached supply cap)
 
     mapping(address => uint256) public positions; // mapping of debt pool to "percentage exposure"
 
     // "shares" system for how much staked value is going into the fund? see myShareOfTheFund in Account.
+    // It's really to get "how much of this fund's debt am i responsible for?" for c-ratio
 
     function setDebtPosition(address debtPoolAddress, uint256 positionValue){
         positions[debtPoolAddress] = positionValue;

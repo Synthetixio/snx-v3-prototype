@@ -43,7 +43,7 @@ contract Account is ERC721 {
     }
 
     function getCollateralizationRatio(uint256 id) public {
-        uint accountDebt = fund.getDebt() / myShareOfTheFund;
+        uint accountDebt = fund.getDebt() / myShareOfTheFund; // I think myShareOfTheFund might be seperated by collateral type?
         return accountStakedValue / accountDebt;
     }
 
