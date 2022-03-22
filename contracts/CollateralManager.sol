@@ -3,12 +3,11 @@ pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 
-// This bank loans you sUSD, accepting SNX as collateral
-// Abstract this to allow non-SNX collateral?
-contract Bank {
+// This bank loans you sUSD, accepting various collateral
+contract CollateralManager {
 
     mapping(address => uint256) public amountMinted;
-    mapping(address => uint256) public amountDeposited;
+    mapping(address => uint256) public amountDeposited; // Needs to be updated to handle multiple collateral types
 
     function stake(address accountToken, uint256 snxAmount) external {
         IERC20(snxTokenAddress).transferFrom(msg.sender, address(this), snxAmount); // Example: 100 SNX
@@ -33,7 +32,9 @@ contract Bank {
         // burn(accountToken, sUSDAmount)
     }
 
-    // Adjust function, parameter is target sUsd. Mints/burns as necessary
+    function adjust(uint targetCRatio){
+        // transfer in sUSD or collateral, call mint or burn as necessary
+    }
 
     function liquidate(address accountToken) external {
         // get c-ratio from account
