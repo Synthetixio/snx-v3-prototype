@@ -48,26 +48,35 @@ contract DebtPool {
         // Needs a function to provide a "quote" of what would come of the other side without doing the transfer
     }
 
-    function increaseStake(uint fundId, address collateralType, uint collateralAmount) {
-        // vsUSD should always track with the "amount minted of sUSD" of the accounts delegating to it (in proportion to their staking position)
-        // This would be updated here
-
+    function increaseStake(uint fundId, address collateralType, uint collateralAmountChange) {
         uint netDebtInflation = synth.totalSupply() * synth.price() - sUSD.balanceOf(address(this));
         uint totalDebt = totalVsUSD + netDebtInflation;
-        int collateralValueChange = collateralAmount * synth.price(); 
+        int collateralValueChange = collateralAmountChange * synth.price(); 
         debtShares[fundId] += collateralValueChange * totalDebtShares / totalDebt;
         totalDebtShares += collateralValueChange * totalDebtShares / totalDebt;
     }
 
-    function decreaseStake(uint fundId, address collateralType, uint collateralAmount) {
-        // vsUSD should always track with the "amount minted of sUSD" of the accounts delegating to it (in proportion to their staking position)
-        // This would be updated here
-
+    function decreaseStake(uint fundId, address collateralType, uint collateralAmountChange) {
         uint netDebtInflation = synth.totalSupply() * synth.price() - sUSD.balanceOf(address(this));
         uint totalDebt = totalVsUSD + netDebtInflation;
-        int collateralValueChange = collateralAmount * synth.price(); 
+        int collateralValueChange = collateralAmountChange * synth.price(); 
         debtShares[fundId] -= collateralValueChange * totalDebtShares / totalDebt;
         totalDebtShares -= collateralValueChange * totalDebtShares / totalDebt;
+    }
+
+    // This is "The amount minted (vsusd) delegated to this fund has increased, so we need to track this."
+    // This needs to be called on mint in collateral manager and on fund join
+    function increaseAmountMinted(fundId, vsUsdAmount){
+        vsUSD[fundId] = vsUsdAmount;
+        totalVsUSD += vsUsdAmount;
+    }
+
+    // This is "The amount minted (vsusd) delegated to this fund has decreased, so we need to track this."
+    // This needs to be called on burn in collateral manager and on leave join
+    function decreaseAmountMinted(fundId, vsUsdAmount){
+        vsUSD[fundId] = vsUsdAmount;
+        totalVsUSD -= vsUsdAmount;
+
     }
 
     function supplyTarget() public {
@@ -86,5 +95,5 @@ contract DebtPool {
         // provide (and mint if necessary) appropropriate sUSD
     }
 
-    // Do we move the above functionality to a seperate exchanger contract? We'll need an exchanger contract (maybe peripheral) for atomic swap functions between synths. Consider fee collection
+    // Do we move the mint/burn functionality to a seperate exchanger contract? We'll need an exchanger contract (maybe peripheral) for atomic swap functions between synths. Consider fee collection
 }

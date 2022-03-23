@@ -24,6 +24,7 @@ contract CollateralManager {
         amountMinted[accountToken] += sUsdAmount;
 
         IAccount(accountToken).fund.updateCollateralAllocation(collateralType);
+        IAccount(accountToken).fund.increaseAmountMinted(sUsdAmount);
     }
 
     function burn(address accountToken, uint256 sUsdAmount) public {
@@ -31,6 +32,7 @@ contract CollateralManager {
         amountMinted[accountToken] -= sUsdAmount;
 
         IAccount(accountToken).fund.updateCollateralAllocation(collateralType);
+        IAccount(accountToken).fund.decreaseAmountMinted(sUsdAmount);
     }
 
     function unstake(address accountToken, uint256 snxAmount) external {

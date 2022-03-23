@@ -18,11 +18,18 @@ contract Account is ERC721 {
     }
 
     function joinFund(){
+        // leave fund if necessary
 
+        // like mint/burn:
+        // update collateral allocation
+        // update the amountMinted on the Fund to include my amount
     }
 
     function leaveFund(){
 
+        // like mint/burn:
+        // update collateral allocation
+        // update the amountMinted on the Fund to decrease by my amount
     }
 
     function getCollateralizationRatio(uint256 id) public {
