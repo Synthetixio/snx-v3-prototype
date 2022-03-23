@@ -9,8 +9,8 @@ contract DebtPool {
     address public synth;
     address public priceFeed;
 
-    mapping(address => uint256) public debtInflationShares;
-    uint256 public totalDebtInflationShares;
+    mapping(address => uint256) public debtShares;
+    uint256 public totalDebtShares;
     mapping(address => uint256) public vsUSD;
     uint256 public totalVsUSD;
     address[] public feeContracts;
@@ -48,41 +48,29 @@ contract DebtPool {
         // Needs a function to provide a "quote" of what would come of the other side without doing the transfer
     }
 
-    function updateAllocatedCollateral(uint fundId, address collateralType, uint collateralAmount) { // might need to pass in the 'change' to collateralAmount and update here
+    function increaseStake(uint fundId, address collateralType, uint collateralAmount) {
+        // vsUSD should always track with the "amount minted of sUSD" of the accounts delegating to it (in proportion to their staking position)
+        // This would be updated here
 
-        collateralAmounts[collateralType] = collateralAmount;
-        
-        uint256 exposureIncreaseValue = 0; //get market rate of amount, does not include exchange fees
-        vsUSD[fundId] += exposureIncreaseValue;
-        totalVsusd += exposureIncreaseValue;
+        uint netDebtInflation = synth.totalSupply() * synth.price() - sUSD.balanceOf(address(this));
+        uint totalDebt = totalVsUSD + netDebtInflation;
+        int collateralValueChange = collateralAmount * synth.price(); 
+        debtShares[fundId] += collateralValueChange * totalDebtShares / totalDebt;
+        totalDebtShares += collateralValueChange * totalDebtShares / totalDebt;
+    }
 
-        debtInflationShares[fundId] += exposureIncreaseValue;
-        // Line above needs to be more like
-        // if (debtPool.totalDebtInflationShares == 0) {
-        //     debtPool.debtInflationShares[staker] = amount
-        // } else {
-        //     debtPool.debtInflationShares[staker] = debtPool.debtInflationShares[staker] ? debtPool.debtInflationShares[staker] : 0
-        //     debtPool.debtInflationShares[staker] += amount * debtPool.totalDebtInflationShares / debtPool.totalDebtInflationShares
-        // }
+    function decreaseStake(uint fundId, address collateralType, uint collateralAmount) {
+        // vsUSD should always track with the "amount minted of sUSD" of the accounts delegating to it (in proportion to their staking position)
+        // This would be updated here
 
-        totalDebtInflationShares += exposureIncreaseValue; // This needs to be updated to reflect the actual change, once the logic above is corrected.
-
+        uint netDebtInflation = synth.totalSupply() * synth.price() - sUSD.balanceOf(address(this));
+        uint totalDebt = totalVsUSD + netDebtInflation;
+        int collateralValueChange = collateralAmount * synth.price(); 
+        debtShares[fundId] -= collateralValueChange * totalDebtShares / totalDebt;
+        totalDebtShares -= collateralValueChange * totalDebtShares / totalDebt;
     }
 
     function supplyTarget() public {
-        /*
-        uint256 totalSupplyTargetInDollars = 0;
-        // Fix this with caching, on debt position change or amount deposited
-        for (uint i=0; i<stakers.length; i++) { // this isn't gonna fly
-            // using getDebtPosition below gives us support for delegation
-            totalSupplyTargetInDollars += Account.getDebtPosition(stakers[i], address(this)) / 100 * Bank.amountDeposited[stakers[i]]; //  * snxPrice / synthExchangeRate;
-        }
-        return totalSupplyTargetInDollars * snxPrice / synthExchangeRate; // return supply cap in synth unit
-        */
-        
-        // TAKE TWO:
-        // This is going to take the amount of each collateral allocated to this pool. (Cached in a mapping updated by fund/staking position updates), apply market rates and add them, then apply the market rates of the synth.
-    
         uint collateralValue = 0;
         for (uint i=0; i<collateralTypes.length; i++) { // This will raise eyebrows, but I think we can anticipate <10 collateral types? How many types of "high quality collateral" are out there anyway?
             address collateralType = collateralTypes[i];
@@ -98,5 +86,5 @@ contract DebtPool {
         // provide (and mint if necessary) appropropriate sUSD
     }
 
-    // Do we move the above functionality to a seperate exchanger contract. We'll need an exchanger contract (maybe peripheral) for atomic swap functions between synths. Consider fee collection
+    // Do we move the above functionality to a seperate exchanger contract? We'll need an exchanger contract (maybe peripheral) for atomic swap functions between synths. Consider fee collection
 }

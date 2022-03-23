@@ -17,15 +17,22 @@ contract CollateralManager {
         uint256 sUsdAmount = snxAmount * snxExchangeRate / (defaultCollateralizationRatio/100);
         mint(accountToken, sUSDAmount);
     }
+
     function mint(address accountToken, uint256 sUsdAmount) public {
         // Do we allow users to put themselves below the min c-ratio? I lean towards yes, and leave it to the UX to warn. Maybe have some functions to "preview" c-ratio effects? This could be done on the FE, but might want in the contract for composability? Still feels peripheral...
-        _mint(sUsdAmount); // Example: 100
+        _mint(sUsdAmount);
         amountMinted[accountToken] += sUsdAmount;
+
+        IAccount(accountToken).fund.updateCollateralAllocation(collateralType);
     }
+
     function burn(address accountToken, uint256 sUsdAmount) public {
-        // _burn()
-        // update debt shares
+        _burn(sUsdAmount);
+        amountMinted[accountToken] -= sUsdAmount;
+
+        IAccount(accountToken).fund.updateCollateralAllocation(collateralType);
     }
+
     function unstake(address accountToken, uint256 snxAmount) external {
         // Get exchange rate from price feed contract
         // SnxToken.transferFrom(address(this), msg.sender, snxAmount)
