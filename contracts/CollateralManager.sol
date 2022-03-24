@@ -22,16 +22,12 @@ contract CollateralManager {
         // Do we allow users to put themselves below the min c-ratio? I lean towards yes, and leave it to the UX to warn. Maybe have some functions to "preview" c-ratio effects? This could be done on the FE, but might want in the contract for composability? Still feels peripheral...
         _mint(sUsdAmount);
         amountMinted[accountToken] += sUsdAmount;
-
-        IAccount(accountToken).fund.updateCollateralAllocation(collateralType);
-        IAccount(accountToken).fund.increaseAmountMinted(sUsdAmount);
+        IAccount(accountToken).fund.increaseAmountMinted(sUsdAmount); // this needs to pass the sUSD amount
     }
 
     function burn(address accountToken, uint256 sUsdAmount) public {
         _burn(sUsdAmount);
         amountMinted[accountToken] -= sUsdAmount;
-
-        IAccount(accountToken).fund.updateCollateralAllocation(collateralType);
         IAccount(accountToken).fund.decreaseAmountMinted(sUsdAmount);
     }
 
@@ -43,12 +39,5 @@ contract CollateralManager {
 
     function adjust(uint targetCRatio){
         // transfer in sUSD or collateral, call mint or burn as necessary
-    }
-
-    function liquidate(address accountToken) external {
-        // get c-ratio from account
-        // get minimum c-ratio from account
-
-        // Force lowest c-ratio liquidations to occur first like liquity?
     }
 }

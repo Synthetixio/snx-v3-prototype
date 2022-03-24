@@ -11,8 +11,8 @@ contract DebtPool {
 
     mapping(address => uint256) public debtShares;
     uint256 public totalDebtShares;
-    mapping(address => uint256) public vsUSD;
-    uint256 public totalVsUSD;
+    mapping(address => uint256) public vsUSD; // This is how much 'amountMinted' has been allocated by each fund
+    uint256 public totalVsUSD; // This is how much 'amountMinted' has been allocated across all funds
     address[] public feeContracts;
 
     mapping(address => uint256) collateralAmounts;
@@ -48,44 +48,28 @@ contract DebtPool {
         // Needs a function to provide a "quote" of what would come of the other side without doing the transfer
     }
 
-    function increaseStake(uint fundId, address collateralType, uint collateralAmountChange) {
+    function increaseLiquidity(uint256 fundId, uint256 amount) public {
+        vsUSD[fundId] += amount;
+        totalVsUSD += amount;
+        
         uint netDebtInflation = synth.totalSupply() * synth.price() - sUSD.balanceOf(address(this));
         uint totalDebt = totalVsUSD + netDebtInflation;
-        int collateralValueChange = collateralAmountChange * synth.price(); 
-        debtShares[fundId] += collateralValueChange * totalDebtShares / totalDebt;
-        totalDebtShares += collateralValueChange * totalDebtShares / totalDebt;
+        debtShares[fundId] += amount * totalDebtShares / totalDebt;
+        totalDebtShares += amount * totalDebtShares / totalDebt;
     }
 
-    function decreaseStake(uint fundId, address collateralType, uint collateralAmountChange) {
+    function decreaseLiquidity(uint256 fundId, uint256 amount) public {
+        vsUSD[fundId] -= amount;
+        totalVsUSD -= amount;
+        
         uint netDebtInflation = synth.totalSupply() * synth.price() - sUSD.balanceOf(address(this));
         uint totalDebt = totalVsUSD + netDebtInflation;
-        int collateralValueChange = collateralAmountChange * synth.price(); 
-        debtShares[fundId] -= collateralValueChange * totalDebtShares / totalDebt;
-        totalDebtShares -= collateralValueChange * totalDebtShares / totalDebt;
-    }
-
-    // This is "The amount minted (vsusd) delegated to this fund has increased, so we need to track this."
-    // This needs to be called on mint in collateral manager and on fund join
-    function increaseAmountMinted(fundId, vsUsdAmount){
-        vsUSD[fundId] = vsUsdAmount;
-        totalVsUSD += vsUsdAmount;
-    }
-
-    // This is "The amount minted (vsusd) delegated to this fund has decreased, so we need to track this."
-    // This needs to be called on burn in collateral manager and on leave join
-    function decreaseAmountMinted(fundId, vsUsdAmount){
-        vsUSD[fundId] = vsUsdAmount;
-        totalVsUSD -= vsUsdAmount;
-
+        debtShares[fundId] -= amount * totalDebtShares / totalDebt;
+        totalDebtShares -= amount * totalDebtShares / totalDebt;
     }
 
     function supplyTarget() public {
-        uint collateralValue = 0;
-        for (uint i=0; i<collateralTypes.length; i++) { // This will raise eyebrows, but I think we can anticipate <10 collateral types? How many types of "high quality collateral" are out there anyway?
-            address collateralType = collateralTypes[i];
-            collateralValue += collateralAmounts[collateralType] / collateralExchangeRates[collateralType];
-        }
-        return collateralValue / synthExchangeRate;
+        return totalVsUSD / synthExchangeRate;
     }
 
     function burn(uint256 amount) public {

@@ -32,16 +32,24 @@ contract Account is ERC721 {
         // update the amountMinted on the Fund to decrease by my amount
     }
 
-    function getCollateralizationRatio(uint256 id) public {
-        uint accountDebt = fund.getDebt() * (Fund.lpShares[id] / Fund.totalLpShares());
-        return accountStakedValue / (Bank.amountMinted[account] + accountDebt);
+    function getCollateralizationRatio(uint256 accountId) public {
+        uint accountDebtInflation = fund.getDebtInflation() * (Fund.amountMintedByUser[accountId] / Fund.amountMinted);
+        return accountStakedValue / (Bank.amountMinted[account] + accountDebtInflation);
     }
 
     function getMinimumCollateralizationRatio(uint256 id) public {
         // This is a function of the c-ratio's associated with each collateral type, weighted by how much this account is in them
     }
 
-    function burn() {
-        // This is liquidation!
+    function burn(accountId) { // This is liquidation!
+        require(getCollateralizationRatio(accountId) < getMinimumCollateralizationRatio(accountId));
+
+        // Distribute debt
+        fund.decreaseAmountMinted(fund.amountMintedByAccount[accountId]);
+
+
+        // Distribute collateral
+
+
     }
 }
