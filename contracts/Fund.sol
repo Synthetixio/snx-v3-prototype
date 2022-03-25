@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "hardhat/console.sol";
 
 // Is "Fund" the right name for this contract? Maybe "StakingPosition"? Maybe "Vault"?
-contract Fund { // Make this an ERC721 and file all the data under ids? also look at https://eips.ethereum.org/EIPS/eip-4626 ?
+contract Fund is ERC721 { // Make this an ERC721 and file all the data under ids? also look at https://eips.ethereum.org/EIPS/eip-4626 ?
     // Manages relationship between percentages (or "weights"), collateral amounts, and debt pool logic (vUSD, debtinflationshares, and cached supply cap)
 
     mapping(address => uint256) public positions; // mapping of debt pool to "percentage exposure"
@@ -74,5 +74,15 @@ contract Fund { // Make this an ERC721 and file all the data under ids? also loo
         }
 
         return totalFundDebtInflation;
+    }
+
+    // Fund has a c-ratio and min c-ratio
+
+    function burn(fundId){
+        require(getCollateralizationRatio(fundId) < getMinimumCollateralizationRatio(fundId));
+
+        // Sell collateral delegated to this fund for sUSD
+        // Burn the sUSD
+
     }
 }
