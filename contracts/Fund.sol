@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "hardhat/console.sol";
 
-// Is "Fund" the right name for this contract? Maybe "StakingPosition"?
+// Is "Fund" the right name for this contract? Maybe "StakingPosition"? Maybe "Vault"?
 contract Fund { // Make this an ERC721 and file all the data under ids? also look at https://eips.ethereum.org/EIPS/eip-4626 ?
     // Manages relationship between percentages (or "weights"), collateral amounts, and debt pool logic (vUSD, debtinflationshares, and cached supply cap)
 

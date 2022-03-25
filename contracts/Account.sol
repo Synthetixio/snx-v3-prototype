@@ -44,12 +44,14 @@ contract Account is ERC721 {
     function burn(accountId) { // This is liquidation!
         require(getCollateralizationRatio(accountId) < getMinimumCollateralizationRatio(accountId));
 
-        // Distribute debt
-        fund.decreaseAmountMinted(fund.amountMintedByAccount[accountId]);
+        // Incentivize Liquidation
 
+        // If the fund is liquidable, do that instead.
+            // Fund.burn()
 
-        // Distribute collateral
-
+        // Else liquidate the account.
+            fund.decreaseAmountMinted(fund.amountMintedByAccount[accountId]);
+            // by burning the debt shares (above), the debt and collateral is socialized among other accounts in the fund
 
     }
 }
