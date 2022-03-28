@@ -15,6 +15,8 @@ contract Account is ERC721 {
     function mint(uint256 id, uint fundId) external { // effectively "create account"
         _mint(id);
         joinFund(uint256 id, uint fundId); // or delegate?
+
+        // I think the way this works is you start with a default fund of the spartan council (sccp configuration address), and then spin up a new fund contact (like a factory)
     }
 
     function joinFund(){

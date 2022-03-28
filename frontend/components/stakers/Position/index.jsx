@@ -35,9 +35,6 @@ export default function Position() {
               Asset
             </Th>
             <Th color="white" pb="2">
-              Minimum C-Ratio
-            </Th>
-            <Th color="white" pb="2">
               Fees APY
             </Th>
             <Th color="white" pb="2">
@@ -66,7 +63,6 @@ export default function Position() {
                 </NextLink>
               </Text>
             </Td>
-            <Td fontSize="lg">250%</Td>
             <Td>
               25.4%
               <Text fontSize="xs" opacity="0.8">

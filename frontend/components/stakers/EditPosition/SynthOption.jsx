@@ -34,9 +34,6 @@ export default function SynthOption({ name, ticker }) {
             </NextLink>
           </Heading>
           <Text fontSize="xs">
-            Minimum C-Ratio: <strong>200%</strong>
-          </Text>
-          <Text fontSize="xs">
             Projected Rewards: <strong>20% APY</strong> (SNX)
           </Text>
           <Text fontSize="xs">
