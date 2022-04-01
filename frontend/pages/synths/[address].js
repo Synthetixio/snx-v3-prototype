@@ -13,7 +13,10 @@ export default function Synth() {
       <Container maxW='container.sm'>
         <Box>
           <Heading size="md" mb="3" mr="auto">Name of synth</Heading>
-          more info here like ERC20 address, trading volume, charts, etc. Link to Kwenta/1inch to buy some.
+          <Text mb="4">more info here like ERC20 address, trading volume, charts, etc. Link to Kwenta/1inch to buy some.</Text>
+
+          <Heading size="sm">Synthesis</Heading>
+          <Text>List of: Network (chainId), contract address, liquidity balance</Text>
         </Box>
 
         <Flex mt="8">
