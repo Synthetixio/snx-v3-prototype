@@ -157,7 +157,7 @@ export default function Synth() {
             data={data3}
           />
 
-          <Heading size="sm" mt="6" mt={6} mb={1}>Liquidity Providers</Heading>
+          <Heading size="sm" mt={6} mb={1}>Liquidity Providers</Heading>
 
           <TableContainer mb={12}>
             <Table variant='simple'>
