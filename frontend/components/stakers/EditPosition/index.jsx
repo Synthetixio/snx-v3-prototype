@@ -108,14 +108,8 @@ export default function Position() {
               </Button>
             </Flex>
 
-            <Heading size="sm" mb="1">
-              Totals
-            </Heading>
-
             <Flex>
-              <Text fontSize="xs">
-                Minimum C-Ratio:<strong>200%</strong>
-              </Text>
+              <Heading size="sm">Totals:</Heading>
               <Spacer />
               <Text fontSize="xs">
                 Projected Rewards: <strong>20% APY</strong> (SNX)
@@ -141,7 +135,7 @@ export default function Position() {
         Stake
       </Button>
       <Text fontSize="xs" mb="3" textAlign="center">
-        By staking, you will receive $12,000 sUSD and an snxAccount token.
+        By staking, you will receive an snxAccount token.
       </Text>
     </Box>
   );

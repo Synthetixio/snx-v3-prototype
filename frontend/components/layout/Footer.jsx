@@ -1,9 +1,10 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Link } from "@chakra-ui/react";
 
 export default function Footer() {
   return (
     <Box textAlign="center" fontSize="xs" p="1" background="gray.900" mt="4">
-      This is an experimental prototype for Synthetix V3. Send feedback to ___
+      This is an experimental prototype for Synthetix V3. Provide feedback in
+      #v3-feedback on <Link>Discord</Link>.
     </Box>
   );
 }

@@ -1,7 +1,13 @@
 import Head from 'next/head'
 import NextLink from "next/link";
 import { useState } from 'react';
-import { Container, Box, Heading, Text, Link, Input, Flex, Button, Badge, UnorderedList, ListItem, Select } from '@chakra-ui/react'
+import {
+  Container, Box, Heading, Text, Link, Input, Flex, Button, Badge, UnorderedList, ListItem,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+} from '@chakra-ui/react'
 import { InfoOutlineIcon, AddIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import Router from 'next/router'
 import EditPosition from '../components/stakers/EditPosition/index'
@@ -25,20 +31,53 @@ export default function Home() {
         <Box>
           <Flex>
             <Heading size="md" mb="2" mr="auto">Synthetix Staking Application</Heading>
-            <Button size="xs" fontWeight="semibold" colorScheme="white" variant="outline" onClick={() => setEasyMode(!easyMode)}>Switch to {easyMode ? "advanced" : "easy"} mode</Button>
+            <Button d="none" size="xs" fontWeight="semibold" colorScheme="white" variant="outline" onClick={() => setEasyMode(!easyMode)}>Switch to {easyMode ? "advanced" : "easy"} mode</Button>
           </Flex>
-          <Text mb="3" fontSize="sm">By staking in Synthetix, you enable the creation of synthetic assets on the blockchain. You earn yield but must also maintain your c-ratio. You can unstake at any time. <Link fontWeight="semibold" color="blue.400">Learn more</Link></Text>
+          <Text mr={[0, 4]} mb="3" fontSize="sm">By staking with Synthetix, you enable the creation of synthetic assets on the blockchain. You earn yield but must also maintain your c-ratio. You can unstake at any time. <Link fontWeight="semibold" color="blue.400">Learn more</Link></Text>
           {easyMode ? <>
             <Box bg="gray.900" mb="6" p="4" borderRadius="12px">
               <Flex mb="2">
                 <Input size="lg" border="none" placeholder='0.0' />
-                <Flex ml="4" border="1px solid rgba(255,255,255,0.33)" borderRadius="6px" alignItems="center" cursor="pointer">
-                  <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" ml="3.5" mr="1">
-                    <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png" />
-                  </Box>
-                  <Text fontWeight="600">SNX</Text>
-                  <ChevronDownIcon opacity="0.66" w="5" h="5" ml="4" mr="2" />
-                </Flex>
+                <Menu>
+                  <MenuButton ml="4" border="1px solid rgba(255,255,255,0.33)" borderRadius="6px" alignItems="center" cursor="pointer">
+                    <Flex>
+                      <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" ml="3.5" mr="1">
+                        <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png" />
+                      </Box>
+                      <Text fontWeight="600">SNX</Text>
+                      <ChevronDownIcon opacity="0.66" w="5" h="5" ml="4" mr="2" />
+                    </Flex>
+                  </MenuButton>
+                  <MenuList px={2} bg="black" border="1px solid rgba(255,255,255,0.33)">
+                    <MenuItem alignItems="left" mb={1} flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
+                      <Flex flexDirection="row">
+                        <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" mr="1">
+                          <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png" />
+                        </Box>
+                        <Text fontWeight="600">SNX</Text>
+                      </Flex>
+                      <Text fontSize="xs" d="block">&times;10 Power</Text>
+                    </MenuItem>
+                    <MenuItem alignItems="left" mb={1} flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
+                      <Flex flexDirection="row">
+                        <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" mr="1">
+                          <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x5f98805A4E8be255a32880FDeC7F6728C6568bA0/logo.png" />
+                        </Box>
+                        <Text fontWeight="600">LUSD</Text>
+                      </Flex>
+                      <Text fontSize="xs" d="block">&times;4 Power</Text>
+                    </MenuItem>
+                    <MenuItem alignItems="left" flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
+                      <Flex flexDirection="row">
+                        <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" mr="1">
+                          <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" />
+                        </Box>
+                        <Text fontWeight="600">ETH</Text>
+                      </Flex>
+                      <Text fontSize="xs" d="block">&times;1 Power</Text>
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
                 <Button size="lg" colorScheme='blue' ml="4" px="9" onClick={() => { Router.push('/stakers/example') }}>Stake</Button>
               </Flex>
               <Flex alignItems="center">
