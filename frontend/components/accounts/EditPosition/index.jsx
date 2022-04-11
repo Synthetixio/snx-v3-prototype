@@ -129,7 +129,7 @@ export default function Position() {
         colorScheme="blue"
         mb="1"
         onClick={() => {
-          Router.push("/stakers/example");
+          Router.push("/accounts/example");
         }}
       >
         Stake

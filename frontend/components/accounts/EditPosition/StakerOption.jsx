@@ -21,7 +21,7 @@ export default function StakerOption({ name, defaultChecked }) {
       <Box flex="1" pl="3">
         <Heading size="sm" mb="0.5">
           {name}&nbsp;
-          <NextLink href={"/stakers/example"} passHref>
+          <NextLink href={"/accounts/example"} passHref>
             <Link
               color="blue.400"
               d="inline-block"

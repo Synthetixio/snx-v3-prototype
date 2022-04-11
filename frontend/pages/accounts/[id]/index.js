@@ -26,8 +26,8 @@ import {
   ButtonGroup,
   IconButton
 } from '@chakra-ui/react'
-import Position from '../../components/stakers/Position/index'
-import EditPosition from '../../components/stakers/EditPosition/index'
+import Position from '../../../components/accounts/Position/index'
+import EditPosition from '../../../components/accounts/EditPosition/index'
 import { EditIcon, InfoOutlineIcon, CalendarIcon, SettingsIcon } from '@chakra-ui/icons'
 
 export default function Synth() {
@@ -46,7 +46,9 @@ export default function Synth() {
         <Box>
           <Flex mb="6">
             <Text fontWeight="semibold" fontSize="md">Account #1324</Text>
-            <Link ml="auto" fontSize="xs" fontWeight="normal" color="blue.400"><SettingsIcon /> Account Settings</Link>
+            <NextLink href={"/accounts/example/settings"} passHref>
+              <Link ml="auto" fontSize="xs" fontWeight="normal" color="blue.400"><SettingsIcon /> Account Settings</Link>
+            </NextLink>
           </Flex>
           <Grid mb="3" textAlign="center" templateColumns='repeat(4, 1fr)' gap={6}>
             <GridItem mb="3">

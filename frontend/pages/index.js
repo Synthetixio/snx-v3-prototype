@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { InfoOutlineIcon, AddIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import Router from 'next/router'
-import EditPosition from '../components/stakers/EditPosition/index'
+import EditPosition from '../components/accounts/EditPosition/index'
 
 
 export default function Home() {
@@ -78,7 +78,7 @@ export default function Home() {
                     </MenuItem>
                   </MenuList>
                 </Menu>
-                <Button size="lg" colorScheme='blue' ml="4" px="9" onClick={() => { Router.push('/stakers/example') }}>Stake</Button>
+                <Button size="lg" colorScheme='blue' ml="4" px="9" onClick={() => { Router.push('/accounts/example') }}>Stake</Button>
               </Flex>
               <Flex alignItems="center">
                 <Text fontSize="xs" mr="auto">Balance: 2,000
