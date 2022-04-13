@@ -90,6 +90,9 @@ export default function Settings() {
                   </Grid>
                 </CheckboxGroup>
 
+                <Checkbox isDisabled={isOwner} value='e' mb="1">Manage Staking Position</Checkbox>
+                <br />
+
                 <Button mt="6" mb="4" isFullWidth colorScheme="blue">
                   Update Permissions
                 </Button>
