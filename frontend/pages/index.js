@@ -56,7 +56,7 @@ export default function Home() {
                         </Box>
                         <Text fontWeight="600">SNX</Text>
                       </Flex>
-                      <Text fontSize="xs" d="block">&times;10 Power</Text>
+                      <Text fontSize="xs" d="block">&times;10 Voting Power</Text>
                     </MenuItem>
                     <MenuItem alignItems="left" mb={1} flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
                       <Flex flexDirection="row">
@@ -65,7 +65,7 @@ export default function Home() {
                         </Box>
                         <Text fontWeight="600">LUSD</Text>
                       </Flex>
-                      <Text fontSize="xs" d="block">&times;4 Power</Text>
+                      <Text fontSize="xs" d="block">&times;4 Voting Power</Text>
                     </MenuItem>
                     <MenuItem alignItems="left" flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
                       <Flex flexDirection="row">
@@ -74,7 +74,7 @@ export default function Home() {
                         </Box>
                         <Text fontWeight="600">ETH</Text>
                       </Flex>
-                      <Text fontSize="xs" d="block">&times;1 Power</Text>
+                      <Text fontSize="xs" d="block">&times;1 Voting Power</Text>
                     </MenuItem>
                   </MenuList>
                 </Menu>

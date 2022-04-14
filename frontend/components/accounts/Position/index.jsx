@@ -1,6 +1,5 @@
 import NextLink from "next/link";
 import {
-  Flex,
   Text,
   Box,
   Link,
@@ -20,6 +19,7 @@ export default function Position() {
     <Box mb="2">
       <Table size="sm" variant="simple">
         <TableCaption color="white">
+          {/* if only staking with spartan council fund */}
           <InfoOutlineIcon d="inline-block" transform="translateY(-1px)" /> Your
           staking position is currently managed by{" "}
           <NextLink href={"/dao"} passHref>

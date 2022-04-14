@@ -24,6 +24,7 @@ import {
   InputGroup,
   Input,
   ButtonGroup,
+  InputLeftAddon,
   IconButton
 } from '@chakra-ui/react'
 import Position from '../../../components/accounts/Position/index'
@@ -54,7 +55,11 @@ export default function Synth() {
             <GridItem mb="3">
               <Text fontSize="sm" fontWeight="semibold">Staked</Text>
               <Heading size="lg">$5,000</Heading>
-              <Text opacity="0.6" fontSize="sm">1,000 SNX</Text>
+              <Text fontSize="sm">
+                <NextLink href={"/accounts/example/collateral"} passHref>
+                  <Link fontWeight="normal" color="blue.400">Manage Collateral</Link>
+                </NextLink>
+              </Text>
             </GridItem>
             <GridItem mb="3">
               <Text fontSize="sm" fontWeight="semibold">C-Ratio</Text>
@@ -81,7 +86,8 @@ export default function Synth() {
             <Grid templateColumns='repeat(2, 1fr)' gap={8}>
               <GridItem>
                 <Heading size="sm" mb="1">Increase Your Stake</Heading>
-                <Text fontSize="xs" mb="2">Provide more collateral to the system.</Text>
+                <Text fontSize="xs" mb="2">Provide more collateral to the system. <Tooltip label="Use the form below to have your staking position managed by the Spartan Council. Click 'Manage Collateral' above to customize your staking position and leverage."><InfoOutlineIcon
+                  transform="translateY(-1.5px)" /></Tooltip></Text>
                 <Grid templateColumns='repeat(4, 1fr)' gap={3}>
                   <GridItem colSpan={3}>
                     <Input size="sm" id='amount' type='amount' />
@@ -106,24 +112,30 @@ export default function Synth() {
             </Grid>
           </Box>
 
-          <Text fontSize="lg" mb="8">You’ve earned a total of <strong>$2,230</strong> in exchange fees. <Tooltip label="Your fees, earned when the synths in your staking position are exchanged, are automatically deducted from your debt. You can retrieve the earned fees by minting sUSD."><InfoOutlineIcon
+          <Text fontSize="lg" mb="6">You’ve earned a total of <strong>$2,230</strong> in exchange fees. <Tooltip label="Your fees, earned when the synths in your staking position are exchanged, are automatically deducted from your debt. You can retrieve the earned fees by minting sUSD."><InfoOutlineIcon
             transform="translateY(-2px)" /></Tooltip></Text>
 
           <Grid mb="8" templateColumns='repeat(2, 1fr)' gap={8}>
             <GridItem mb="4">
               <Heading size="md" mb="1">Claim Rewards</Heading>
-              <Text fontSize="sm" mb="2">SNX rewards incentivize stakers to include various pools in their staking position. You can
-                {" "}<NextLink href={"/dao"} passHref>
-                  <Link fontWeight="semibold" color="blue.400">
-                    vote
-                  </Link>
-                </NextLink> on how they should be distributed.</Text>
+              <Text fontSize="sm" mb="2">SNX rewards incentivize stakers to include various pools in their staking position.</Text>
               <Button size="sm" colorScheme="blue" mb="2">Claim 1,200 SNX</Button>
             </GridItem>
             <GridItem mb="4">
-              <Heading size="md" mb="1">Lock SNX</Heading>
-              <Text fontSize="sm" mb="2">Receive greater rewards, fees, and voting power by locking your SNX tokens as staked. This scales up the longer you lock.</Text>
-              <Button size="sm" colorScheme="blue" onClick={onOpenLocks}>Manage Locks</Button>
+
+              <Heading size="md" mb="1">Mint sUSD</Heading>
+              <Text fontSize="sm" mb="2">Receive a loan of sUSD against your staked collateral. <strong>This will reduce your c-ratio.</strong></Text>
+              <Grid templateColumns='repeat(4, 1fr)' gap={3}>
+                <GridItem colSpan={3}>
+                  <InputGroup size="sm">
+                    <InputLeftAddon bg="black" children='$' />
+                    <Input id='amount' type='amount' borderLeft="none" />
+                  </InputGroup>
+                </GridItem>
+                <GridItem>
+                  <Button size="sm" colorScheme="blue" w="100%">Mint</Button>
+                </GridItem>
+              </Grid>
 
               <Modal size="2xl" isOpen={isOpenLocks} onClose={onCloseLocks}>
                 <ModalOverlay />
@@ -216,22 +228,7 @@ export default function Synth() {
             </GridItem>
           </Grid>
 
-          <Flex mb="2">
-            <Heading size="md" mb="1">Staking Position</Heading>
-            <Button size="xs" colorScheme="green" ml="auto" onClick={onOpenPosition}><EditIcon mr="1.5" />Edit</Button>
-
-            <Modal size="2xl" isOpen={isOpenPosition} onClose={onClosePosition}>
-              <ModalOverlay />
-              <ModalContent bg="black" color="white">
-                <ModalHeader>Modify Staking Position</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  <EditPosition />
-                </ModalBody>
-              </ModalContent>
-            </Modal>
-          </Flex>
-
+          <Heading size="md" mb="1">Staking Position</Heading>
           <Text fontSize="sm" mb="4">
             Your staking position effects your rewards/fees APY as well as how your c-ratio fluctuates. You’re currently enabling the creation of the following synthetic assets:
           </Text>
@@ -240,33 +237,6 @@ export default function Synth() {
 
           <Heading size="sm" mb="1">Hedging Your Staking Position</Heading>
           <Text fontSize="sm" mb="12">If you’re concerned about maintaining your c-ratio, you can hedge your debt position. To become fully hedged, hold your position of your staked value in each of the assets above or their non-synthetic equivalent. (For example, if you have $2,000 staked and a 50% position on sBTC, you would hold $1,000 BTC.) These assets will change in value by the amount that you need to restore your c-ratio to its current value.</Text>
-
-          <Grid mb="4" templateColumns='repeat(2, 1fr)' gap={8}>
-            <GridItem mb="4">
-              <Heading size="md" mb="1">Unstake</Heading>
-              <Text fontSize="sm" mb="2">Burn synths to redeem your SNX tokens</Text>
-              <Grid templateColumns='repeat(4, 1fr)' gap={3}>
-                <GridItem colSpan={3}>
-                  <Input size="sm" id='amount' type='amount' />
-                </GridItem>
-                <GridItem>
-                  <Button size="sm" colorScheme="blue" w="100%">Unstake</Button>
-                </GridItem>
-              </Grid>
-            </GridItem>
-            <GridItem mb="4">
-              <Heading size="md" mb="1">Mint sUSD</Heading>
-              <Text fontSize="sm" mb="2"><strong>This will reduce your c-ratio.</strong></Text>
-              <Grid templateColumns='repeat(4, 1fr)' gap={3}>
-                <GridItem colSpan={3}>
-                  <Input size="sm" id='amount' type='amount' />
-                </GridItem>
-                <GridItem>
-                  <Button size="sm" colorScheme="blue" w="100%">Mint</Button>
-                </GridItem>
-              </Grid>
-            </GridItem>
-          </Grid>
 
         </Box>
       </Container >
