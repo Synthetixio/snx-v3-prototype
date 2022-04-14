@@ -128,7 +128,7 @@ export default function Synth() {
               <Grid templateColumns='repeat(4, 1fr)' gap={3}>
                 <GridItem colSpan={3}>
                   <InputGroup size="sm">
-                    <InputLeftAddon bg="black" children='$' />
+                    <InputLeftAddon bg="black">$</InputLeftAddon>
                     <Input id='amount' type='amount' borderLeft="none" />
                   </InputGroup>
                 </GridItem>
