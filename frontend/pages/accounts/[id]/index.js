@@ -40,12 +40,12 @@ export default function Synth() {
   return (
     <Box>
       <Head>
-        <title>Staker</title>
-        <meta name="description" content="Staker" />
+        <title>Account</title>
+        <meta name="description" content="Account" />
       </Head>
       <Container maxW='container.sm'>
         <Box>
-          <Flex mb="6">
+          <Flex mb="6" alignItems="center">
             <Text fontWeight="semibold" fontSize="md">Account #1324</Text>
             <NextLink href={"/accounts/example/settings"} passHref>
               <Link ml="auto" fontSize="xs" fontWeight="normal" color="blue.400"><SettingsIcon /> Account Settings</Link>

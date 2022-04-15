@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Head from 'next/head'
+import NextLink from "next/link"
 import {
   Container, Box, Heading, Text, Tooltip, Flex, Button,
   useDisclosure,
@@ -38,10 +39,13 @@ export default function Settings() {
         <meta name="description" content="Account Settings" />
       </Head>
       <Container maxW='container.sm'>
-        <Box mb="6">
-          <Link fontSize="sm" mb="1"><ChevronLeftIcon />Back</Link>
+
+        <Flex mb="6" alignItems="center">
           <Text fontWeight="semibold" fontSize="md">Account #1324</Text>
-        </Box>
+          <NextLink href={"/accounts/example"} passHref>
+            <Link ml="auto" fontSize="xs" fontWeight="normal" color="blue.400"><ChevronLeftIcon /> Return to overview</Link>
+          </NextLink>
+        </Flex>
 
         <Flex mb="2">
           <Heading size="md" mb="1">Permissions</Heading>
