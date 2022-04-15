@@ -20,19 +20,19 @@ export default function StakerOption({ name, defaultChecked }) {
       </Box>
       <Box flex="1" pl="3">
         <Heading size="sm" mb="0.5">
-          {name}&nbsp;
-          <NextLink href={"/accounts/example"} passHref>
+          {name}
+        </Heading>
+        <Text fontSize="xs" d="block" color="gray.400">
+          Fund #231&nbsp;
+          <NextLink href={"/funds/example"} passHref>
             <Link
               color="blue.400"
               d="inline-block"
-              transform="translateY(-2.5px)"
+              transform="translateY(-1.5px)"
             >
               <ExternalLinkIcon />
             </Link>
           </NextLink>
-        </Heading>
-        <Text fontSize="xs" d="block" color="gray.400">
-          0x6991cf5a96d8c6e5802e92fb5e329e0d0ddd701f
         </Text>
       </Box>
       <Box pl="4">

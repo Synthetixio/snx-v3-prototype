@@ -28,6 +28,7 @@ export default function Position() {
         <TabList>
           <Tab>Delegated Staking</Tab>
           <Tab>Manual Staking</Tab>
+          <Tab>No Staking Position</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -45,12 +46,12 @@ export default function Position() {
                     Custom
                   </Heading>
                   <Text fontSize="xs" d="block" color="gray.400">
-                    Follow the staking position of another snxAccount token.
+                    Follow the staking position of another fund
                   </Text>
                   {delegate == "custom" && (
                     <Box>
                       <Text opacity="0.6" fontSize="sm" mt="1.5" mb="1">
-                        snxAccount Token Address
+                        Fund ID
                       </Text>
                       <Input size="sm" />
                     </Box>
@@ -120,23 +121,11 @@ export default function Position() {
               </Text>
             </Flex>
           </TabPanel>
+          <TabPanel>
+            <Text>Explain how/why you wouldn’t have a staking position</Text>
+          </TabPanel>
         </TabPanels>
       </Tabs>
-
-      <Button
-        w="100%"
-        size="lg"
-        colorScheme="blue"
-        mb="1"
-        onClick={() => {
-          Router.push("/accounts/example");
-        }}
-      >
-        Stake
-      </Button>
-      <Text fontSize="xs" mb="3" textAlign="center">
-        By staking, you will receive an snxAccount token.
-      </Text>
     </Box>
   );
 }

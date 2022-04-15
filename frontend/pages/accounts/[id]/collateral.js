@@ -18,10 +18,13 @@ import {
   Button,
   IconButton,
   useDisclosure,
+  InputLeftAddon,
   Grid, GridItem, Progress, FormControl, FormLabel, InputGroup, InputRightAddon, ButtonGroup,
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody
 } from '@chakra-ui/react'
 import { ChevronLeftIcon, EditIcon, QuestionOutlineIcon, ChevronDownIcon, LockIcon, SettingsIcon, CalendarIcon } from '@chakra-ui/icons'
+
+import EditPosition from '../../../components/accounts/EditPosition/index'
 
 export default function Settings() {
   const { isOpen: isOpenFund, onOpen: onOpenFund, onClose: onCloseFund } = useDisclosure()
@@ -30,8 +33,8 @@ export default function Settings() {
   return (
     <Box>
       <Head>
-        <title>Account Settings</title>
-        <meta name="description" content="Account Settings" />
+        <title>Manage Collateral</title>
+        <meta name="description" content="Manage Collateral" />
       </Head>
       <Container maxW='container.sm'>
 
@@ -194,10 +197,25 @@ export default function Settings() {
         <Modal size="2xl" isOpen={isOpenFund} onClose={onCloseFund}>
           <ModalOverlay />
           <ModalContent bg="black" color="white">
-            <ModalHeader>Manage Staking Position [WIP]</ModalHeader>
+            <ModalHeader>Manage Staking Position</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              Edit Staking Position
+              <EditPosition />
+              <Heading size="sm" mb="3">Leverage</Heading>
+
+              <Grid templateColumns='repeat(12, 1fr)' gap={6} alignItems="center" mb="6">
+                <GridItem colSpan="3">
+                  <InputGroup>
+                    <InputLeftAddon bg="black">&times;</InputLeftAddon>
+                    <Input id='amount' type='amount' borderLeft="none" value="1" />
+                  </InputGroup>
+                </GridItem>
+                <GridItem colSpan="9">
+                  <Text fontSize="sm">Leveraging your staking position allows you to earn more rewards, but your c-ratio is subject to greater volatiity. <em>Use leverage with caution.</em></Text>
+
+                </GridItem>
+              </Grid>
+              <Button w="100%" colorScheme="blue">Update</Button>
             </ModalBody>
           </ModalContent>
         </Modal>
@@ -222,9 +240,11 @@ export default function Settings() {
                 </GridItem>
               </Grid>
 
-              <Heading mb="2" size="md">Lock SNX</Heading>
+              <Heading mb="2" size="md">Lock Collateral</Heading>
 
-              <Grid mb="8" templateColumns='repeat(3, 1fr)' gap={4}>
+              <Heading mb="2" size="md">Extend Lock</Heading>
+
+              <Grid mb="2" templateColumns='repeat(3, 1fr)' gap={4}>
                 <GridItem mb="4">
                   <FormControl>
                     <FormLabel htmlFor='amount'>Amount</FormLabel>
@@ -252,6 +272,11 @@ export default function Settings() {
                   <Button size="sm" colorScheme="blue" w="100%" mt="8">Lock</Button>
                 </GridItem>
               </Grid>
+
+              <Heading mb="2" size="md">Unlock</Heading>
+
+              <Text>You can unlock your collateral early, allowing you to unstake it, but will incur a penalty of <strong>50%</strong>. The penalized collateral is liquidated.</Text>
+
             </ModalBody>
           </ModalContent>
         </Modal>
