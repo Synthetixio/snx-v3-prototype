@@ -42,7 +42,7 @@ export default function Header() {
           <Link
             mx="3"
             fontWeight="semibold"
-            href={"https://docs.synthetix.io/"}
+            href={"https://snx-v3-docs.netlify.app/"}
             isExternal
           >
             Developers
