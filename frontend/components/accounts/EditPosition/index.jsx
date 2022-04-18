@@ -122,7 +122,9 @@ export default function Position() {
             </Flex>
           </TabPanel>
           <TabPanel>
-            <Text>Explain how/why you wouldn’t have a staking position</Text>
+            <Text textAlign="center" my="4">
+              Explain how/why you wouldn’t have a staking position
+            </Text>
           </TabPanel>
         </TabPanels>
       </Tabs>

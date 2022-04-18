@@ -64,7 +64,7 @@ const data2 = {
 };
 
 const supplyTotals = labels.map(() => faker.datatype.number({ min: 1800000, max: 2000000 }))
-console.log(supplyTotals)
+
 const data3 = {
   labels,
   datasets: [
@@ -92,7 +92,7 @@ export default function Synth() {
       </Head>
       <Container maxW='container.sm'>
         <Box>
-          <Tooltip label='This synth has been verified by the Spatan Council'>
+          <Tooltip label='This synth has been verified by the Spartan Council'>
             <Tag mb="4" mr="2" colorScheme="green" size="sm">Verified</Tag>
           </Tooltip>
           <Tag opacity="0.66" mb="4" colorScheme="gray" size="sm" bg="black" border="1px solid white" color="white">Crypto</Tag>

@@ -135,7 +135,9 @@ export default function Settings() {
                 <Text fontSize="xs" opacity="0.66" mt="1'">$5,264.34</Text>
               </Td>
               <Td>
-                Spartan Council
+                <NextLink href={"/funds/example"} passHref>
+                  <Link _hover={{ textDecoration: 'none' }} d="inline" borderBottom="1px dotted rgba(255,255,255,0.5)">Spartan Council</Link>
+                </NextLink>
                 <Link color="blue.400" ml="1">
                   <EditIcon onClick={onOpenFund} style={{ transform: 'translateY(-2px)' }} />
                 </Link>

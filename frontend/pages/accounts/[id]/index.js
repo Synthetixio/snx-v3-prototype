@@ -28,8 +28,7 @@ import {
   IconButton
 } from '@chakra-ui/react'
 import Position from '../../../components/accounts/Position/index'
-import EditPosition from '../../../components/accounts/EditPosition/index'
-import { EditIcon, InfoOutlineIcon, CalendarIcon, SettingsIcon } from '@chakra-ui/icons'
+import { InfoOutlineIcon, CalendarIcon, SettingsIcon } from '@chakra-ui/icons'
 
 export default function Synth() {
   // If the connect wallet doesn’t own this LP token, remove the c-ratio maintenance component, unstake component, and hedging component. The edit component should be a read component and add a button that opens the edit ui when the connect wallet owns the LP token. Also, editable version here for easy mode need to be rethought. Also, informing the user how changing their position will effect the c-ratio and rewards. This whole view probably needs and advanced mode to handle burning on a per pool basis.
