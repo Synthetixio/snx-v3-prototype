@@ -63,8 +63,6 @@ export default function Settings() {
                   <Input id='address' />
                 </FormControl>
 
-                <Text fontSize="sm" mb="4">Someone who can modify permissions can do so for their own account <strong>revoke other admins</strong>.</Text>
-
                 <Heading size="sm" mb="2">Permit Actions</Heading>
                 <CheckboxGroup>
                   <Grid gap={3} templateColumns='repeat(3, 1fr)'>
