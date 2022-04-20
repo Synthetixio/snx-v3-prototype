@@ -63,39 +63,44 @@ export default function Settings() {
                   <Input id='address' />
                 </FormControl>
 
-                <Checkbox isChecked={isOwner} onChange={() => { setIsOwner(!isOwner) }} value='x'>
-                  Owner
-                </Checkbox>
-                <Text fontSize="sm" mb="4">Account owners have full permissions, including the ability to modify others’ permissions and <strong>revoke other owners</strong>.</Text>
+                <Text fontSize="sm" mb="4">Someone who can modify permissions can do so for their own account <strong>revoke other admins</strong>.</Text>
 
                 <Heading size="sm" mb="2">Permit Actions</Heading>
                 <CheckboxGroup>
                   <Grid gap={3} templateColumns='repeat(3, 1fr)'>
                     <GridItem>
-                      <Checkbox isDisabled={isOwner} value='a' mb="1">Stake</Checkbox>
+                      <Checkbox value='a' mb="1">Stake</Checkbox>
                       <br />
-                      <Checkbox isDisabled={isOwner} value='b' mb="1">Burn</Checkbox>
-                      <br />
-                    </GridItem>
-
-                    <GridItem>
-                      <Checkbox isDisabled={isOwner} value='c' mb="1">Unstake</Checkbox>
-                      <br />
-                      <Checkbox isDisabled={isOwner} value='d' mb="1">Mint</Checkbox>
+                      <Checkbox value='b' mb="1">Burn</Checkbox>
                       <br />
                     </GridItem>
 
                     <GridItem>
-                      <Checkbox isDisabled={isOwner} value='e' mb="1">Claim Rewards</Checkbox>
+                      <Checkbox value='c' mb="1">Unstake</Checkbox>
                       <br />
-                      <Checkbox isDisabled={isOwner} value='f' mb="1">Manage Locks</Checkbox>
+                      <Checkbox value='d' mb="1">Mint</Checkbox>
+                      <br />
+                    </GridItem>
+
+                    <GridItem>
+                      <Checkbox value='e' mb="1">Claim Rewards</Checkbox>
+                      <br />
+                      <Checkbox value='f' mb="1">Manage Locks</Checkbox>
+                      <br />
+                    </GridItem>
+                  </Grid>
+
+                  <Grid gap={3} templateColumns='repeat(2, 1fr)'>
+                    <GridItem>
+                      <Checkbox value='e' mb="1">Manage Staking Position</Checkbox>
+                      <br />
+                    </GridItem>
+                    <GridItem>
+                      <Checkbox value='x'>Modify Permissions</Checkbox>
                       <br />
                     </GridItem>
                   </Grid>
                 </CheckboxGroup>
-
-                <Checkbox isDisabled={isOwner} value='e' mb="1">Manage Staking Position</Checkbox>
-                <br />
 
                 <Button mt="6" mb="4" isFullWidth colorScheme="blue">
                   Update Permissions
