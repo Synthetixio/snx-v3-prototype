@@ -34,9 +34,9 @@ export default function Fund() {
             <Table variant='simple'>
               <Thead>
                 <Tr>
-                  <Th>Asset</Th>
-                  <Th>Amount</Th>
-                  <Th isNumeric>Value</Th>
+                  <Th color="white">Asset</Th>
+                  <Th color="white">Amount</Th>
+                  <Th color="white" isNumeric>Value</Th>
                 </Tr>
               </Thead>
               <Tbody>

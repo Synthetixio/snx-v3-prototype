@@ -29,11 +29,11 @@ export default function Home() {
       </Head>
       <Container maxW='container.sm'>
         <Box>
-          <Flex>
+          <Flex d="none">
             <Heading size="md" mb="2" mr="auto">Synthetix Staking Application</Heading>
-            <Button d="none" size="xs" fontWeight="semibold" colorScheme="white" variant="outline" onClick={() => setEasyMode(!easyMode)}>Switch to {easyMode ? "advanced" : "easy"} mode</Button>
+            <Button size="xs" fontWeight="semibold" colorScheme="white" variant="outline" onClick={() => setEasyMode(!easyMode)}>Switch to {easyMode ? "advanced" : "easy"} mode</Button>
           </Flex>
-          <Text mr={[0, 4]} mb="3" fontSize="sm">By staking with Synthetix, you enable the creation of synthetic assets on the blockchain. You earn yield but must also maintain your c-ratio. You can unstake at any time. <Link fontWeight="semibold" color="blue.400">Learn more</Link></Text>
+          <Text fontSize="lg" mt="14" mb="4">Stake with Synthetix to enable the creation of synthetic assets on-chain. You earn yield but must also maintain your c-ratio. <Link href="https://snx-v3-docs.netlify.app/" fontWeight="semibold" color="blue.400">Learn more</Link></Text>
           {easyMode ? <>
             <Box bg="gray.900" mb="6" p="4" borderRadius="12px">
               <Flex mb="2">

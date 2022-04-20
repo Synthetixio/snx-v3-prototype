@@ -98,7 +98,7 @@ export default function Settings() {
             <Tooltip label="Configure Lock">
               <IconButton onClick={onOpenLock} ml="3" bg="transparent" border="1px solid rgba(255,255,255,0.33)" size="lg" aria-label='Configure Lock' icon={<LockIcon />} />
             </Tooltip>
-            <Button size="lg" colorScheme='blue' ml="4" px="8" onClick={() => { Router.push('/accounts/example') }}>Stake</Button>
+            <Button size="lg" colorScheme='blue' ml="4" px="8">Stake</Button>
           </Flex>
           <Flex alignItems="center">
             <Text fontSize="xs" mr="auto">Balance: 2,000
@@ -110,7 +110,7 @@ export default function Settings() {
           </Flex>
         </Box>
 
-        <Heading size="md" mb="2">Staked Collateral</Heading>
+        <Heading size="sm" mb="2">Staked Collateral</Heading>
 
         <Table size="sm" variant="simple" mb="8">
           <Thead>
