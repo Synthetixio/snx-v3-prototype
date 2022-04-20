@@ -77,10 +77,13 @@ export default function Synth() {
             </GridItem>
           </Grid>
 
+          <Text fontSize="xl" mb="6">You’ve earned a total of <strong>$2,230</strong> in exchange fees. <Tooltip label="Your fees, earned when the synths in your staking position are exchanged, are automatically deducted from your debt. You can retrieve the earned fees by minting sUSD."><InfoOutlineIcon
+            transform="translateY(-2px)" /></Tooltip></Text>
+
           <Box bg="gray.900" mb="8" p="6" borderRadius="12px">
             <Heading size="sm" mb="2">Maintain Your C-Ratio</Heading>
-            <Text fontSize="sm" mb="2">As a staker, you’re enabling the creation of synthetic assets by staking collateral (in the form of SNX tokens) to back them. The ratio of the value of staked collateral and the value of synths can vary as market rates fluctuate. It’s important for the system to keep a high c-ratio, ensuring that the synths are properly backed.</Text>
-            <Text fontSize="sm" mb="4">The higher your c-ratio, the greater your share of the fees and rewards. <strong>If your c-ratio drops below your minimum, you may be liquidated and lose your collateral.</strong> There are two ways to increase your c-ratio:</Text>
+            <Text fontSize="sm" mb="2">As a staker, you’re enabling the creation of synthetic assets by providing collateral to back them. Your <strong>C-Ratio</strong> is the value of your staked collateral divided by the value of synths you’re responsible for. It’s important for everyone to keep a high c-ratio, ensuring that the synths are properly backed.</Text>
+            <Text fontSize="sm" mb="4"><strong>If your C-Ratio drops below your minimum of 250%, you may be liquidated and lose your collateral.</strong> There are two ways to increase your C-Ratio:</Text>
 
             <Grid templateColumns='repeat(2, 1fr)' gap={8}>
               <GridItem>
@@ -110,9 +113,6 @@ export default function Synth() {
               </GridItem>
             </Grid>
           </Box>
-
-          <Text fontSize="lg" mb="6">You’ve earned a total of <strong>$2,230</strong> in exchange fees. <Tooltip label="Your fees, earned when the synths in your staking position are exchanged, are automatically deducted from your debt. You can retrieve the earned fees by minting sUSD."><InfoOutlineIcon
-            transform="translateY(-2px)" /></Tooltip></Text>
 
           <Grid mb="8" templateColumns='repeat(2, 1fr)' gap={8}>
             <GridItem mb="4">
