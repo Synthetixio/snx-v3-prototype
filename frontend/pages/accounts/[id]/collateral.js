@@ -70,7 +70,6 @@ export default function Settings() {
                     </Box>
                     <Text fontWeight="600">SNX</Text>
                   </Flex>
-                  <Text fontSize="xs" d="block">&times;10 Voting Power</Text>
                 </MenuItem>
                 <MenuItem alignItems="left" mb={1} flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
                   <Flex flexDirection="row">
@@ -79,7 +78,6 @@ export default function Settings() {
                     </Box>
                     <Text fontWeight="600">LUSD</Text>
                   </Flex>
-                  <Text fontSize="xs" d="block">&times;4 Voting Power</Text>
                 </MenuItem>
                 <MenuItem alignItems="left" flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
                   <Flex flexDirection="row">
@@ -88,16 +86,17 @@ export default function Settings() {
                     </Box>
                     <Text fontWeight="600">ETH</Text>
                   </Flex>
-                  <Text fontSize="xs" d="block">&times;1 Voting Power</Text>
                 </MenuItem>
               </MenuList>
             </Menu>
             <Tooltip label="Configure Staking Position">
               <IconButton onClick={onOpenFund} ml="3" bg="blue.900" color="blue.200" border="1px solid rgba(255,255,255,0.33)" size="lg" aria-label='Configure Staking Position' icon={<SettingsIcon />} />
             </Tooltip>
+            {/*
             <Tooltip label="Configure Lock">
               <IconButton onClick={onOpenLock} ml="3" bg="transparent" border="1px solid rgba(255,255,255,0.33)" size="lg" aria-label='Configure Lock' icon={<LockIcon />} />
             </Tooltip>
+            */}
             <Button size="lg" colorScheme='blue' ml="4" px="8">Stake</Button>
           </Flex>
           <Flex alignItems="center">
@@ -106,7 +105,7 @@ export default function Settings() {
                 Use Max
               </Badge>
             </Text>
-            <Text fontSize="xs" textAlign="right">This will increase your C-Ratio by XX%</Text>
+            {/*<Text fontSize="xs" textAlign="right">This will increase your C-Ratio by XX%</Text>*/}
           </Flex>
         </Box>
 
@@ -119,11 +118,19 @@ export default function Settings() {
                 Amount
               </Th>
               <Th color="white" pb="2">
+                Debt
+              </Th>
+              <Th color="white" pb="2">
+                C-Ratio
+              </Th>
+              <Th color="white" pb="2">
                 Staking Position
               </Th>
+              {/*
               <Th color="white" pb="2">
                 Lock
               </Th>
+              */}
               <Th color="white" pb="2">
               </Th>
             </Tr>
@@ -134,6 +141,14 @@ export default function Settings() {
                 1,000 SNX
                 <Text fontSize="xs" opacity="0.66" mt="1'">$5,264.34</Text>
               </Td>
+              <Td py="4">
+                $3,200
+                <Text fontSize="xs" opacity="0.66" mt="1'">$342 from sUSD</Text>
+              </Td>
+              <Td py="4">
+                400%
+                <Text fontSize="xs" opacity="0.66" mt="1'">{/*target here as well?*/}300% Min.</Text>
+              </Td>
               <Td>
                 <NextLink href={"/funds/example"} passHref>
                   <Link _hover={{ textDecoration: 'none' }} d="inline" borderBottom="1px dotted rgba(255,255,255,0.5)">Spartan Council</Link>
@@ -141,8 +156,9 @@ export default function Settings() {
                 <Link color="blue.400" ml="1">
                   <EditIcon onClick={onOpenFund} style={{ transform: 'translateY(-2px)' }} />
                 </Link>
-                <Text fontSize="xs" opacity="0.66" mt="1'">&times;3 Leverage</Text>
+                {/*<Text fontSize="xs" opacity="0.66" mt="1'">&times;1 Leverage</Text>*/}
               </Td>
+              {/*
               <Td>
                 100 years <Link color="blue.400">
                   <EditIcon onClick={onOpenLock} style={{ transform: 'translateY(-2px)' }} />
@@ -150,10 +166,9 @@ export default function Settings() {
                 <Text fontSize="xs" opacity="0.66" mt="1'">16,000 voting power <Tooltip label="Amount x collateral power modifier x lock power modifier"><QuestionOutlineIcon
                   transform="translateY(-1.5px)" /></Tooltip></Text>
               </Td>
+              */}
               <Td isNumeric>
-                <Tooltip label="You must unlock this collateral before unstaking">
-                  <Button size="xs" colorScheme="red" isDisabled>Unstake</Button>
-                </Tooltip>
+                <Button size="xs" colorScheme="red">Unstake</Button>
               </Td>
             </Tr>
             <Tr>
@@ -161,13 +176,27 @@ export default function Settings() {
                 1,000 LUSD
                 <Text fontSize="xs" opacity="0.66" mt="1'">$1,000.00</Text>
               </Td>
+              <Td py="4">
+                $3,200
+                <Text fontSize="xs" opacity="0.66" mt="1'">$342 from sUSD</Text>
+              </Td>
+              <Td py="4">
+                232%
+                <Text fontSize="xs" opacity="0.66" mt="1'">200% Min.</Text>
+              </Td>
               <Td>
-                <Text opacity="0.66">None</Text>
+                <Text opacity="0.66">None
+                  <Link color="blue.400" ml="1">
+                    <EditIcon onClick={onOpenFund} style={{ transform: 'translateY(-2px)' }} />
+                  </Link></Text>
+                {/*
                 <Text fontSize="xs" mt="1'">
                   <Link onClick={onOpenFund} color="blue.400">
                     Add staking position
                   </Link></Text>
+                */}
               </Td>
+              {/*
               <Td>
                 <Text opacity="0.66" d="inline">None</Text><Link color="blue.400" ml="1">
                   <EditIcon onClick={onOpenLock} style={{ transform: 'translateY(-2px)' }} />
@@ -175,10 +204,12 @@ export default function Settings() {
                 <Text fontSize="xs" opacity="0.66" mt="1'">1,000 voting power <Tooltip label="Amount x collateral power modifier x lock power modifier"><QuestionOutlineIcon
                   transform="translateY(-1.5px)" /></Tooltip></Text>
               </Td>
+              */}
               <Td isNumeric>
                 <Button size="xs" colorScheme="red">Unstake</Button>
               </Td>
             </Tr>
+            {/*
             <Tr>
               <Td py="4">
                 <Text fontSize="xs" mb="1">Total Staked Value</Text>
@@ -193,6 +224,7 @@ export default function Settings() {
               <Td isNumeric>
               </Td>
             </Tr>
+            */}
           </Tbody>
         </Table>
 
@@ -203,8 +235,8 @@ export default function Settings() {
             <ModalCloseButton />
             <ModalBody>
               <EditPosition />
+              {/*
               <Heading size="sm" mb="3">Leverage</Heading>
-
               <Grid templateColumns='repeat(12, 1fr)' gap={6} alignItems="center" mb="6">
                 <GridItem colSpan="3">
                   <InputGroup>
@@ -214,9 +246,9 @@ export default function Settings() {
                 </GridItem>
                 <GridItem colSpan="9">
                   <Text fontSize="sm">Leveraging your staking position allows you to earn more rewards, but your c-ratio is subject to greater volatiity. <em>Use leverage with caution.</em></Text>
-
                 </GridItem>
               </Grid>
+              */}
               <Button w="100%" colorScheme="blue">Update</Button>
             </ModalBody>
           </ModalContent>

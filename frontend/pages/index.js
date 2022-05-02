@@ -51,30 +51,27 @@ export default function Home() {
                   <MenuList px={2} bg="black" border="1px solid rgba(255,255,255,0.33)">
                     <MenuItem alignItems="left" mb={1} flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
                       <Flex flexDirection="row">
-                        <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" mr="1">
+                        <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" mr="2">
                           <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png" />
                         </Box>
                         <Text fontWeight="600">SNX</Text>
                       </Flex>
-                      <Text fontSize="xs" d="block">&times;10 Voting Power</Text>
                     </MenuItem>
                     <MenuItem alignItems="left" mb={1} flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
                       <Flex flexDirection="row">
-                        <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" mr="1">
+                        <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" mr="2">
                           <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x5f98805A4E8be255a32880FDeC7F6728C6568bA0/logo.png" />
                         </Box>
                         <Text fontWeight="600">LUSD</Text>
                       </Flex>
-                      <Text fontSize="xs" d="block">&times;4 Voting Power</Text>
                     </MenuItem>
                     <MenuItem alignItems="left" flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
                       <Flex flexDirection="row">
-                        <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" mr="1">
+                        <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" mr="2">
                           <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" />
                         </Box>
                         <Text fontWeight="600">ETH</Text>
                       </Flex>
-                      <Text fontSize="xs" d="block">&times;1 Voting Power</Text>
                     </MenuItem>
                   </MenuList>
                 </Menu>

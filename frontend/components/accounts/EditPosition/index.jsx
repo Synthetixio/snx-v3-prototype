@@ -14,7 +14,6 @@ import {
   RadioGroup,
   Spacer,
 } from "@chakra-ui/react";
-import Router from "next/router";
 import StakerOption from "./StakerOption";
 import SynthOption from "./SynthOption";
 import { useState } from "react";
@@ -123,7 +122,7 @@ export default function Position() {
           </TabPanel>
           <TabPanel>
             <Text textAlign="center" my="4">
-              Explain how/why you wouldn’t have a staking position
+              This collateral is not assigned to a fund.
             </Text>
           </TabPanel>
         </TabPanels>
