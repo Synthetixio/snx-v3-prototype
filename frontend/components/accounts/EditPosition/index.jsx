@@ -121,8 +121,19 @@ export default function Position() {
             </Flex>
           </TabPanel>
           <TabPanel>
-            <Text textAlign="center" my="4">
-              This collateral is not assigned to a fund.
+            <Text textAlign="center" mt="9" mb="3">
+              This collateral will not take a staking position.
+            </Text>
+            <Text
+              textAlign="center"
+              mb="6"
+              mx="12"
+              fontSize="sm"
+              color="gray.500"
+            >
+              This is typically used to take out a loan of sUSD against your
+              collateral. Your C-Ratio is subject to less fluctuation, but you
+              receive no fees or rewards.
             </Text>
           </TabPanel>
         </TabPanels>

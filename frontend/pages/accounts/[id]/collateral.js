@@ -18,11 +18,10 @@ import {
   Button,
   IconButton,
   useDisclosure,
-  InputLeftAddon,
   Grid, GridItem, Progress, FormControl, FormLabel, InputGroup, InputRightAddon, ButtonGroup,
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody
 } from '@chakra-ui/react'
-import { ChevronLeftIcon, EditIcon, QuestionOutlineIcon, ChevronDownIcon, LockIcon, SettingsIcon, CalendarIcon } from '@chakra-ui/icons'
+import { ChevronLeftIcon, EditIcon, WarningIcon, ChevronDownIcon, SettingsIcon, CalendarIcon } from '@chakra-ui/icons'
 
 import EditPosition from '../../../components/accounts/EditPosition/index'
 
@@ -47,71 +46,9 @@ export default function Settings() {
 
         <Text mb="6">Enable the creation of synthetic assets on the blockchain by staking with Synthetix. Improve your c-ratio and reduce risk of liquidation by providing more collateral.</Text>
 
-        <Heading size="md" mb="2">Stake Additional Collateral</Heading>
+        <Heading size="md" mb="3">Staked Collateral</Heading>
 
-        <Box bg="gray.900" mb="8" p="6" pb="4" borderRadius="12px">
-          <Flex mb="3">
-            <Input size="lg" border="none" placeholder='0.0' />
-            <Menu>
-              <MenuButton ml="4" border="1px solid rgba(255,255,255,0.33)" borderRadius="6px" alignItems="center" cursor="pointer">
-                <Flex>
-                  <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" ml="3.5" mr="1">
-                    <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png" />
-                  </Box>
-                  <Text fontWeight="600">SNX</Text>
-                  <ChevronDownIcon opacity="0.66" w="5" h="5" ml="4" mr="2" />
-                </Flex>
-              </MenuButton>
-              <MenuList px={2} bg="black" border="1px solid rgba(255,255,255,0.33)">
-                <MenuItem alignItems="left" mb={1} flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
-                  <Flex flexDirection="row">
-                    <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" mr="1">
-                      <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png" />
-                    </Box>
-                    <Text fontWeight="600">SNX</Text>
-                  </Flex>
-                </MenuItem>
-                <MenuItem alignItems="left" mb={1} flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
-                  <Flex flexDirection="row">
-                    <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" mr="1">
-                      <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x5f98805A4E8be255a32880FDeC7F6728C6568bA0/logo.png" />
-                    </Box>
-                    <Text fontWeight="600">LUSD</Text>
-                  </Flex>
-                </MenuItem>
-                <MenuItem alignItems="left" flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
-                  <Flex flexDirection="row">
-                    <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" mr="1">
-                      <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" />
-                    </Box>
-                    <Text fontWeight="600">ETH</Text>
-                  </Flex>
-                </MenuItem>
-              </MenuList>
-            </Menu>
-            <Tooltip label="Configure Staking Position">
-              <IconButton onClick={onOpenFund} ml="3" bg="blue.900" color="blue.200" border="1px solid rgba(255,255,255,0.33)" size="lg" aria-label='Configure Staking Position' icon={<SettingsIcon />} />
-            </Tooltip>
-            {/*
-            <Tooltip label="Configure Lock">
-              <IconButton onClick={onOpenLock} ml="3" bg="transparent" border="1px solid rgba(255,255,255,0.33)" size="lg" aria-label='Configure Lock' icon={<LockIcon />} />
-            </Tooltip>
-            */}
-            <Button size="lg" colorScheme='blue' ml="4" px="8">Stake</Button>
-          </Flex>
-          <Flex alignItems="center">
-            <Text fontSize="xs" mr="auto">Balance: 2,000
-              <Badge ml="2" variant='outline' colorScheme='blue' transform="translateY(-1px)">
-                Use Max
-              </Badge>
-            </Text>
-            {/*<Text fontSize="xs" textAlign="right">This will increase your C-Ratio by XX%</Text>*/}
-          </Flex>
-        </Box>
-
-        <Heading size="sm" mb="2">Staked Collateral</Heading>
-
-        <Table size="sm" variant="simple" mb="8">
+        <Table size="sm" variant="simple" mb="9">
           <Thead>
             <Tr>
               <Th color="white" pb="2">
@@ -181,7 +118,7 @@ export default function Settings() {
                 <Text fontSize="xs" opacity="0.66" mt="1'">$342 from sUSD</Text>
               </Td>
               <Td py="4">
-                232%
+                <Text fontWeight="bold" color="red">232% <WarningIcon transform="translateY(-1px)" /></Text>
                 <Text fontSize="xs" opacity="0.66" mt="1'">200% Min.</Text>
               </Td>
               <Td>
@@ -227,6 +164,67 @@ export default function Settings() {
             */}
           </Tbody>
         </Table>
+
+        <Heading size="md" mb="3">Stake Additional Collateral</Heading>
+        <Box bg="gray.900" mb="8" p="6" pb="4" borderRadius="12px">
+          <Flex mb="3">
+            <Input size="lg" border="none" placeholder='0.0' />
+            <Menu>
+              <MenuButton ml="4" border="1px solid rgba(255,255,255,0.33)" borderRadius="6px" alignItems="center" cursor="pointer">
+                <Flex>
+                  <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" ml="3.5" mr="1">
+                    <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png" />
+                  </Box>
+                  <Text fontWeight="600">SNX</Text>
+                  <ChevronDownIcon opacity="0.66" w="5" h="5" ml="4" mr="2" />
+                </Flex>
+              </MenuButton>
+              <MenuList px={2} bg="black" border="1px solid rgba(255,255,255,0.33)">
+                <MenuItem alignItems="left" mb={1} flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
+                  <Flex flexDirection="row">
+                    <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" mr="1">
+                      <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png" />
+                    </Box>
+                    <Text fontWeight="600">SNX</Text>
+                  </Flex>
+                </MenuItem>
+                <MenuItem alignItems="left" mb={1} flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
+                  <Flex flexDirection="row">
+                    <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" mr="1">
+                      <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x5f98805A4E8be255a32880FDeC7F6728C6568bA0/logo.png" />
+                    </Box>
+                    <Text fontWeight="600">LUSD</Text>
+                  </Flex>
+                </MenuItem>
+                <MenuItem alignItems="left" flexDirection="column" _hover={{ bg: 'gray.800' }} _focus={{ bg: 'gray.800' }} _active={{ bg: 'gray.800' }}>
+                  <Flex flexDirection="row">
+                    <Box w="24px" h="24px" borderRadius="12px" overflow="hidden" mr="1">
+                      <img width="24" height="24" src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" />
+                    </Box>
+                    <Text fontWeight="600">ETH</Text>
+                  </Flex>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+            <Tooltip label="Configure Staking Position">
+              <IconButton onClick={onOpenFund} ml="3" bg="blue.900" color="blue.200" border="1px solid rgba(255,255,255,0.33)" size="lg" aria-label='Configure Staking Position' icon={<SettingsIcon />} />
+            </Tooltip>
+            {/*
+            <Tooltip label="Configure Lock">
+              <IconButton onClick={onOpenLock} ml="3" bg="transparent" border="1px solid rgba(255,255,255,0.33)" size="lg" aria-label='Configure Lock' icon={<LockIcon />} />
+            </Tooltip>
+            */}
+            <Button size="lg" colorScheme='blue' ml="4" px="8">Stake</Button>
+          </Flex>
+          <Flex alignItems="center">
+            <Text fontSize="xs" mr="auto">Balance: 2,000
+              <Badge ml="2" variant='outline' colorScheme='blue' transform="translateY(-1px)">
+                Use Max
+              </Badge>
+            </Text>
+            {/*<Text fontSize="xs" textAlign="right">This will increase your C-Ratio by XX%</Text>*/}
+          </Flex>
+        </Box>
 
         <Modal size="2xl" isOpen={isOpenFund} onClose={onCloseFund}>
           <ModalOverlay />
