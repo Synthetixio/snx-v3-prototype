@@ -15,6 +15,7 @@ import Image from "next/image";
 import logo from "../../public/logo.png";
 import NextLink from "next/link";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export default function Header() {
   return (
@@ -63,12 +64,13 @@ export default function Header() {
         </Box>
         <Spacer />
         <Box>
-          <Button colorScheme="blue" size="xs" mr="2">
-            Network Selector
-          </Button>
-          <Button colorScheme="blue" size="xs">
-            Connect Wallet
-          </Button>
+          <ConnectButton
+            showBalance={false}
+            accountStatus={{
+              smallScreen: "avatar",
+              largeScreen: "full",
+            }}
+          />
         </Box>
       </Flex>
     </Container>
