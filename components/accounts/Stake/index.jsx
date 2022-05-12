@@ -5,10 +5,6 @@ import {
   Badge,
   Flex,
   Input,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   Button,
   IconButton,
   Modal,
@@ -18,47 +14,66 @@ import {
   ModalCloseButton,
   ModalBody,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import {
-  ChevronDownIcon,
-  SettingsIcon,
-  InfoOutlineIcon,
-} from "@chakra-ui/icons";
+import { SettingsIcon, InfoOutlineIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import EditPosition from "../EditPosition/index";
 import Router from "next/router";
-import { useContractWrite } from "wagmi";
+import CollateralTypeSelector from "./CollateralTypeSelector";
+import Balance from "./Balance";
+import { useMulticall } from "../../../utils/index";
 
 export default function Stake({ createAccount }) {
+  // on loading dropdown and token amount https://chakra-ui.com/docs/components/feedback/skeleton ?
+  const toast = useToast();
   const {
     isOpen: isOpenFund,
     onOpen: onOpenFund,
     onClose: onCloseFund,
   } = useDisclosure();
   const [loading, setLoading] = useState(false);
+  const [amount, setAmount] = useState(0);
+  const [inputAmount, setInputAmount] = useState(0); // accounts for decimals
+  const [collateralType, setCollateralType] = useState({});
 
-  const { data, isError, isLoading, write } = useContractWrite(
-    {
-      addressOrName: "0xecb504d39723b0be0e3a9aa33d646642d1051ee1",
-      contractInterface: [],
-    },
-    "feed"
-  );
+  const updateAmount = (val) => {
+    setAmount(val);
+    setInputAmount(val); // divide by decimals and convert to float
+  };
 
-  const onSubmit = (e) => {
+  const updateInputAmount = (val) => {
+    setInputAmount(val);
+    setAmount(val); // multiple by decimals and convert to BN
+  };
+
+  const onSubmit = async (e) => {
     e.preventDefault();
-    e.stopPropagation();
-
     setLoading(true);
 
-    write();
-
-    // on loading dropdown and token amount https://chakra-ui.com/docs/components/feedback/skeleton ?
-    // set button to loading
+    // Can we have global error handling, toasts for reversions, etc.?
     if (createAccount) {
+      /*
+      const accountId = await getAvailableAccountId();
+      const { data, isError, isLoading, write } = useMulticall([
+        [], // Mint account token
+        [], // Stake specified collateral (collateralType.address) -> convert to wETH if necessary
+        [], // Join the Spartan Council fund // spartan council fund id is retrieved from the configurable value on-chain
+      ]);
+      write();
+      */
+      toast({
+        title: "Approve the transaction to create your account",
+        description: "You’ll be redirected once your transaction is processed.",
+        status: "info",
+        duration: 9000,
+        isClosable: true,
+      });
+      // Wait on an 'account token created' event, then redirect below
       Router.push("/accounts/id");
     } else {
       // toast
+      setLoading(false);
     }
   };
 
@@ -67,115 +82,23 @@ export default function Stake({ createAccount }) {
       <Box bg="gray.900" mb="8" p="6" pb="4" borderRadius="12px">
         <form onSubmit={onSubmit}>
           <Flex mb="3">
-            <Input size="lg" border="none" placeholder="0.0" />
-            <Menu>
-              <MenuButton
-                ml="4"
-                border="1px solid rgba(255,255,255,0.33)"
-                borderRadius="6px"
-                alignItems="center"
-                cursor="pointer"
-              >
-                <Flex>
-                  <Box
-                    w="24px"
-                    h="24px"
-                    borderRadius="12px"
-                    overflow="hidden"
-                    ml="3.5"
-                    mr="1"
-                  >
-                    <img
-                      width="24"
-                      height="24"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png"
-                    />
-                  </Box>
-                  <Text fontWeight="600">SNX</Text>
-                  <ChevronDownIcon opacity="0.66" w="5" h="5" ml="4" mr="2" />
-                </Flex>
-              </MenuButton>
-              <MenuList
-                px={2}
-                bg="black"
-                border="1px solid rgba(255,255,255,0.33)"
-              >
-                <MenuItem
-                  alignItems="left"
-                  mb={1}
-                  flexDirection="column"
-                  _hover={{ bg: "gray.800" }}
-                  _focus={{ bg: "gray.800" }}
-                  _active={{ bg: "gray.800" }}
-                >
-                  <Flex flexDirection="row">
-                    <Box
-                      w="24px"
-                      h="24px"
-                      borderRadius="12px"
-                      overflow="hidden"
-                      mr="1"
-                    >
-                      <img
-                        width="24"
-                        height="24"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png"
-                      />
-                    </Box>
-                    <Text fontWeight="600">SNX</Text>
-                  </Flex>
-                </MenuItem>
-                <MenuItem
-                  alignItems="left"
-                  mb={1}
-                  flexDirection="column"
-                  _hover={{ bg: "gray.800" }}
-                  _focus={{ bg: "gray.800" }}
-                  _active={{ bg: "gray.800" }}
-                >
-                  <Flex flexDirection="row">
-                    <Box
-                      w="24px"
-                      h="24px"
-                      borderRadius="12px"
-                      overflow="hidden"
-                      mr="1"
-                    >
-                      <img
-                        width="24"
-                        height="24"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x5f98805A4E8be255a32880FDeC7F6728C6568bA0/logo.png"
-                      />
-                    </Box>
-                    <Text fontWeight="600">LUSD</Text>
-                  </Flex>
-                </MenuItem>
-                <MenuItem
-                  alignItems="left"
-                  flexDirection="column"
-                  _hover={{ bg: "gray.800" }}
-                  _focus={{ bg: "gray.800" }}
-                  _active={{ bg: "gray.800" }}
-                >
-                  <Flex flexDirection="row">
-                    <Box
-                      w="24px"
-                      h="24px"
-                      borderRadius="12px"
-                      overflow="hidden"
-                      mr="1"
-                    >
-                      <img
-                        width="24"
-                        height="24"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                      />
-                    </Box>
-                    <Text fontWeight="600">ETH</Text>
-                  </Flex>
-                </MenuItem>
-              </MenuList>
-            </Menu>
+            <Input
+              type="number"
+              size="lg"
+              border="none"
+              placeholder="0.0"
+              mr="4"
+              value={inputAmount}
+              onChange={(e) => {
+                updateInputAmount(e.target.value);
+              }}
+            />
+            <CollateralTypeSelector
+              handleChange={(selectedCollateralType) => {
+                setCollateralType(selectedCollateralType);
+                updateAmount(0);
+              }}
+            />
             {!createAccount && (
               <Tooltip label="Configure Staking Position">
                 <IconButton
@@ -191,12 +114,13 @@ export default function Stake({ createAccount }) {
               </Tooltip>
             )}
             {/*
-        <Tooltip label="Configure Lock">
-          <IconButton onClick={onOpenLock} ml="3" bg="transparent" border="1px solid rgba(255,255,255,0.33)" size="lg" aria-label='Configure Lock' icon={<LockIcon />} />
-        </Tooltip>
-        */}
+              <Tooltip label="Configure Lock">
+                <IconButton onClick={onOpenLock} ml="3" bg="transparent" border="1px solid rgba(255,255,255,0.33)" size="lg" aria-label='Configure Lock' icon={<LockIcon />} />
+              </Tooltip>
+            */}
             <Button
               isLoading={loading}
+              isDisabled={!amount}
               size="lg"
               colorScheme="blue"
               ml="4"
@@ -208,17 +132,12 @@ export default function Stake({ createAccount }) {
           </Flex>
         </form>
         <Flex alignItems="center">
-          <Text fontSize="xs" mr="auto">
-            Balance: 2,000
-            <Badge
-              ml="2"
-              variant="outline"
-              colorScheme="blue"
-              transform="translateY(-1px)"
-            >
-              Use Max
-            </Badge>
-          </Text>
+          <Box mr="auto">
+            <Balance
+              tokenAddress={collateralType.address}
+              onUseMax={(maxAmount) => updateAmount(maxAmount)}
+            />
+          </Box>
           {createAccount && (
             <Text fontSize="xs" textAlign="right">
               Receive an snxAccount token{" "}
@@ -236,19 +155,19 @@ export default function Stake({ createAccount }) {
           <ModalBody>
             <EditPosition />
             {/*
-          <Heading size="sm" mb="3">Leverage</Heading>
-          <Grid templateColumns='repeat(12, 1fr)' gap={6} alignItems="center" mb="6">
-            <GridItem colSpan="3">
-              <InputGroup>
-                <InputLeftAddon bg="black">&times;</InputLeftAddon>
-                <Input id='amount' type='amount' borderLeft="none" value="1" />
-              </InputGroup>
-            </GridItem>
-            <GridItem colSpan="9">
-              <Text fontSize="sm">Leveraging your staking position allows you to earn more rewards, but your c-ratio is subject to greater volatiity. <em>Use leverage with caution.</em></Text>
-            </GridItem>
-          </Grid>
-          */}
+              <Heading size="sm" mb="3">Leverage</Heading>
+              <Grid templateColumns='repeat(12, 1fr)' gap={6} alignItems="center" mb="6">
+                <GridItem colSpan="3">
+                  <InputGroup>
+                    <InputLeftAddon bg="black">&times;</InputLeftAddon>
+                    <Input id='amount' type='amount' borderLeft="none" value="1" />
+                  </InputGroup>
+                </GridItem>
+                <GridItem colSpan="9">
+                  <Text fontSize="sm">Leveraging your staking position allows you to earn more rewards, but your c-ratio is subject to greater volatiity. <em>Use leverage with caution.</em></Text>
+                </GridItem>
+              </Grid>
+            */}
             <Button w="100%" colorScheme="blue">
               Update
             </Button>
