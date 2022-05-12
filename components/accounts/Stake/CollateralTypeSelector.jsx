@@ -16,13 +16,15 @@ export default function CollateralTypeSelector({ handleChange }) {
   // on loading dropdown and token amount https://chakra-ui.com/docs/components/feedback/skeleton ?
 
   const [collateralTypes] = useRecoilState(collateralTypesState);
-  const [collateralType, setCollateralType] = useState(collateralTypes[0]);
+  const [collateralType, setCollateralType] = useState(
+    Object.values(collateralTypes)[0]
+  );
   useEffect(() => {
     handleChange(collateralType);
   }, [collateralType]);
 
   return (
-    collateralTypes.length && (
+    Object.values(collateralTypes).length && (
       <Menu>
         <MenuButton
           border="1px solid rgba(255,255,255,0.33)"
@@ -47,7 +49,7 @@ export default function CollateralTypeSelector({ handleChange }) {
           </Flex>
         </MenuButton>
         <MenuList px={2} bg="black" border="1px solid rgba(255,255,255,0.33)">
-          {collateralTypes.map((collateralType, ind) => (
+          {Object.values(collateralTypes).map((collateralType) => (
             <MenuItem
               key={collateralType.ticker}
               alignItems="left"
@@ -56,7 +58,7 @@ export default function CollateralTypeSelector({ handleChange }) {
               _hover={{ bg: "gray.800" }}
               _focus={{ bg: "gray.800" }}
               _active={{ bg: "gray.800" }}
-              onClick={() => setCollateralType(collateralTypes[ind])}
+              onClick={() => setCollateralType(collateralType)}
             >
               <Flex flexDirection="row">
                 <Box

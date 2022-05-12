@@ -2,7 +2,6 @@ import {
   Box,
   Text,
   Tooltip,
-  Badge,
   Flex,
   Input,
   Button,
@@ -22,6 +21,8 @@ import EditPosition from "../EditPosition/index";
 import Router from "next/router";
 import CollateralTypeSelector from "./CollateralTypeSelector";
 import Balance from "./Balance";
+import { useRecoilState } from "recoil";
+import { collateralTypesState } from "../../../state/index";
 import { useMulticall } from "../../../utils/index";
 
 export default function Stake({ createAccount }) {
@@ -32,6 +33,7 @@ export default function Stake({ createAccount }) {
     onOpen: onOpenFund,
     onClose: onCloseFund,
   } = useDisclosure();
+  const [collateralTypes] = useRecoilState(collateralTypesState);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState(0);
   const [inputAmount, setInputAmount] = useState(""); // accounts for decimals
@@ -141,7 +143,12 @@ export default function Stake({ createAccount }) {
           {createAccount && (
             <Text fontSize="xs" textAlign="right">
               Receive an snxAccount token{" "}
-              <InfoOutlineIcon transform="translateY(-1.5px)" />
+              <Tooltip
+                textAlign="center"
+                label="You will be minted an NFT that represents your account. You can easily transfer it between wallets."
+              >
+                <InfoOutlineIcon transform="translateY(-1.5px)" />
+              </Tooltip>
             </Text>
           )}
         </Flex>
