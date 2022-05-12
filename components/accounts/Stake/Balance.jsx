@@ -1,7 +1,11 @@
 import { useAccount, useContractRead, erc20ABI } from "wagmi";
 import { Text, Badge } from "@chakra-ui/react";
+import { useRecoilState } from "recoil";
+import { collateralTypesState } from "../../../state/index";
 
 export default function Balance({ tokenAddress, onUseMax }) {
+  const [collateralTypes] = useRecoilState(collateralTypesState); // to get decimals for display
+
   const { data: accountData } = useAccount();
   const accountAddress = accountData?.address;
 
@@ -21,18 +25,20 @@ export default function Balance({ tokenAddress, onUseMax }) {
   return (
     <Text fontSize="xs">
       Balance: {balance.toLocaleString()}
-      <Badge
-        as="button"
-        ml="2"
-        variant="outline"
-        colorScheme="blue"
-        transform="translateY(-1px)"
-        onClick={() => {
-          onUseMax(balance);
-        }}
-      >
-        Use Max
-      </Badge>
+      {balance > 0 && (
+        <Badge
+          as="button"
+          ml="2"
+          variant="outline"
+          colorScheme="blue"
+          transform="translateY(-1px)"
+          onClick={() => {
+            onUseMax(balance);
+          }}
+        >
+          Use Max
+        </Badge>
+      )}
     </Text>
   );
 }

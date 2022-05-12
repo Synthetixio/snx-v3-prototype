@@ -1,7 +1,7 @@
 import { ChakraProvider, Box } from '@chakra-ui/react'
 import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
-
+import { RecoilRoot } from 'recoil';
 import '@rainbow-me/rainbowkit/styles.css';
 import {
   apiProvider,
@@ -32,31 +32,33 @@ const wagmiClient = createClient({
 
 function MyApp({ Component, pageProps }) {
   return (
-    <WagmiProvider client={wagmiClient}>
-      <RainbowKitProvider theme={darkTheme({
-        accentColor: 'rgb(49, 130, 206)',
-        accentColorForeground: 'white',
-        borderRadius: 'small',
-        fontStack: 'system',
-      })} chains={chains}>
-        <ChakraProvider>
-          <Box
-            as="main"
-            background="black"
-            minHeight="100vh"
-            color="rgba(255,255,255,0.85)"
-            d="flex"
-            flexDirection="column"
-          >
-            <Box flex="1">
-              <Header />
-              <Component {...pageProps} />
+    <RecoilRoot>
+      <WagmiProvider client={wagmiClient}>
+        <RainbowKitProvider theme={darkTheme({
+          accentColor: 'rgb(49, 130, 206)',
+          accentColorForeground: 'white',
+          borderRadius: 'small',
+          fontStack: 'system',
+        })} chains={chains}>
+          <ChakraProvider>
+            <Box
+              as="main"
+              background="black"
+              minHeight="100vh"
+              color="rgba(255,255,255,0.85)"
+              d="flex"
+              flexDirection="column"
+            >
+              <Box flex="1">
+                <Header />
+                <Component {...pageProps} />
+              </Box>
+              <Footer />
             </Box>
-            <Footer />
-          </Box>
-        </ChakraProvider>
-      </RainbowKitProvider>
-    </WagmiProvider>
+          </ChakraProvider>
+        </RainbowKitProvider>
+      </WagmiProvider>
+    </RecoilRoot>
   )
 }
 export default MyApp

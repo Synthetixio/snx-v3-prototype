@@ -34,16 +34,16 @@ export default function Stake({ createAccount }) {
   } = useDisclosure();
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState(0);
-  const [inputAmount, setInputAmount] = useState(0); // accounts for decimals
+  const [inputAmount, setInputAmount] = useState(""); // accounts for decimals
   const [collateralType, setCollateralType] = useState({});
 
   const updateAmount = (val) => {
     setAmount(val);
-    setInputAmount(val); // divide by decimals and convert to float
+    setInputAmount(val || ""); // divide by decimals and convert to float, use '' if 0
   };
 
   const updateInputAmount = (val) => {
-    setInputAmount(val);
+    setInputAmount(val || ""); // use '' if 0
     setAmount(val); // multiple by decimals and convert to BN
   };
 
