@@ -14,9 +14,18 @@ import {
   ModalBody,
   useDisclosure,
   useToast,
+  Grid,
+  GridItem,
+  Heading,
+  Progress,
+  FormControl,
+  FormLabel,
+  InputGroup,
+  InputRightAddon,
+  ButtonGroup,
 } from "@chakra-ui/react";
 import { useAccount, useContractRead, erc20ABI } from "wagmi";
-import { SettingsIcon, InfoOutlineIcon } from "@chakra-ui/icons";
+import { SettingsIcon, InfoOutlineIcon, CalendarIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import EditPosition from "../EditPosition/index";
 import Router from "next/router";
@@ -36,6 +45,11 @@ export default function Stake({ createAccount }) {
     isOpen: isOpenFund,
     onOpen: onOpenFund,
     onClose: onCloseFund,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenLock,
+    onOpen: onOpenLock,
+    onClose: onCloseLock,
   } = useDisclosure();
 
   const { data: accountData } = useAccount();
@@ -96,7 +110,7 @@ export default function Stake({ createAccount }) {
         isClosable: true,
       });
       // Wait on an 'account token created' event, then redirect below
-      Router.push("/accounts/id");
+      Router.push("/accounts/1234");
     } else {
       // toast
       setLoading(false);
@@ -204,6 +218,93 @@ export default function Stake({ createAccount }) {
             <Button w="100%" colorScheme="blue">
               Update
             </Button>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      <Modal size="2xl" isOpen={isOpenLock} onClose={onCloseLock}>
+        <ModalOverlay />
+        <ModalContent bg="black" color="white">
+          <ModalHeader>Manage Lock [WIP]</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Grid templateColumns="repeat(2, 1fr)" gap={6} alignItems="center">
+              <GridItem mb="4">
+                Lock your staked SNX tokens to increase your rewards, fees, and
+                voting power. Benefits scale the longer you lock.
+              </GridItem>
+              <GridItem mb="4">
+                <Heading mb="1.5" size="sm">
+                  Locked SNX
+                </Heading>
+                <Progress
+                  mb="1"
+                  value="23"
+                  colorScheme="green"
+                  size="sm"
+                  borderRadius="4"
+                />
+                <Text fontSize="xs">
+                  Total Locked SNX: 2.3MM
+                  <br />
+                  SNX Floating Supply: 8.2MM
+                </Text>
+              </GridItem>
+            </Grid>
+
+            <Heading mb="2" size="md">
+              Lock Collateral
+            </Heading>
+
+            <Heading mb="2" size="md">
+              Extend Lock
+            </Heading>
+
+            <Grid mb="2" templateColumns="repeat(3, 1fr)" gap={4}>
+              <GridItem mb="4">
+                <FormControl>
+                  <FormLabel htmlFor="amount">Amount</FormLabel>
+                  <InputGroup size="sm">
+                    <Input id="amount" type="amount" />
+                    <InputRightAddon color="black">SNX</InputRightAddon>
+                  </InputGroup>
+                </FormControl>
+              </GridItem>
+              <GridItem mb="4">
+                <FormControl mb="6">
+                  <FormLabel htmlFor="name">Lock Duration</FormLabel>
+                  <ButtonGroup
+                    size="sm"
+                    isAttached
+                    colorScheme="blue"
+                    variant="outline"
+                  >
+                    <Button mr="-px">1W</Button>
+                    <Button mr="-px">1M</Button>
+                    <Button mr="-px">3M</Button>
+                    <Button mr="-px">6M</Button>
+                    <Button mr="-px">1Y</Button>
+                    <Button mr="-px">2Y</Button>
+                    <IconButton aria-label="Custom" icon={<CalendarIcon />} />
+                  </ButtonGroup>
+                </FormControl>
+              </GridItem>
+              <GridItem mb="4">
+                <Button size="sm" colorScheme="blue" w="100%" mt="8">
+                  Lock
+                </Button>
+              </GridItem>
+            </Grid>
+
+            <Heading mb="2" size="md">
+              Unlock
+            </Heading>
+
+            <Text>
+              You can unlock your collateral early, allowing you to unstake it,
+              but will incur a penalty of <strong>50%</strong>. The penalized
+              collateral is liquidated.
+            </Text>
           </ModalBody>
         </ModalContent>
       </Modal>

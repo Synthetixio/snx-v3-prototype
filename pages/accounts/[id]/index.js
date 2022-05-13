@@ -26,16 +26,16 @@ import {
   ButtonGroup,
   InputLeftAddon,
   IconButton,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription
 } from '@chakra-ui/react'
+import { useRouter } from "next/router";
 import Position from '../../../components/accounts/Position/index'
 import { InfoOutlineIcon, CalendarIcon, SettingsIcon } from '@chakra-ui/icons'
 
-export default function Synth() {
+export default function Account() {
   // If the connect wallet doesn’t own this LP token, remove the c-ratio maintenance component, unstake component, and hedging component. The edit component should be a read component and add a button that opens the edit ui when the connect wallet owns the LP token. Also, editable version here for easy mode need to be rethought. Also, informing the user how changing their position will effect the c-ratio and rewards. This whole view probably needs and advanced mode to handle burning on a per pool basis.
+
+  const router = useRouter();
+  const { id } = router.query;
 
   const { isOpen: isOpenPosition, onOpen: onOpenPosition, onClose: onClosePosition } = useDisclosure()
   const { isOpen: isOpenLocks, onOpen: onOpenLocks, onClose: onCloseLocks } = useDisclosure()
@@ -43,13 +43,13 @@ export default function Synth() {
   return (
     <Box>
       <Head>
-        <title>Account</title>
+        <title>Account #{id}</title>
         <meta name="description" content="Account" />
       </Head>
       <Container maxW='container.sm'>
         <Box>
           <Flex mb="6" alignItems="center">
-            <Text fontWeight="semibold" fontSize="md">Account #1324</Text>
+            <Text fontWeight="semibold" fontSize="md">Account #{id}</Text>
             <NextLink href={"/accounts/example/settings"} passHref>
               <Link ml="auto" fontSize="xs" fontWeight="normal" color="blue.400"><SettingsIcon transform="translateY(-1px)" /> Account Settings</Link>
             </NextLink>
