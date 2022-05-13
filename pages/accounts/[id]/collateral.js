@@ -40,7 +40,7 @@ export default function Settings() {
         <Flex mb="6" alignItems="center">
           <Text fontWeight="semibold" fontSize="md">Account #1324</Text>
           <NextLink href={"/accounts/example"} passHref>
-            <Link ml="auto" fontSize="xs" fontWeight="normal" color="blue.400"><ChevronLeftIcon /> Return to overview</Link>
+            <Link ml="auto" fontSize="xs" fontWeight="normal" color="blue.400"><ChevronLeftIcon transform="translateY(-1px)" /> Return to overview</Link>
           </NextLink>
         </Flex>
 

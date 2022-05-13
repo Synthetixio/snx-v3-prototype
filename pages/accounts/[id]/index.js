@@ -51,7 +51,7 @@ export default function Synth() {
           <Flex mb="6" alignItems="center">
             <Text fontWeight="semibold" fontSize="md">Account #1324</Text>
             <NextLink href={"/accounts/example/settings"} passHref>
-              <Link ml="auto" fontSize="xs" fontWeight="normal" color="blue.400"><SettingsIcon /> Account Settings</Link>
+              <Link ml="auto" fontSize="xs" fontWeight="normal" color="blue.400"><SettingsIcon transform="translateY(-1px)" /> Account Settings</Link>
             </NextLink>
           </Flex>
           <Grid mb="3" textAlign="center" templateColumns='repeat(4, 1fr)' gap={6}>
