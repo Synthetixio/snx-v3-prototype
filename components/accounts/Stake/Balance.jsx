@@ -1,27 +1,11 @@
-import { useAccount, useContractRead, erc20ABI } from "wagmi";
 import { Text, Badge } from "@chakra-ui/react";
 import { useRecoilState } from "recoil";
 import { collateralTypesState } from "../../../state/index";
 import { BigNumber } from "ethers";
 
-export default function Balance({ tokenAddress, onUseMax }) {
+export default function Balance({ balance, tokenAddress, onUseMax }) {
   const [collateralTypes] = useRecoilState(collateralTypesState); // to get decimals for display
   const collateralType = collateralTypes[tokenAddress];
-  const { data: accountData } = useAccount();
-  const accountAddress = accountData?.address;
-
-  const { data: balanceData } = useContractRead(
-    {
-      addressOrName: tokenAddress,
-      contractInterface: erc20ABI,
-    },
-    "balanceOf",
-    {
-      args: accountAddress,
-    }
-  );
-
-  let balance = balanceData || BigNumber.from(0);
   if (collateralType) {
     balance = balance.div(BigNumber.from(10).pow(collateralType.decimals));
   }

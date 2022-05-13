@@ -15,6 +15,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { useAccount, useContractRead, erc20ABI } from "wagmi";
 import { SettingsIcon, InfoOutlineIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import EditPosition from "../EditPosition/index";
@@ -25,17 +26,32 @@ import { BigNumber } from "ethers";
 import { useMulticall } from "../../../utils/index";
 
 export default function Stake({ createAccount }) {
-  // on loading dropdown and token amount https://chakra-ui.com/docs/components/feedback/skeleton ?
+  // on loading dropdown and token amount maybe use https://chakra-ui.com/docs/components/feedback/skeleton
   const toast = useToast();
+  const [loading, setLoading] = useState(false);
+  const [amount, setAmount] = useState(BigNumber.from(0));
+  const [inputAmount, setInputAmount] = useState(""); // accounts for decimals
+  const [collateralType, setCollateralType] = useState({});
   const {
     isOpen: isOpenFund,
     onOpen: onOpenFund,
     onClose: onCloseFund,
   } = useDisclosure();
-  const [loading, setLoading] = useState(false);
-  const [amount, setAmount] = useState(0);
-  const [inputAmount, setInputAmount] = useState(""); // accounts for decimals
-  const [collateralType, setCollateralType] = useState({});
+
+  const { data: accountData } = useAccount();
+  const accountAddress = accountData?.address;
+  const { data: balanceData } = useContractRead(
+    {
+      addressOrName: collateralType.address,
+      contractInterface: erc20ABI,
+    },
+    "balanceOf",
+    {
+      args: accountAddress,
+    }
+  );
+  let balance = balanceData || BigNumber.from(0);
+  let sufficientFunds = balance.gte(amount);
 
   const updateAmount = (val) => {
     setAmount(val);
@@ -93,6 +109,7 @@ export default function Stake({ createAccount }) {
         <form onSubmit={onSubmit}>
           <Flex mb="3">
             <Input
+              flex="1"
               type="number"
               size="lg"
               border="none"
@@ -130,20 +147,21 @@ export default function Stake({ createAccount }) {
             */}
             <Button
               isLoading={loading}
-              isDisabled={!amount}
+              isDisabled={!amount || !sufficientFunds}
               size="lg"
               colorScheme="blue"
               ml="4"
               px="8"
               type="submit"
             >
-              Stake
+              {sufficientFunds ? "Stake" : "Insufficient Funds"}
             </Button>
           </Flex>
         </form>
         <Flex alignItems="center">
           <Box mr="auto">
             <Balance
+              balance={balance}
               tokenAddress={collateralType.address}
               onUseMax={(maxAmount) => updateInputAmount(maxAmount)}
             />
