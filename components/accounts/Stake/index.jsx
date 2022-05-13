@@ -21,8 +21,7 @@ import EditPosition from "../EditPosition/index";
 import Router from "next/router";
 import CollateralTypeSelector from "./CollateralTypeSelector";
 import Balance from "./Balance";
-import { useRecoilState } from "recoil";
-import { collateralTypesState } from "../../../state/index";
+import { BigNumber } from "ethers";
 import { useMulticall } from "../../../utils/index";
 
 export default function Stake({ createAccount }) {
@@ -33,7 +32,6 @@ export default function Stake({ createAccount }) {
     onOpen: onOpenFund,
     onClose: onCloseFund,
   } = useDisclosure();
-  const [collateralTypes] = useRecoilState(collateralTypesState);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState(0);
   const [inputAmount, setInputAmount] = useState(""); // accounts for decimals
@@ -41,12 +39,22 @@ export default function Stake({ createAccount }) {
 
   const updateAmount = (val) => {
     setAmount(val);
-    setInputAmount(val || ""); // divide by decimals and convert to float, use '' if 0
+    setInputAmount(
+      collateralType.decimals && val
+        ? BigNumber.from(val).div(BigNumber.from(collateralType.decimals))
+        : ""
+    );
   };
 
   const updateInputAmount = (val) => {
     setInputAmount(val || ""); // use '' if 0
-    setAmount(val); // multiple by decimals and convert to BN
+    setAmount(
+      val && collateralType.decimals
+        ? BigNumber.from(val).mul(
+            BigNumber.from(10).pow(collateralType.decimals)
+          )
+        : 0
+    );
   };
 
   const onSubmit = async (e) => {
@@ -137,7 +145,7 @@ export default function Stake({ createAccount }) {
           <Box mr="auto">
             <Balance
               tokenAddress={collateralType.address}
-              onUseMax={(maxAmount) => updateAmount(maxAmount)}
+              onUseMax={(maxAmount) => updateInputAmount(maxAmount)}
             />
           </Box>
           {createAccount && (
