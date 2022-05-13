@@ -3,6 +3,7 @@ import NextLink from "next/link";
 import { Container, Tag, Grid, GridItem, Tooltip, Box, Heading, Text, Flex, Link, Button, UnorderedList, ListItem, StatGroup, Stat, StatLabel, StatNumber, StatHelpText, StatArrow, TableContainer, Table, Thead, Tr, Th, Tbody, Td } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { Line } from 'react-chartjs-2';
+import Address from '../../components/shared/Address'
 const { faker } = require('@faker-js/faker');
 import {
   Chart as ChartJS,
@@ -209,11 +210,7 @@ export default function Synth() {
               Creator
             </Heading>
 
-            <Text>
-              0x07aeeb7e544a070a2553e142828fb30c214a1f86
-              <Link d="inline-block" opacity="0.66" ml="2"><Tooltip label='View Market Contract on Tenderly'><img width="12" height="12" src="/tenderly.svg" /></Tooltip></Link>
-              <Link d="inline-block" opacity="0.66" ml="2"><Tooltip label='View Market Contract on Etherscan'><img width="12" height="12" src="/etherscan.svg" /></Tooltip></Link>
-            </Text>
+            <Address address="0x07aeeb7e544a070a2553e142828fb30c214a1f86" displayFullAddress />
           </Box>
 
           <Box mb="6">
@@ -227,21 +224,9 @@ export default function Synth() {
               Fee Contracts
             </Heading>
 
-            <Text>
-              0x07aeeb7e544a070a2553e142828fb30c214a1f86
-              <Link d="inline-block" opacity="0.66" ml="2"><Tooltip label='View Market Contract on Tenderly'><img width="12" height="12" src="/tenderly.svg" /></Tooltip></Link>
-              <Link d="inline-block" opacity="0.66" ml="2"><Tooltip label='View Market Contract on Etherscan'><img width="12" height="12" src="/etherscan.svg" /></Tooltip></Link>
-            </Text>
-            <Text>
-              0x07aeeb7e544a070a2553e142828fb30c214a1f86
-              <Link d="inline-block" opacity="0.66" ml="2"><Tooltip label='View Market Contract on Tenderly'><img width="12" height="12" src="/tenderly.svg" /></Tooltip></Link>
-              <Link d="inline-block" opacity="0.66" ml="2"><Tooltip label='View Market Contract on Etherscan'><img width="12" height="12" src="/etherscan.svg" /></Tooltip></Link>
-            </Text>
-            <Text>
-              0x07aeeb7e544a070a2553e142828fb30c214a1f86
-              <Link d="inline-block" opacity="0.66" ml="2"><Tooltip label='View Market Contract on Tenderly'><img width="12" height="12" src="/tenderly.svg" /></Tooltip></Link>
-              <Link d="inline-block" opacity="0.66" ml="2"><Tooltip label='View Market Contract on Etherscan'><img width="12" height="12" src="/etherscan.svg" /></Tooltip></Link>
-            </Text>
+            <Address address="0x07aeeb7e544a070a2553e142828fb30c214a1f86" displayFullAddress />
+            <Address address="0x07aeeb7e544a070a2553e142828fb30c214a1f86" displayFullAddress />
+            <Address address="0x07aeeb7e544a070a2553e142828fb30c214a1f86" displayFullAddress />
           </Box>
         </Box>
 

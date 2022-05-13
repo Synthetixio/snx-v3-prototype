@@ -1,7 +1,6 @@
 import {
   Box,
   Heading,
-  Tooltip,
   Flex,
   Button,
   useDisclosure,
@@ -11,7 +10,6 @@ import {
   ModalHeader,
   ModalBody,
   ModalCloseButton,
-  Link,
   Table,
   Thead,
   Tr,
@@ -28,6 +26,7 @@ import {
   Tag,
 } from "@chakra-ui/react";
 import { EditIcon, AddIcon } from "@chakra-ui/icons";
+import Address from "../../shared/Address";
 
 export default function Permissions() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -129,17 +128,7 @@ export default function Permissions() {
         <Tbody>
           <Tr>
             <Td py="4">
-              0x0000....0000
-              <Link d="inline-block" opacity="0.66" ml="2">
-                <Tooltip label="View Account on Tenderly">
-                  <img width="10" height="10" src="/tenderly.svg" />
-                </Tooltip>
-              </Link>
-              <Link d="inline-block" opacity="0.66" ml="2">
-                <Tooltip label="View Account on Etherscan">
-                  <img width="10" height="10" src="/etherscan.svg" />
-                </Tooltip>
-              </Link>
+              <Address address="0x0000000000000000000000000000000000000000" />
             </Td>
             <Td>
               <Tag colorScheme="purple" size="sm" mr="1">
@@ -152,17 +141,7 @@ export default function Permissions() {
           </Tr>
           <Tr>
             <Td py="4">
-              0x0000....0000
-              <Link d="inline-block" opacity="0.66" ml="2">
-                <Tooltip label="View Account on Tenderly">
-                  <img width="10" height="10" src="/tenderly.svg" />
-                </Tooltip>
-              </Link>
-              <Link d="inline-block" opacity="0.66" ml="2">
-                <Tooltip label="View Account on Etherscan">
-                  <img width="10" height="10" src="/etherscan.svg" />
-                </Tooltip>
-              </Link>
+              <Address address="0x0000000000000000000000000000000000000000" />
             </Td>
             <Td>
               <Tag colorScheme="green" size="sm" mr="1">

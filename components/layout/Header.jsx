@@ -3,7 +3,6 @@ import {
   Flex,
   Box,
   Link,
-  Button,
   Spacer,
   Popover,
   PopoverTrigger,
