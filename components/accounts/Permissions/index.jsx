@@ -2,7 +2,6 @@ import {
   Box,
   Heading,
   Flex,
-  Button,
   useDisclosure,
   Modal,
   ModalOverlay,
@@ -16,20 +15,55 @@ import {
   Th,
   Tbody,
   Td,
-  FormControl,
-  FormLabel,
-  Grid,
-  GridItem,
-  Input,
-  CheckboxGroup,
-  Checkbox,
   Tag,
 } from "@chakra-ui/react";
-import { EditIcon, AddIcon } from "@chakra-ui/icons";
+import { EditIcon } from "@chakra-ui/icons";
 import Address from "../../shared/Address";
+import Item from "./Item";
+import { useRouter } from "next/router";
+import { useAccount, useContractRead } from "wagmi";
+import PermissionsEditor from "./PermissionsEditor";
 
 export default function Permissions() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOwnerOpen,
+    onOpen: onOwnerOpen,
+    onClose: onOwnerClose,
+  } = useDisclosure();
+  const {
+    isOpen: isPermissionsOpen,
+    onOpen: onPermissionsOpen,
+    onClose: onPermissionsClose,
+  } = useDisclosure();
+
+  // Only show edit icon if current account is owner or modify permissions
+  const { data: accountData } = useAccount();
+  const accountAddress = accountData?.address;
+
+  const router = useRouter();
+  const { id } = router.query;
+  /*
+  const { data: owner, isError, isLoading } = useContractRead(
+    {
+      addressOrName: '0xecb504d39723b0be0e3a9aa33d646642d1051ee1',
+      contractInterface: wagmigotchiABI,
+    },
+    'ownerOf',
+    {
+      args: id,
+    }
+  )
+  */
+  const owner = "0x0000000000000000000000000000000000000000";
+
+  // Unsure what the interface will look like to pull address -> permissions/roles
+  const addresses = [
+    "0x0000000000000000000000000000000000000000",
+    "0x0000000000000000000000000000000000000000",
+    "0x0000000000000000000000000000000000000000",
+  ];
+
+  // Need to listen for events to rerender this when changes are made?
 
   return (
     <Box>
@@ -37,82 +71,12 @@ export default function Permissions() {
         <Heading size="md" mb="1">
           Permissions
         </Heading>
-        <Button size="xs" colorScheme="green" ml="auto" onClick={onOpen}>
-          <AddIcon mr="1.5" />
-          Add Address
-        </Button>
-
-        <Modal size="lg" isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent bg="black" color="white">
-            <ModalHeader>Modify Permissions</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <FormControl mb={5}>
-                <FormLabel htmlFor="address">Address</FormLabel>
-                <Input id="address" />
-              </FormControl>
-
-              <Heading size="sm" mb="2">
-                Permit Actions
-              </Heading>
-              <CheckboxGroup>
-                <Grid gap={3} templateColumns="repeat(3, 1fr)">
-                  <GridItem>
-                    <Checkbox value="a" mb="1">
-                      Stake
-                    </Checkbox>
-                    <br />
-                    <Checkbox value="b" mb="1">
-                      Burn
-                    </Checkbox>
-                    <br />
-                  </GridItem>
-
-                  <GridItem>
-                    <Checkbox value="c" mb="1">
-                      Unstake
-                    </Checkbox>
-                    <br />
-                    <Checkbox value="d" mb="1">
-                      Mint
-                    </Checkbox>
-                    <br />
-                  </GridItem>
-
-                  <GridItem>
-                    <Checkbox value="e" mb="1">
-                      Claim Rewards
-                    </Checkbox>
-                    <br />
-                    <Checkbox value="f" mb="1">
-                      Manage Locks
-                    </Checkbox>
-                    <br />
-                  </GridItem>
-                </Grid>
-
-                <Grid gap={3} templateColumns="repeat(2, 1fr)">
-                  <GridItem>
-                    <Checkbox value="e" mb="1">
-                      Manage Staking Position
-                    </Checkbox>
-                    <br />
-                  </GridItem>
-                  <GridItem>
-                    <Checkbox value="x">Modify Permissions</Checkbox>
-                    <br />
-                  </GridItem>
-                </Grid>
-              </CheckboxGroup>
-
-              <Button mt="6" mb="4" isFullWidth colorScheme="blue">
-                Update Permissions
-              </Button>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
+        <Box ml="auto">
+          {/* only render below if owner or has modify permissions role */}
+          <PermissionsEditor />
+        </Box>
       </Flex>
+
       <Table size="sm" variant="simple" mb="8">
         <Thead>
           <Tr>
@@ -128,7 +92,7 @@ export default function Permissions() {
         <Tbody>
           <Tr>
             <Td py="4">
-              <Address address="0x0000000000000000000000000000000000000000" />
+              <Address address={owner} />
             </Td>
             <Td>
               <Tag colorScheme="purple" size="sm" mr="1">
@@ -136,30 +100,24 @@ export default function Permissions() {
               </Tag>
             </Td>
             <Td>
-              <EditIcon color="blue.400" onClick={onOpen} />
+              <EditIcon color="blue.400" onClick={onOwnerOpen} />
+              {accountAddress == owner && null /* only show above if owner*/}
             </Td>
           </Tr>
-          <Tr>
-            <Td py="4">
-              <Address address="0x0000000000000000000000000000000000000000" />
-            </Td>
-            <Td>
-              <Tag colorScheme="green" size="sm" mr="1">
-                Stake
-              </Tag>
-              <Tag colorScheme="green" size="sm" mr="1">
-                Burn
-              </Tag>
-              <Tag colorScheme="blue" size="sm" mr="1">
-                Claim Rewards
-              </Tag>
-            </Td>
-            <Td>
-              <EditIcon color="blue.400" onClick={onOpen} />
-            </Td>
-          </Tr>
+          {addresses.map((address) => (
+            <Item key={address} address={address} />
+          ))}
         </Tbody>
       </Table>
+
+      <Modal size="lg" isOpen={isOwnerOpen} onClose={onOwnerClose}>
+        <ModalOverlay />
+        <ModalContent bg="black" color="white">
+          <ModalHeader>Transfer Account Ownership</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>UI to transfer ownership of account token NFT</ModalBody>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
