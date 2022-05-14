@@ -1,12 +1,51 @@
 import { ethers } from "ethers";
-import { useProvider, erc20ABI } from "wagmi";
-import { collateralTypesState } from "../../state/index";
+import { useProvider, useNetwork, erc20ABI } from "wagmi";
+import { collateralTypesState } from "../state/index";
 import { useRecoilState } from "recoil";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-// There's gotta be a way to do this, not in a component? I think I need hooks for recoil?
-export default function StateInitializer() {
+export default function Initializer() {
   const provider = useProvider();
+  const { activeChain, switchNetwork } = useNetwork();
+
+  /***** INITIALIZE NETWORK *****/
+  const chainOptions = { 1: "mainnet", 42: "kovan", 1337: "localhost" };
+
+  useEffect(() => {
+    const web3Provider = new ethers.providers.Web3Provider(
+      window.ethereum,
+      "any"
+    );
+
+    // The provider is the 'source of truth'. When it changes or is not set, assign the query parameter accordingly.
+    web3Provider.on("network", (newNetwork, oldNetwork) => {
+      var searchParams = new URLSearchParams(window.location.search);
+      if (oldNetwork || !searchParams.get("chain")) {
+        searchParams.set("chain", chainOptions[newNetwork.chainId]);
+        var newRelativePathQuery =
+          window.location.pathname + "?" + searchParams.toString();
+        history.replaceState(null, "", newRelativePathQuery);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    // Once switchNetwork becomes available, set the network to the query parameter, otherwise mainnet.
+    if (switchNetwork) {
+      var searchParams = new URLSearchParams(window.location.search);
+      var chain = searchParams.get("chain");
+      if (chain) {
+        var chainId = Object.entries(chainOptions).find(
+          (opt) => opt[1] == chain
+        )[0];
+        switchNetwork(parseInt(chainId));
+      } else {
+        switchNetwork(1);
+      }
+    }
+  }, [switchNetwork]);
+
+  /***** INITIALIZE COLLATERAL TYPES *****/
   const [, setCollateralTypes] = useRecoilState(collateralTypesState);
 
   useEffect(() => {
@@ -47,7 +86,7 @@ export default function StateInitializer() {
       }
       setCollateralTypes(collateralTypes);
     })();
-  }, []);
+  }, [activeChain]);
 
   return null;
 }

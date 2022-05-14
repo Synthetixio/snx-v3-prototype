@@ -11,10 +11,10 @@ import {
   darkTheme,
 } from '@rainbow-me/rainbowkit';
 import { chain, createClient, WagmiProvider } from 'wagmi';
-import StateInitializer from "../components/layout/StateInitializer";
+import Initializer from "../components/Initializer";
 
 const { chains, provider } = configureChains(
-  [chain.kovan],
+  [chain.mainnet, chain.kovan, chain.localhost],
   [
     apiProvider.fallback()
   ]
@@ -42,7 +42,7 @@ function Synthetix({ Component, pageProps }) {
           fontStack: 'system',
         })} chains={chains}>
           <ChakraProvider>
-            <StateInitializer />
+            <Initializer />
             <Box
               as="main"
               background="black"

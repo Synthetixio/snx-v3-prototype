@@ -1,4 +1,4 @@
-import { Text, Badge } from "@chakra-ui/react";
+import { Text, Badge, Link } from "@chakra-ui/react";
 import { useRecoilState } from "recoil";
 import { collateralTypesState } from "../../../state/index";
 import { BigNumber } from "ethers";
@@ -15,19 +15,32 @@ export default function Balance({ balance, tokenAddress, onUseMax }) {
     <Text fontSize="xs">
       Balance: {balance.toLocaleString()}{" "}
       {collateralType && collateralType.ticker}
-      <Badge
-        as="button"
-        ml="2"
-        variant="outline"
-        colorScheme="blue"
-        transform="translateY(-2px)"
-        visibility={balance == 0 ? "hidden" : "visible"}
-        onClick={() => {
-          onUseMax(balance);
-        }}
-      >
-        Use Max
-      </Badge>
+      {balance == 0 ? (
+        <Link>
+          <Badge
+            as="button"
+            ml="2"
+            variant="outline"
+            colorScheme="blue"
+            transform="translateY(-2px)"
+          >
+            Buy {collateralType && collateralType.ticker}
+          </Badge>
+        </Link>
+      ) : (
+        <Badge
+          as="button"
+          ml="2"
+          variant="outline"
+          colorScheme="blue"
+          transform="translateY(-2px)"
+          onClick={() => {
+            onUseMax(balance);
+          }}
+        >
+          Use Max
+        </Badge>
+      )}
     </Text>
   );
 }
