@@ -24,7 +24,7 @@ export default function CollateralTypeSelector({ handleChange }) {
   }, [collateralType]);
 
   return (
-    Object.values(collateralTypes).length && (
+    Object.values(collateralTypes) && (
       <Menu>
         <MenuButton
           border="1px solid rgba(255,255,255,0.33)"
@@ -42,9 +42,9 @@ export default function CollateralTypeSelector({ handleChange }) {
               ml="3.5"
               mr="2"
             >
-              <img width="24" height="24" src={collateralType.icon} />
+              <img width="24" height="24" src={collateralType?.icon} />
             </Box>
-            <Text fontWeight="600">{collateralType.ticker}</Text>
+            <Text fontWeight="600">{collateralType?.ticker}</Text>
             <ChevronDownIcon opacity="0.66" w="5" h="5" ml="4" mr="2" />
           </Flex>
         </MenuButton>
@@ -68,9 +68,9 @@ export default function CollateralTypeSelector({ handleChange }) {
                   overflow="hidden"
                   mr="2"
                 >
-                  <img width="24" height="24" src={collateralType.icon} />
+                  <img width="24" height="24" src={collateralType?.icon} />
                 </Box>
-                <Text fontWeight="600">{collateralType.ticker}</Text>
+                <Text fontWeight="600">{collateralType?.ticker}</Text>
               </Flex>
             </MenuItem>
           ))}

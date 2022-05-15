@@ -1,4 +1,4 @@
-import { ChakraProvider, Box } from '@chakra-ui/react'
+import { ChakraProvider, Flex, Box } from '@chakra-ui/react'
 import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
 import { RecoilRoot } from 'recoil';
@@ -51,10 +51,10 @@ function Synthetix({ Component, pageProps }) {
               d="flex"
               flexDirection="column"
             >
-              <Box flex="1">
+              <Flex flex="1" flexDirection="column">
                 <Header />
                 <Component {...pageProps} />
-              </Box>
+              </Flex>
               <Footer />
             </Box>
           </ChakraProvider>

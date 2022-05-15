@@ -56,7 +56,7 @@ export default function Stake({ createAccount }) {
   const accountAddress = accountData?.address;
   const { data: balanceData } = useContractRead(
     {
-      addressOrName: collateralType.address,
+      addressOrName: collateralType?.address,
       contractInterface: erc20ABI,
     },
     "balanceOf",
@@ -70,7 +70,7 @@ export default function Stake({ createAccount }) {
   const updateAmount = (val) => {
     setAmount(val);
     setInputAmount(
-      collateralType.decimals && val
+      collateralType?.decimals && val
         ? BigNumber.from(val).div(BigNumber.from(collateralType.decimals))
         : ""
     );
@@ -110,7 +110,10 @@ export default function Stake({ createAccount }) {
         isClosable: true,
       });
       // Wait on an 'account token created' event, then redirect below
-      Router.push("/accounts/1234");
+      Router.push({
+        pathname: "/accounts/1234",
+        query: Object.fromEntries(new URLSearchParams(window.location.search)),
+      });
     } else {
       // toast
       setLoading(false);
@@ -176,7 +179,7 @@ export default function Stake({ createAccount }) {
           <Box mr="auto">
             <Balance
               balance={balance}
-              tokenAddress={collateralType.address}
+              tokenAddress={collateralType?.address}
               onUseMax={(maxAmount) => updateInputAmount(maxAmount)}
             />
           </Box>

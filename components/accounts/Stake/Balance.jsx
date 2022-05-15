@@ -11,10 +11,9 @@ export default function Balance({ balance, tokenAddress, onUseMax }) {
   }
   // Needs a special case for ETH/wETH?
 
-  return (
+  return collateralType ? (
     <Text fontSize="xs">
-      Balance: {balance.toLocaleString()}{" "}
-      {collateralType && collateralType.ticker}
+      Balance: {balance.toLocaleString()} {collateralType.ticker}
       {balance == 0 ? (
         <Link>
           <Badge
@@ -24,7 +23,7 @@ export default function Balance({ balance, tokenAddress, onUseMax }) {
             colorScheme="blue"
             transform="translateY(-2px)"
           >
-            Buy {collateralType && collateralType.ticker}
+            Buy {collateralType.ticker}
           </Badge>
         </Link>
       ) : (
@@ -42,5 +41,5 @@ export default function Balance({ balance, tokenAddress, onUseMax }) {
         </Badge>
       )}
     </Text>
-  );
+  ) : null;
 }
