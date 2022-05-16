@@ -20,6 +20,7 @@ export default function Initializer() {
         "any"
       );
 
+      // On load, switch into the chain specified by the query param
       var searchParams = new URLSearchParams(window.location.search);
       var chain = searchParams.get("chain");
       if (chain) {
@@ -27,6 +28,8 @@ export default function Initializer() {
           (opt) => opt[1] == chain
         )[0];
         switchNetwork(parseInt(chainId));
+      } else {
+        // TODO: Set to mainnet
       }
 
       // The provider is the 'source of truth'. When it changes, assign the query parameter accordingly.

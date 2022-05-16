@@ -109,7 +109,7 @@ export default function Stake({ createAccount }) {
         duration: 9000,
         isClosable: true,
       });
-      // Wait on an 'account token created' event, then redirect below
+      // https://wagmi.sh/docs/hooks/useWaitForTransaction or, probably worse option, wait on an 'account token created' event, then redirect below
       Router.push({
         pathname: "/accounts/1234",
         query: Object.fromEntries(new URLSearchParams(window.location.search)),

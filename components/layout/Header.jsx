@@ -14,7 +14,7 @@ import Image from "next/image";
 import logo from "../../public/logo.png";
 import NextLink from "next/link";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import NetworkController from "./NetworkController";
 
 export default function Header() {
   return (
@@ -22,7 +22,7 @@ export default function Header() {
       <Flex alignItems="center">
         <Box>
           <NextLink href={"/"} passHref>
-            <Link>
+            <Link _focus={{ boxShadow: "none" }}>
               <Image src={logo} alt="Synthetix" width={200} height={14.5} />
             </Link>
           </NextLink>
@@ -30,16 +30,17 @@ export default function Header() {
         <Spacer />
         <Box>
           <NextLink href={"/"} passHref>
-            <Link mx="3" fontWeight="semibold">
+            <Link _focus={{ boxShadow: "none" }} mx="3" fontWeight="semibold">
               Stake
             </Link>
           </NextLink>
           <NextLink href={"/dao"} passHref>
-            <Link mx="3" fontWeight="semibold">
+            <Link _focus={{ boxShadow: "none" }} mx="3" fontWeight="semibold">
               DAO
             </Link>
           </NextLink>
           <Link
+            _focus={{ boxShadow: "none" }}
             mx="3"
             fontWeight="semibold"
             href={"https://snx-v3-docs.netlify.app/"}
@@ -49,7 +50,12 @@ export default function Header() {
           </Link>
           <Popover trigger="hover">
             <PopoverTrigger>
-              <Link mx="3" fontWeight="semibold">
+              <Link
+                _focus={{ boxShadow: "none" }}
+                _hover={{ textDecoration: "none" }}
+                mx="3"
+                fontWeight="semibold"
+              >
                 Trade <ChevronDownIcon />
               </Link>
             </PopoverTrigger>
@@ -63,13 +69,7 @@ export default function Header() {
         </Box>
         <Spacer />
         <Box>
-          <ConnectButton
-            showBalance={false}
-            accountStatus={{
-              smallScreen: "avatar",
-              largeScreen: "full",
-            }}
-          />
+          <NetworkController />
         </Box>
       </Flex>
     </Container>
