@@ -28,7 +28,7 @@ const { connectors } = getDefaultWallets({
 const wagmiClient = createClient({
   autoConnect: true,
   connectors,
-  provider
+  provider: provider({ chainId: 1 }),
 })
 
 function Synthetix({ Component, pageProps }) {
