@@ -5,12 +5,12 @@
     "packages/*"
   ],
   "scripts": {
-    "hardhat": "yarn workspace @snx-v3/fe-contracts",
-    "fe": "yarn workspace @snx-v3/fe",
-    "dev": "yarn fe dev"
+    "hardhat": "npm run --workspace=@snx-v3/periphery",
+    "fe": "npm run --workspace=@snx-v3/frontend",
+    "dev": "npm run fe dev"
   },
   "engines": {
-    "yarn": ">=1.0.0",
+    "npm": ">=8.0.0",
     "node": ">=16.0.0"
   }
 }
