@@ -37,7 +37,37 @@ export default function NetworkController() {
               },
             })}
           >
-            {activeConnector ? (
+            <Button
+                bg="gray.800"
+                _hover={{ bg: "gray.700" }}
+                onClick={openChainModal}
+                style={{ display: "flex", alignItems: "center" }}
+                type="button"
+                mr="4"
+              >
+                {chain?.hasIcon && (
+                  <div
+                    style={{
+                      background: chain?.iconBackground,
+                      width: 20,
+                      height: 20,
+                      borderRadius: 999,
+                      overflow: "hidden",
+                      marginRight: 8,
+                    }}
+                  >
+                    {chain?.iconUrl && (
+                      <img
+                        alt={chain?.name ?? "Chain icon"}
+                        src={chain?.iconUrl}
+                        style={{ width: 20, height: 20 }}
+                      />
+                    )}
+                  </div>
+                )}
+                {chain?.name}
+              </Button>
+            {/* {activeConnector ? (
               <Button
                 bg="gray.800"
                 _hover={{ bg: "gray.700" }}
@@ -141,7 +171,7 @@ export default function NetworkController() {
                     ))}
                 </MenuList>
               </Menu>
-            )}
+            )} */}
 
             {(() => {
               if (!mounted || !account || !chain) {

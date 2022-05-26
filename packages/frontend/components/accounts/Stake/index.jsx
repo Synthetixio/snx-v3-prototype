@@ -61,9 +61,11 @@ export default function Stake({ createAccount }) {
     },
     "balanceOf",
     {
+      chainId: 1, 
       args: accountAddress,
     }
   );
+  console.log(balanceData, collateralType, erc20ABI, accountData);
   let balance = balanceData || BigNumber.from(0);
   let sufficientFunds = balance.gte(amount);
 

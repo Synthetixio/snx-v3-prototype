@@ -9,6 +9,7 @@ export default function Balance({ balance, tokenAddress, onUseMax }) {
   if (collateralType) {
     balance = balance.div(BigNumber.from(10).pow(collateralType.decimals));
   }
+  
   // Needs a special case for ETH/wETH?
 
   return collateralType ? (
