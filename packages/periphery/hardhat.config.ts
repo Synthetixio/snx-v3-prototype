@@ -3,22 +3,29 @@ import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import { config as dotenvConfig } from "dotenv";
 import "hardhat-gas-reporter";
+import "hardhat-cannon";
 import { HardhatUserConfig } from "hardhat/config";
 import { NetworkUserConfig } from "hardhat/types";
 import { resolve } from "path";
-import "solidity-coverage";
+
+// todo: below module seems to be legacy broken
+//import "solidity-coverage";
 
 dotenvConfig({ path: resolve(__dirname, "./.env") });
-
-// Ensure that we have all the environment variables we need.
-const mnemonic: string | undefined = process.env.MNEMONIC;
-if (!mnemonic) {
-  throw new Error("Please set your MNEMONIC in a .env file");
-}
 
 const infuraApiKey: string | undefined = process.env.INFURA_API_KEY;
 if (!infuraApiKey) {
   throw new Error("Please set your INFURA_API_KEY in a .env file");
+}
+
+const infuraIpfsId: string | undefined = process.env.INFURA_IPFS_ID;
+if (!infuraIpfsId) {
+  throw new Error("Please set your INFURA_IPFS_ID in a .env file");
+}
+
+const infuraIpfsSecret: string | undefined = process.env.INFURA_IPFS_SECRET;
+if (!infuraIpfsSecret) {
+  throw new Error("Please set your INFURA_IPFS_SECRET in a .env file");
 }
 
 const chainIds = {
@@ -46,13 +53,8 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
   }
   return {
-    accounts: {
-      count: 10,
-      mnemonic,
-      path: "m/44'/60'/0'/0",
-    },
     chainId: chainIds[chain],
-    url: jsonRpcUrl,
+    url: process.env.PROVIDER_URL || jsonRpcUrl,
   };
 }
 
@@ -78,9 +80,6 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
-      accounts: {
-        mnemonic,
-      },
       chainId: chainIds.hardhat,
     },
     arbitrum: getChainConfig("arbitrum-mainnet"),
@@ -118,6 +117,19 @@ const config: HardhatUserConfig = {
     outDir: "src/types",
     target: "ethers-v5",
   },
+  cannon: {
+    publisherPrivateKey: process.env.PRIVATE_KEY,
+    ipfsConnection: {
+      protocol: 'https',
+      host: 'ipfs.infura.io',
+      port: 5001,
+      headers: {
+        authorization: `Basic ${Buffer.from(infuraIpfsId + ':' + infuraIpfsSecret).toString(
+          'base64'
+        )}`,
+      },
+    }
+  }
 };
 
 export default config;
