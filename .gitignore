@@ -38,3 +38,6 @@ typings/
 
 # next.js build output
 .next
+
+# generated deployments folder
+packages/periphery/deployments
