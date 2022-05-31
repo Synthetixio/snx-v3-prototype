@@ -13,24 +13,78 @@ import { ethers } from "ethers";
 declare module "hardhat/types/runtime" {
   interface HardhatEthersHelpers extends HardhatEthersHelpersBase {
     getContractFactory(
+      name: "BaseRelayRecipient",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.BaseRelayRecipient__factory>;
+    getContractFactory(
+      name: "IRelayRecipient",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IRelayRecipient__factory>;
+    getContractFactory(
       name: "Multicall3",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Multicall3__factory>;
     getContractFactory(
+      name: "Onboarding",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Onboarding__factory>;
+    getContractFactory(
       name: "WETH9",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.WETH9__factory>;
+    getContractFactory(
+      name: "IERC20",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20__factory>;
+    getContractFactory(
+      name: "IERC721",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC721__factory>;
+    getContractFactory(
+      name: "ISynthetixProxy",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ISynthetixProxy__factory>;
 
+    getContractAt(
+      name: "BaseRelayRecipient",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.BaseRelayRecipient>;
+    getContractAt(
+      name: "IRelayRecipient",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IRelayRecipient>;
     getContractAt(
       name: "Multicall3",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Multicall3>;
     getContractAt(
+      name: "Onboarding",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Onboarding>;
+    getContractAt(
       name: "WETH9",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.WETH9>;
+    getContractAt(
+      name: "IERC20",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20>;
+    getContractAt(
+      name: "IERC721",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC721>;
+    getContractAt(
+      name: "ISynthetixProxy",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ISynthetixProxy>;
 
     // default types
     getContractFactory(
