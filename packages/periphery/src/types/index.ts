@@ -2,5 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { Multicall3 } from "./Multicall3";
+export type { WETH9 } from "./WETH9";
 export * as factories from "./factories";
 export { Multicall3__factory } from "./factories/Multicall3__factory";
+export { WETH9__factory } from "./factories/WETH9__factory";
