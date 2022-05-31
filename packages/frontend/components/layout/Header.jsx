@@ -1,3 +1,8 @@
+import kwenta from "../../public/kwenta.svg";
+import logo from "../../public/logo.png";
+import lyra from "../../public/lyra.svg";
+import NetworkController from "./NetworkController";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Container,
   Flex,
@@ -9,12 +14,10 @@ import {
   PopoverContent,
   PopoverArrow,
   PopoverBody,
+  Text,
 } from "@chakra-ui/react";
 import Image from "next/image";
-import logo from "../../public/logo.png";
 import NextLink from "next/link";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import NetworkController from "./NetworkController";
 
 export default function Header() {
   return (
@@ -61,8 +64,29 @@ export default function Header() {
             </PopoverTrigger>
             <PopoverContent border="none">
               <PopoverArrow bg="gray.800" />
-              <PopoverBody bg="gray.800" color="white">
-                Link to Kwenta, Lyra, etc. with their icons and tagline
+              <PopoverBody bg="gray.800" color="white" p="5">
+                <NextLink href="http://kwenta.io" isExternal>
+                  <Flex mb="2" cursor="pointer">
+                    <Image src={kwenta} alt="Kwenta" width={36} height={36} />
+                    <Box pl="3">
+                      <Text fontWeight="500">Kwenta</Text>
+                      <Text fontSize="xs">
+                        Trade perpetual futures with up to 10x leverage.
+                      </Text>
+                    </Box>
+                  </Flex>
+                </NextLink>
+                <NextLink href="http://lyra.finance" isExternal>
+                  <Flex cursor="pointer">
+                    <Image src={lyra} alt="Lyra" width={36} height={36} />
+                    <Box pl="3">
+                      <Text fontWeight="500">Lyra</Text>
+                      <Text fontSize="xs">
+                        The first completely decentralized options protocol.
+                      </Text>
+                    </Box>
+                  </Flex>
+                </NextLink>
               </PopoverBody>
             </PopoverContent>
           </Popover>

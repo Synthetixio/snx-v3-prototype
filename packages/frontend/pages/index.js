@@ -3,7 +3,6 @@ import NextLink from "next/link";
 import { useState } from 'react';
 import { Container, Box, Heading, Text, Link, Input, Flex, Button, Badge, UnorderedList, ListItem } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
-import Router from 'next/router'
 import EditPosition from '../components/accounts/EditPosition/index'
 import Stake from '../components/accounts/Stake/index'
 

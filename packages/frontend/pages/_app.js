@@ -1,4 +1,4 @@
-import { ChakraProvider, Flex, Box } from '@chakra-ui/react'
+import { ChakraProvider, Flex, Box, extendTheme } from '@chakra-ui/react'
 import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
 import { RecoilRoot } from 'recoil';
@@ -11,6 +11,7 @@ import {
 import { chain, createClient, WagmiConfig, configureChains } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
 import Initializer from "../components/Initializer";
+import '../styles/index.css'
 
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.kovan, chain.localhost],
