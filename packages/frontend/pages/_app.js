@@ -1,46 +1,47 @@
-import { ChakraProvider, Flex, Box } from '@chakra-ui/react'
-import Header from '../components/layout/Header'
-import Footer from '../components/layout/Footer'
-import { RecoilRoot } from 'recoil';
-import '@rainbow-me/rainbowkit/styles.css';
+import Initializer from '../components/Initializer';
+import Footer from '../components/layout/Footer';
+import Header from '../components/layout/Header';
+import { ChakraProvider, Flex, Box } from '@chakra-ui/react';
 import {
   apiProvider,
-  configureChains,
   getDefaultWallets,
   RainbowKitProvider,
   darkTheme,
 } from '@rainbow-me/rainbowkit';
-import { chain, createClient, WagmiProvider } from 'wagmi';
-import Initializer from "../components/Initializer";
+import '@rainbow-me/rainbowkit/styles.css';
+import { RecoilRoot } from 'recoil';
+import { configureChains, chain, createClient, WagmiProvider } from 'wagmi';
+import { publicProvider } from 'wagmi/providers/public';
 
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.kovan, chain.localhost],
-  [
-    apiProvider.fallback()
-  ]
+  [publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({
   appName: 'Synthetix',
-  chains
+  chains,
 });
 
 const wagmiClient = createClient({
   autoConnect: true,
   connectors,
   provider: provider({ chainId: 1 }),
-})
+});
 
 function Synthetix({ Component, pageProps }) {
   return (
     <RecoilRoot>
       <WagmiProvider client={wagmiClient}>
-        <RainbowKitProvider theme={darkTheme({
-          accentColor: 'rgb(49, 130, 206)',
-          accentColorForeground: 'white',
-          borderRadius: 'small',
-          fontStack: 'system',
-        })} chains={chains}>
+        <RainbowKitProvider
+          theme={darkTheme({
+            accentColor: 'rgb(49, 130, 206)',
+            accentColorForeground: 'white',
+            borderRadius: 'small',
+            fontStack: 'system',
+          })}
+          chains={chains}
+        >
           <ChakraProvider>
             <Initializer />
             <Box
@@ -61,6 +62,6 @@ function Synthetix({ Component, pageProps }) {
         </RainbowKitProvider>
       </WagmiProvider>
     </RecoilRoot>
-  )
+  );
 }
-export default Synthetix
+export default Synthetix;
