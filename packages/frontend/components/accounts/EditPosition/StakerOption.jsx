@@ -1,5 +1,5 @@
-import { Heading, Box, Text, Flex, Radio, Link } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { Heading, Box, Text, Flex, Radio, Link } from "@chakra-ui/react";
 import NextLink from "next/link";
 
 export default function StakerOption({ name, defaultChecked }) {
@@ -22,12 +22,12 @@ export default function StakerOption({ name, defaultChecked }) {
         <Heading size="sm" mb="0.5">
           {name}
         </Heading>
-        <Text fontSize="xs" d="block" color="gray.400">
+        <Text fontSize="xs" display="block" color="gray.400">
           Fund #231&nbsp;
           <NextLink href={"/funds/example"} passHref>
             <Link
               color="blue.400"
-              d="inline-block"
+              display="inline-block"
               transform="translateY(-1.5px)"
             >
               <ExternalLinkIcon />

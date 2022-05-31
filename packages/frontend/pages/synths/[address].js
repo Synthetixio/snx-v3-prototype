@@ -105,8 +105,8 @@ export default function Synth() {
               <Heading size="lg" mr="auto" lineHeight="1.2">sBTC</Heading>
               <Text color="gray.400">
                 Synthetic Bitcoin
-                <Link d="inline-block" opacity="0.66" ml="2"><Tooltip label='View Synth Contract on Tenderly'><img width="12" height="12" src="/tenderly.svg" /></Tooltip></Link>
-                <Link d="inline-block" opacity="0.66" ml="2"><Tooltip label='View Synth Contract on Etherscan'><img width="12" height="12" src="/etherscan.svg" /></Tooltip></Link>
+                <Link display="inline-block" opacity="0.66" ml="2"><Tooltip label='View Synth Contract on Tenderly'><img width="12" height="12" src="/tenderly.svg" /></Tooltip></Link>
+                <Link display="inline-block" opacity="0.66" ml="2"><Tooltip label='View Synth Contract on Etherscan'><img width="12" height="12" src="/etherscan.svg" /></Tooltip></Link>
               </Text>
             </Flex>
           </Flex>
@@ -116,8 +116,8 @@ export default function Synth() {
               <Stat>
                 <StatLabel>
                   Price
-                  <Link d="inline-block" opacity="0.66" ml="2"><Tooltip label='View Price Contract on Tenderly'><img width="10" height="10" src="/tenderly.svg" /></Tooltip></Link>
-                  <Link d="inline-block" opacity="0.66" ml="2"><Tooltip label='View Price Contract on Etherscan'><img width="10" height="10" src="/etherscan.svg" /></Tooltip></Link>
+                  <Link display="inline-block" opacity="0.66" ml="2"><Tooltip label='View Price Contract on Tenderly'><img width="10" height="10" src="/tenderly.svg" /></Tooltip></Link>
+                  <Link display="inline-block" opacity="0.66" ml="2"><Tooltip label='View Price Contract on Etherscan'><img width="10" height="10" src="/etherscan.svg" /></Tooltip></Link>
                 </StatLabel>
                 <StatNumber>$42,231.23</StatNumber>
                 <StatHelpText>
@@ -134,8 +134,8 @@ export default function Synth() {
               <Stat>
                 <StatLabel>
                   Exchange Volume
-                  <Link d="inline-block" opacity="0.66" ml="2"><Tooltip label='View Market Contract on Tenderly'><img width="10" height="10" src="/tenderly.svg" /></Tooltip></Link>
-                  <Link d="inline-block" opacity="0.66" ml="2"><Tooltip label='View Market Contract on Etherscan'><img width="10" height="10" src="/etherscan.svg" /></Tooltip></Link>
+                  <Link display="inline-block" opacity="0.66" ml="2"><Tooltip label='View Market Contract on Tenderly'><img width="10" height="10" src="/tenderly.svg" /></Tooltip></Link>
+                  <Link display="inline-block" opacity="0.66" ml="2"><Tooltip label='View Market Contract on Etherscan'><img width="10" height="10" src="/etherscan.svg" /></Tooltip></Link>
                 </StatLabel>
                 <StatNumber>$240,342.23</StatNumber>
                 <StatHelpText>
@@ -174,7 +174,7 @@ export default function Synth() {
                   <Td>Optimism</Td>
                   <Td>
                     #254
-                    <Text ml={2} d="inline" fontSize="xs" color="gray.500">Delegated to #123</Text>
+                    <Text ml={2} display="inline" fontSize="xs" color="gray.500">Delegated to #123</Text>
                   </Td>
                   <Td isNumeric>$123,321.43</Td>
                 </Tr>
@@ -189,7 +189,7 @@ export default function Synth() {
                   <Td>Optimism</Td>
                   <Td>
                     #854
-                    <Text ml={2} d="inline" fontSize="xs" color="gray.500">Delegated to #123</Text>
+                    <Text ml={2} display="inline" fontSize="xs" color="gray.500">Delegated to #123</Text>
                   </Td>
                   <Td isNumeric>$93,704.31</Td>
                 </Tr>

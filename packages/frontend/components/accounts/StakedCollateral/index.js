@@ -63,7 +63,7 @@ export default function StakedCollateral() {
             </Td>
             <Td>
               <NextLink href={"/funds/example"} passHref>
-                <Link _hover={{ textDecoration: 'none' }} d="inline" borderBottom="1px dotted rgba(255,255,255,0.5)">Spartan Council</Link>
+                <Link _hover={{ textDecoration: 'none' }} display="inline" borderBottom="1px dotted rgba(255,255,255,0.5)">Spartan Council</Link>
               </NextLink>
               <Link color="blue.400" ml="1">
                 <EditIcon onClick={onOpenFund} style={{ transform: 'translateY(-2px)' }} />
@@ -110,7 +110,7 @@ export default function StakedCollateral() {
             </Td>
             {/*
               <Td>
-                <Text opacity="0.66" d="inline">None</Text><Link color="blue.400" ml="1">
+                <Text opacity="0.66" display="inline">None</Text><Link color="blue.400" ml="1">
                   <EditIcon onClick={onOpenLock} style={{ transform: 'translateY(-2px)' }} />
                 </Link>
                 <Text fontSize="xs" opacity="0.66" mt="1'">1,000 voting power <Tooltip label="Amount x collateral power modifier x lock power modifier"><QuestionOutlineIcon
