@@ -3,14 +3,13 @@ import Footer from '../components/layout/Footer';
 import Header from '../components/layout/Header';
 import { ChakraProvider, Flex, Box } from '@chakra-ui/react';
 import {
-  apiProvider,
   getDefaultWallets,
   RainbowKitProvider,
   darkTheme,
 } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 import { RecoilRoot } from 'recoil';
-import { configureChains, chain, createClient, WagmiProvider } from 'wagmi';
+import { chain, createClient, WagmiProvider, configureChains } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
 
 const { chains, provider } = configureChains(
@@ -26,7 +25,7 @@ const { connectors } = getDefaultWallets({
 const wagmiClient = createClient({
   autoConnect: true,
   connectors,
-  provider: provider({ chainId: 1 }),
+  provider,
 });
 
 function Synthetix({ Component, pageProps }) {
