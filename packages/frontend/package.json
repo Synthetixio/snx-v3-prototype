@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^1.1.7",
-    "@chakra-ui/react": "^1.8.6",
+    "@chakra-ui/icons": "1.1.7",
+    "@chakra-ui/react": "1.8.8",
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
     "@rainbow-me/rainbowkit": "^0.1.0",
@@ -18,8 +18,7 @@
     "next": "12.1.0",
     "react": "^18.1.0",
     "react-chartjs-2": "^4.1.0",
-    "react-dom": "17.0.2",
-    "recoil": "^0.7.3-alpha.2",
+    "react-dom": "^17.0.2",
     "wagmi": "^0.3.5"
   },
   "devDependencies": {
