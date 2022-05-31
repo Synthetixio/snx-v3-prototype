@@ -28,10 +28,10 @@ source = "erc20:<%= settings.erc20_version %>"
 options.name = "Liquity USD"
 options.symbol = "LSUD"
 
-[import.weth]
+[import.snx]
 source = "erc20:<%= settings.erc20_version %>"
-options.name = "Wrapped Ether"
-options.symbol = "WETH"
+options.name = "Synthetix Token"
+options.symbol = "SNX"
 
 [import.aggregator_snx]
 source = "chainlink:<%= settings.chainlink_version %>"
@@ -60,6 +60,10 @@ step = 1
 artifact = "Onboarding"
 step = 1
 
+[contract.WETH]
+artifact = "WETH9"
+step = 1
+
 [invoke.register_lusd_collateral]
 on = ["synthetix.Proxy"]
 fromCall.func = "owner"
@@ -71,17 +75,30 @@ args = [
     "1100000000000000000",
     true
 ]
-step = 1
+step = 2
+
+[invoke.register_snx_collateral]
+on = ["synthetix.Proxy"]
+fromCall.func = "owner"
+func = "adjustCollateralType"
+args = [
+    "<%= imports.snx.contracts.token.address %>",
+    "<%= imports.aggregator_snx.contracts.aggregator.address %>",
+    "4000000000000000000",
+    "2000000000000000000",
+    true
+]
+step = 2
 
 [invoke.register_weth_collateral]
 on = ["synthetix.Proxy"]
 fromCall.func = "owner"
 func = "adjustCollateralType"
 args = [
-    "<%= imports.weth.contracts.token.address %>",
+    "<%= contracts.WETH.address %>",
     "<%= imports.aggregator_weth.contracts.aggregator.address %>",
     "3000000000000000000",
     "1500000000000000000",
     true
 ]
-step = 1
+step = 2
