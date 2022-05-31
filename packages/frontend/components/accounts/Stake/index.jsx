@@ -1,3 +1,13 @@
+import { useMulticall } from "../../../utils/index";
+import EditPosition from "../EditPosition/index";
+import Balance from "./Balance";
+import CollateralTypeSelector from "./CollateralTypeSelector";
+import {
+  EditIcon,
+  LockIcon,
+  InfoOutlineIcon,
+  CalendarIcon,
+} from "@chakra-ui/icons";
 import {
   Box,
   Text,
@@ -23,16 +33,12 @@ import {
   InputGroup,
   InputRightAddon,
   ButtonGroup,
+  Link,
 } from "@chakra-ui/react";
-import { useAccount, useContractRead, erc20ABI } from "wagmi";
-import { SettingsIcon, InfoOutlineIcon, CalendarIcon } from "@chakra-ui/icons";
-import { useState } from "react";
-import EditPosition from "../EditPosition/index";
-import Router from "next/router";
-import CollateralTypeSelector from "./CollateralTypeSelector";
-import Balance from "./Balance";
 import { BigNumber } from "ethers";
-import { useMulticall } from "../../../utils/index";
+import Router from "next/router";
+import { useState } from "react";
+import { useAccount, useContractRead, erc20ABI } from "wagmi";
 
 export default function Stake({ createAccount }) {
   // on loading dropdown and token amount maybe use https://chakra-ui.com/docs/components/feedback/skeleton
@@ -144,16 +150,16 @@ export default function Stake({ createAccount }) {
               }}
             />
             {!createAccount && (
-              <Tooltip label="Configure Staking Position">
+              <Tooltip label="Configure Lock Duration">
                 <IconButton
-                  onClick={onOpenFund}
+                  onClick={onOpenLock}
                   ml="3"
                   bg="blue.900"
                   color="blue.200"
                   border="1px solid rgba(255,255,255,0.33)"
                   size="lg"
                   aria-label="Configure Staking Position"
-                  icon={<SettingsIcon />}
+                  icon={<LockIcon />}
                 />
               </Tooltip>
             )}
@@ -183,7 +189,7 @@ export default function Stake({ createAccount }) {
               onUseMax={(maxAmount) => updateInputAmount(maxAmount)}
             />
           </Box>
-          {createAccount && (
+          {createAccount ? (
             <Text fontSize="xs" textAlign="right">
               Receive an snxAccount token{" "}
               <Tooltip
@@ -192,6 +198,16 @@ export default function Stake({ createAccount }) {
               >
                 <InfoOutlineIcon transform="translateY(-1.5px)" />
               </Tooltip>
+            </Text>
+          ) : (
+            <Text fontSize="xs" textAlign="right">
+              Staking Position: None{" "}
+              <Link color="blue.400">
+                <EditIcon
+                  onClick={onOpenFund}
+                  style={{ transform: "translateY(-2px)" }}
+                />
+              </Link>
             </Text>
           )}
         </Flex>
