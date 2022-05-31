@@ -1,3 +1,5 @@
+import StakerOption from "./StakerOption";
+import SynthOption from "./SynthOption";
 import {
   Box,
   Heading,
@@ -14,8 +16,6 @@ import {
   RadioGroup,
   Spacer,
 } from "@chakra-ui/react";
-import StakerOption from "./StakerOption";
-import SynthOption from "./SynthOption";
 import { useState } from "react";
 
 export default function Position() {
@@ -44,7 +44,7 @@ export default function Position() {
                   <Heading size="sm" mb="0.5">
                     Custom
                   </Heading>
-                  <Text fontSize="xs" d="block" color="gray.400">
+                  <Text fontSize="xs" display="block" color="gray.400">
                     Follow the staking position of another fund
                   </Text>
                   {delegate == "custom" && (

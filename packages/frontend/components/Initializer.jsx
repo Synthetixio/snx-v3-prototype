@@ -29,7 +29,6 @@ export default function Initializer() {
         )[0];
         switchNetwork(parseInt(chainId));
       } else {
-        switchNetwork(1);
         // TODO: Set to mainnet
       }
 

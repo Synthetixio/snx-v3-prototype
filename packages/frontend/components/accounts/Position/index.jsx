@@ -1,4 +1,4 @@
-import NextLink from "next/link";
+import { ExternalLinkIcon, InfoOutlineIcon } from "@chakra-ui/icons";
 import {
   Text,
   Box,
@@ -12,7 +12,7 @@ import {
   Td,
   Heading,
 } from "@chakra-ui/react";
-import { ExternalLinkIcon, InfoOutlineIcon } from "@chakra-ui/icons";
+import NextLink from "next/link";
 
 export default function Position() {
   return (
@@ -20,8 +20,11 @@ export default function Position() {
       <Table size="sm" variant="simple">
         <TableCaption color="white">
           {/* if only staking with spartan council fund */}
-          <InfoOutlineIcon d="inline-block" transform="translateY(-1px)" /> Your
-          staking position is currently managed by{" "}
+          <InfoOutlineIcon
+            display="inline-block"
+            transform="translateY(-1px)"
+          />{" "}
+          Your staking position is currently managed by{" "}
           <NextLink href={"/dao"} passHref>
             <Link fontWeight="semibold" color="blue.400">
               The Spartan Council
@@ -55,7 +58,7 @@ export default function Position() {
                   <Link
                     color="blue.400"
                     ml="1"
-                    d="inline-block"
+                    display="inline-block"
                     transform="translateY(-1px)"
                   >
                     <ExternalLinkIcon />

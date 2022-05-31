@@ -23,7 +23,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container maxW='container.sm' py="8">
-        <Flex d="none">
+        <Flex display="none">
           <Heading size="md" mb="2" mr="auto">Synthetix Staking Application</Heading>
           <Button size="xs" fontWeight="semibold" colorScheme="white" variant="outline" onClick={() => setEasyMode(!easyMode)}>Switch to {easyMode ? "advanced" : "easy"} mode</Button>
         </Flex>
