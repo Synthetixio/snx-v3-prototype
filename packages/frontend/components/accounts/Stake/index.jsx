@@ -201,12 +201,15 @@ export default function Stake({ createAccount }) {
             </Text>
           ) : (
             <Text fontSize="xs" textAlign="right">
-              Staking Position: None{" "}
-              <Link color="blue.400">
-                <EditIcon
-                  onClick={onOpenFund}
-                  style={{ transform: "translateY(-2px)" }}
-                />
+              Staking Position:
+              <Link
+                ml="1"
+                _hover={{ textDecoration: "none" }}
+                onClick={onOpenFund}
+                display="inline"
+                borderBottom="1px dotted rgba(255,255,255,0.5)"
+              >
+                None
               </Link>
             </Text>
           )}

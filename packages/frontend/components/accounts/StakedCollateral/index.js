@@ -21,7 +21,7 @@ export default function StakedCollateral() {
 
   return (
     <Box>
-      <Heading size="md" mb="2">Staked Collateral</Heading>
+      <Heading size="md" mb="2">Staking Positions</Heading>
 
       <Table size="sm" variant="simple" mb="9">
         <Thead>
@@ -36,7 +36,7 @@ export default function StakedCollateral() {
               C-Ratio
             </Th>
             <Th color="white" pb="2">
-              Staking Position
+              Fund
             </Th>
             {/*
               <Th color="white" pb="2">
@@ -50,8 +50,8 @@ export default function StakedCollateral() {
         <Tbody>
           <Tr>
             <Td py="4">
-              1,000 SNX
-              <Text fontSize="xs" opacity="0.66" mt="1'">$5,264.34</Text>
+              $5,264.34
+              <Text fontSize="xs" opacity="0.66" mt="1'">1,000 SNX</Text>
             </Td>
             <Td py="4">
               $3,200
@@ -85,8 +85,8 @@ export default function StakedCollateral() {
           </Tr>
           <Tr>
             <Td py="4">
-              1,000 LUSD
-              <Text fontSize="xs" opacity="0.66" mt="1'">$1,000.00</Text>
+              $1,000.00
+              <Text fontSize="xs" opacity="0.66" mt="1'">1,000 LUSD</Text>
             </Td>
             <Td py="4">
               $3,200
