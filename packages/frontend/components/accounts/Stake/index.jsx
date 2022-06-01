@@ -149,7 +149,7 @@ export default function Stake({ createAccount }) {
                 updateAmount(0);
               }}
             />
-            {!createAccount && (
+            {false && (
               <Tooltip label="Configure Lock Duration">
                 <IconButton
                   onClick={onOpenLock}
@@ -201,7 +201,7 @@ export default function Stake({ createAccount }) {
             </Text>
           ) : (
             <Text fontSize="xs" textAlign="right">
-              Staking Position:
+              Fund:
               <Link
                 ml="1"
                 _hover={{ textDecoration: "none" }}

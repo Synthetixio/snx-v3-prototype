@@ -2,8 +2,6 @@
 pragma solidity >=0.8.4;
 
 interface ISynthetixProxy {
-    function createAccount(uint256 accountId) external;
-
     function stake(
         uint256 accountId,
         address collateralType,
@@ -19,6 +17,4 @@ interface ISynthetixProxy {
         uint256 amount,
         uint256 leverage
     ) external;
-
-    function transferAccount(address to, uint256 accountId) external;
 }

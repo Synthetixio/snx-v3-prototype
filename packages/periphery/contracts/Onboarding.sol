@@ -18,7 +18,7 @@ contract Onboarding is BaseRelayRecipient {
         accountToken = IERC721(_accountToken);
     }
 
-    function onboard(address collateralType, uint256 amount) external {
+    function onboard(address collateralType, uint256 amount) external returns (uint256) {
         // Receive collateral
         IERC20(collateralType).transferFrom(_msgSender(), address(this), amount);
 
@@ -28,7 +28,7 @@ contract Onboarding is BaseRelayRecipient {
         }
 
         // Create account
-        synthetix.createAccount(lastIdUsed);
+        accountToken.mint(lastIdUsed);
 
         // Approve transfer of collateral to Synthetix
         IERC20(collateralType).approve(address(synthetix), amount);
@@ -39,13 +39,15 @@ contract Onboarding is BaseRelayRecipient {
         synthetix.delegateCollateral(fundId, lastIdUsed, collateralType, amount, 1 ether);
 
         // Provide the account token
-        synthetix.transferAccount(_msgSender(), lastIdUsed);
+        accountToken.safeTransferFrom(address(this), _msgSender(), lastIdUsed);
 
         // Sanity check
         require(IERC20(collateralType).balanceOf(address(this)) == 0, "Incorrect amount of collateral transferred.");
 
         // Emit event
         emit Onboarded(_msgSender(), lastIdUsed, collateralType, amount, fundId);
+
+        return lastIdUsed;
     }
 
     event Onboarded(

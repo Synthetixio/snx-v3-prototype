@@ -23,7 +23,7 @@ export default function Fund() {
             <Heading size="lg" mr="auto" lineHeight="1.2">Spartan Council</Heading>
           </Flex>
 
-          <Heading size="md" mb="3">Staking Position</Heading>
+          <Heading size="md" mb="3">Market Allocation</Heading>
           <Box mb="8">
             <Position />
           </Box>
