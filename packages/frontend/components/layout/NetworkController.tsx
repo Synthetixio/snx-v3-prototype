@@ -139,7 +139,7 @@ export function NetworkController() {
                           )
                         }}
                       >
-                        {chainOption.hasIcon && (
+                        {/* chainOption.hasIcon && (
                           <div
                             style={{
                               background: chainOption.iconBackground,
@@ -158,7 +158,7 @@ export function NetworkController() {
                               />
                             )}
                           </div>
-                        )}
+                            ) */}
                         {chainOption.name}
                       </MenuItem>
                     ))}
