@@ -6,7 +6,7 @@ export const useSynthetixWrite = (
   funcName: string,
   args: ContractWriteParams[2]
 ) => {
-  const { chainId, contractJSON } = useContract();
+  const { contractJSON } = useContract();
   return useContractWrite(
     {
       addressOrName: contractJSON.address,
@@ -15,7 +15,6 @@ export const useSynthetixWrite = (
     funcName,
     {
       ...args,
-      chainId,
     }
   );
 };
