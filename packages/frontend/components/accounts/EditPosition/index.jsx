@@ -25,9 +25,9 @@ export default function Position() {
     <Box>
       <Tabs isFitted>
         <TabList>
-          <Tab>Delegated Staking</Tab>
-          <Tab>Manual Staking</Tab>
-          <Tab>No Staking Position</Tab>
+          <Tab>Join Fund</Tab>
+          {/* <Tab>Manual Staking</Tab> */}
+          <Tab>No Fund</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -35,7 +35,7 @@ export default function Position() {
               <StakerOption name="Spartan Council" defaultChecked={true} />
               <StakerOption name="Forex" />
               <StakerOption name="Commodities" />
-
+              {/*
               <Flex mb="2" pt="1">
                 <Box pt="2">
                   <Radio size="lg" name="custom" colorScheme="orange" />
@@ -57,8 +57,10 @@ export default function Position() {
                   )}
                 </Box>
               </Flex>
+                  */}
             </RadioGroup>
           </TabPanel>
+          {/*
           <TabPanel>
             <Heading
               size="xs"
@@ -120,9 +122,10 @@ export default function Position() {
               </Text>
             </Flex>
           </TabPanel>
+          */}
           <TabPanel>
             <Text textAlign="center" mt="9" mb="3">
-              This collateral will not take a staking position.
+              This collateral will not be delegated to a fund.
             </Text>
             <Text
               textAlign="center"
@@ -132,8 +135,8 @@ export default function Position() {
               color="gray.500"
             >
               This is typically used to take out a loan of sUSD against your
-              collateral. Your C-Ratio is subject to less fluctuation, but you
-              receive no fees or rewards.
+              collateral. Your C-Ratio is only subject to fluctuations based on
+              the value of your collateral, but you receive no fees or rewards.
             </Text>
           </TabPanel>
         </TabPanels>

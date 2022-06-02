@@ -23,6 +23,7 @@ export default function Subnav() {
     <Flex mb="6" alignItems="center">
       <Text fontWeight="semibold" fontSize="md">
         Account #{id}
+        {/*
         <Menu>
           <MenuButton ml="1" transform="translateY(-1px)">
             <ChevronDownIcon />
@@ -56,8 +57,10 @@ export default function Subnav() {
             </MenuItem>
           </MenuList>
         </Menu>
+        */}
       </Text>
-      {router.route.split("/").length == 3 ? (
+
+      {false && router.route.split("/").length == 3 && (
         <NextLink href={`/accounts/${id}/settings`} passHref>
           <Link
             ml="auto"
@@ -70,7 +73,8 @@ export default function Subnav() {
             &nbsp;&nbsp;Account Settings
           </Link>
         </NextLink>
-      ) : (
+      )}
+      {false && (
         <NextLink href={`/accounts/${id}`} passHref>
           <Link
             ml="auto"
