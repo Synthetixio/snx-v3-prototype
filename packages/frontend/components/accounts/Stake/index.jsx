@@ -1,7 +1,7 @@
 import EditPosition from "../EditPosition/index";
 import Balance from "./Balance";
 import CollateralTypeSelector from "./CollateralTypeSelector";
-import { LockIcon, InfoOutlineIcon } from "@chakra-ui/icons";
+import { LockIcon, InfoOutlineIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
   Text,
@@ -31,7 +31,7 @@ export default function Stake({ createAccount }) {
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState(BigNumber.from(0));
   const [inputAmount, setInputAmount] = useState(""); // accounts for decimals
-  const [collateralType, setCollateralType] = useState({});
+  const [collateralType, setCollateralType] = useState();
   const {
     isOpen: isOpenFund,
     onOpen: onOpenFund,
@@ -55,6 +55,7 @@ export default function Stake({ createAccount }) {
     "balanceOf",
     {
       args: accountAddress,
+      chainId: 42,
     }
   );
   let balance = balanceData || BigNumber.from(0);
@@ -194,7 +195,7 @@ export default function Stake({ createAccount }) {
           <Box mr="auto">
             <Balance
               balance={balance}
-              tokenAddress={collateralType?.address}
+              collateralType={collateralType}
               onUseMax={(maxAmount) => updateInputAmount(maxAmount)}
             />
           </Box>
@@ -210,15 +211,12 @@ export default function Stake({ createAccount }) {
             </Text>
           ) : (
             <Text fontSize="xs" textAlign="right">
-              Fund:
-              <Link
-                ml="1"
-                _hover={{ textDecoration: "none" }}
-                onClick={onOpenFund}
-                display="inline"
-                borderBottom="1px dotted rgba(255,255,255,0.5)"
-              >
-                None
+              Staking Position: None{" "}
+              <Link color="blue.400">
+                <EditIcon
+                  onClick={onOpenFund}
+                  style={{ transform: "translateY(-2px)" }}
+                />
               </Link>
             </Text>
           )}

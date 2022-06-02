@@ -41,3 +41,32 @@ typings/
 
 # generated deployments folder
 packages/periphery/deployments
+
+packages/frontend/tsconfig.tsbuildinfo
+
+**/artifacts
+**/build
+**/cache
+**/coverage
+**/.coverage_artifacts
+**/.coverage_cache
+**/.coverage_contracts
+**/dist
+**/node_modules
+
+# files
+*.env
+*.log
+.pnp.*
+coverage.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# types
+packages/periphery/src/types/*
+!packages/periphery/src/types/common.ts
+
+# factories
+!packages/periphery/src/types/factories
+packages/periphery/src/types/factories/*

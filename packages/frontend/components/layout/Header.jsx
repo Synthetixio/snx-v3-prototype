@@ -1,8 +1,8 @@
-import kwenta from "../../public/kwenta.svg";
-import logo from "../../public/logo.png";
-import lyra from "../../public/lyra.svg";
-import NetworkController from "./NetworkController";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import kwenta from '../../public/kwenta.svg';
+import logo from '../../public/logo.png';
+import lyra from '../../public/lyra.svg';
+import { NetworkController } from './NetworkController';
+import { ChevronDownIcon } from '@chakra-ui/icons';
 import {
   Container,
   Flex,
@@ -15,42 +15,42 @@ import {
   PopoverArrow,
   PopoverBody,
   Text,
-} from "@chakra-ui/react";
-import Image from "next/image";
-import NextLink from "next/link";
+} from '@chakra-ui/react';
+import Image from 'next/image';
+import NextLink from 'next/link';
 
 export default function Header() {
   return (
     <Container mb="8" maxW="container.lg" py="4">
       <Flex alignItems="center">
         <Box>
-          <NextLink href={"/"} passHref>
-            <Link _focus={{ boxShadow: "none" }}>
+          <NextLink href={'/'} passHref>
+            <Link _focus={{ boxShadow: 'none' }}>
               <Image src={logo} alt="Synthetix" width={200} height={14.5} />
             </Link>
           </NextLink>
         </Box>
         <Spacer />
         <Box>
-          <NextLink href={"/"} passHref>
-            <Link _focus={{ boxShadow: "none" }} mx="3" fontWeight="semibold">
+          <NextLink href={'/'} passHref>
+            <Link _focus={{ boxShadow: 'none' }} mx="3" fontWeight="semibold">
               Stake
             </Link>
           </NextLink>
           <Link
-            _focus={{ boxShadow: "none" }}
+            _focus={{ boxShadow: 'none' }}
             mx="3"
             fontWeight="semibold"
-            href={"https://governance.synthetix.io/"}
+            href={'https://governance.synthetix.io/'}
             isExternal
           >
             DAO
           </Link>
           <Link
-            _focus={{ boxShadow: "none" }}
+            _focus={{ boxShadow: 'none' }}
             mx="3"
             fontWeight="semibold"
-            href={"https://snx-v3-docs.netlify.app/"}
+            href={'https://snx-v3-docs.netlify.app/'}
             isExternal
           >
             Developers
@@ -58,8 +58,8 @@ export default function Header() {
           <Popover trigger="hover">
             <PopoverTrigger>
               <Link
-                _focus={{ boxShadow: "none" }}
-                _hover={{ textDecoration: "none" }}
+                _focus={{ boxShadow: 'none' }}
+                _hover={{ textDecoration: 'none' }}
                 mx="3"
                 fontWeight="semibold"
               >

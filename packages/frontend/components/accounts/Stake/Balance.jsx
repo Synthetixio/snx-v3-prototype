@@ -1,11 +1,9 @@
-import { collateralTypesState } from "../../../state/index";
-import { Text, Badge, Link } from "@chakra-ui/react";
-import { BigNumber } from "ethers";
-import { useRecoilState } from "recoil";
+import { collateralTypesState } from '../../../state/index';
+import { Text, Badge, Link } from '@chakra-ui/react';
+import { BigNumber } from 'ethers';
+import { useRecoilState } from 'recoil';
 
-export default function Balance({ balance, tokenAddress, onUseMax }) {
-  const [collateralTypes] = useRecoilState(collateralTypesState); // to get decimals for display
-  const collateralType = collateralTypes[tokenAddress];
+export default function Balance({ balance, collateralType, onUseMax }) {
   if (collateralType) {
     balance = balance.div(BigNumber.from(10).pow(collateralType.decimals));
   }

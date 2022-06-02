@@ -1,3 +1,5 @@
+import { chainIdState } from '../../state'
+import { supportedChains } from '../../utils/constants'
 import {
   Flex,
   Button,
@@ -5,14 +7,20 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-} from "@chakra-ui/react";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useConnect, useNetwork } from "wagmi";
+} from '@chakra-ui/react'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { useRouter } from 'next/router'
+import { useRecoilState } from 'recoil'
+import { useConnect, useNetwork } from 'wagmi'
 
-export default function NetworkController() {
-  const { activeConnector } = useConnect();
-  const { activeChain, chains } = useNetwork();
-  const currentChain = {}; // TODO: Pull this off the this provider, we may not have a connected wallet for activeChain
+export function NetworkController() {
+  const { activeConnector } = useConnect()
+  const router = useRouter()
+  const { chains: networkChains } = useNetwork()
+  const [localChainId, setLocalChainId] = useRecoilState(chainIdState)
+
+  const chains = networkChains.length ? networkChains : supportedChains
+  const localChain = chains.find((chain) => chain.id === localChainId)
 
   // Look in here for logged out chains to render images https://github.com/rainbow-me/rainbowkit/blob/main/packages/rainbowkit/src/components/ConnectButton/ConnectButtonRenderer.tsx
 
@@ -29,20 +37,20 @@ export default function NetworkController() {
         return (
           <Flex
             {...(!mounted && {
-              "aria-hidden": true,
+              'aria-hidden': true,
               style: {
                 opacity: 0,
-                pointerEvents: "none",
-                userSelect: "none",
+                pointerEvents: 'none',
+                userSelect: 'none',
               },
             })}
           >
             {activeConnector ? (
               <Button
                 bg="gray.800"
-                _hover={{ bg: "gray.700" }}
+                _hover={{ bg: 'gray.700' }}
                 onClick={openChainModal}
-                style={{ display: "flex", alignItems: "center" }}
+                style={{ display: 'flex', alignItems: 'center' }}
                 type="button"
                 mr="4"
               >
@@ -53,13 +61,13 @@ export default function NetworkController() {
                       width: 20,
                       height: 20,
                       borderRadius: 999,
-                      overflow: "hidden",
+                      overflow: 'hidden',
                       marginRight: 8,
                     }}
                   >
                     {chain?.iconUrl && (
                       <img
-                        alt={chain?.name ?? "Chain icon"}
+                        alt={chain?.name ?? 'Chain icon'}
                         src={chain?.iconUrl}
                         style={{ width: 20, height: 20 }}
                       />
@@ -73,10 +81,10 @@ export default function NetworkController() {
                 <MenuButton
                   as={Button}
                   bg="gray.800"
-                  _hover={{ bg: "gray.700" }}
-                  _active={{ bg: "gray.700" }}
+                  _hover={{ bg: 'gray.700' }}
+                  _active={{ bg: 'gray.700' }}
                   mr="4"
-                  style={{ display: "flex", alignItems: "center" }}
+                  style={{ display: 'flex', alignItems: 'center' }}
                 >
                   {chain?.hasIcon && (
                     <div
@@ -85,20 +93,20 @@ export default function NetworkController() {
                         width: 20,
                         height: 20,
                         borderRadius: 999,
-                        overflow: "hidden",
+                        overflow: 'hidden',
                         marginRight: 8,
                       }}
                     >
                       {chain?.iconUrl && (
                         <img
-                          alt={chain?.name ?? "Chain icon"}
+                          alt={chain?.name ?? 'Chain icon'}
                           src={chain?.iconUrl}
                           style={{ width: 20, height: 20 }}
                         />
                       )}
                     </div>
                   )}
-                  {chain?.name}
+                  {chain?.name || localChain?.name}
                 </MenuButton>
                 <MenuList
                   px={2}
@@ -112,9 +120,24 @@ export default function NetworkController() {
                         alignItems="left"
                         mb={1}
                         flexDirection="column"
-                        _hover={{ bg: "gray.800" }}
-                        _focus={{ bg: "gray.800" }}
-                        _active={{ bg: "gray.800" }}
+                        _hover={{ bg: 'gray.800' }}
+                        _focus={{ bg: 'gray.800' }}
+                        _active={{ bg: 'gray.800' }}
+                        onClick={() => {
+                          setLocalChainId(chainOption.id)
+                          router.replace(
+                            {
+                              pathname: router.basePath,
+                              query: {
+                                chainId: chainOption.id,
+                              },
+                            },
+                            undefined,
+                            {
+                              shallow: true,
+                            },
+                          )
+                        }}
                       >
                         {chainOption.hasIcon && (
                           <div
@@ -123,13 +146,13 @@ export default function NetworkController() {
                               width: 20,
                               height: 20,
                               borderRadius: 999,
-                              overflow: "hidden",
+                              overflow: 'hidden',
                               marginRight: 8,
                             }}
                           >
                             {chainOption.iconUrl && (
                               <img
-                                alt={chainOption.name ?? "Chain icon"}
+                                alt={chainOption.name ?? 'Chain icon'}
                                 src={chainOption.iconUrl}
                                 style={{ width: 20, height: 20 }}
                               />
@@ -142,7 +165,6 @@ export default function NetworkController() {
                 </MenuList>
               </Menu>
             )}
-
             {(() => {
               if (!mounted || !account || !chain) {
                 return (
@@ -153,9 +175,8 @@ export default function NetworkController() {
                   >
                     Connect Wallet
                   </Button>
-                );
+                )
               }
-
               if (chain.unsupported) {
                 return (
                   <Button
@@ -165,26 +186,25 @@ export default function NetworkController() {
                   >
                     Wrong network
                   </Button>
-                );
+                )
               }
-
               return (
                 <Button
                   bg="gray.800"
-                  _hover={{ bg: "gray.700" }}
+                  _hover={{ bg: 'gray.700' }}
                   onClick={openAccountModal}
                   type="button"
                 >
                   {account.displayName}
-                  {account.displayBalance && false
+                  {false && account.displayBalance
                     ? ` (${account.displayBalance})`
-                    : ""}
+                    : ''}
                 </Button>
-              );
+              )
             })()}
           </Flex>
-        );
+        )
       }}
     </ConnectButton.Custom>
-  );
+  )
 }
