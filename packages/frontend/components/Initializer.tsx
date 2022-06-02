@@ -10,9 +10,9 @@ export const Initializer = () => {
   const [localChainId, setLocalChainId] = useRecoilState(chainIdState);
   const router = useRouter();
 
-  const { switchNetwork } = useNetwork();
+  const { switchNetwork, activeChain } = useNetwork();
 
-  const navigateToChain = useCallback(
+  const switchToChain = useCallback(
     (chainId: number) => {
       router.replace(
         {
@@ -26,8 +26,9 @@ export const Initializer = () => {
           shallow: true,
         }
       );
+      setLocalChainId(chainId);
     },
-    [router]
+    [router, setLocalChainId]
   );
 
   useEffect(() => {
@@ -39,42 +40,41 @@ export const Initializer = () => {
 
       web3Provider.on('network', (newNetwork, oldNetwork) => {
         if (oldNetwork) {
-          navigateToChain(newNetwork.chainId);
+          console.log('NETWORK CHANGE', newNetwork);
+          switchToChain(newNetwork.chainId);
         }
       });
     }
-  }, [navigateToChain]);
+  }, [switchToChain]);
 
   useEffect(() => {
     if (!router.isReady) {
       return;
     }
 
-    const chainId =
+    const chainIdParam =
       router.query.chainId && parseInt(router.query.chainId.toString());
 
     if (switchNetwork) {
-      if (chainId) {
-        const chain = getChainById(chainId);
+      if (chainIdParam) {
+        const chain = getChainById(chainIdParam);
+        const chainId = chain ? chain.id : MAINNET_CHAIN_ID;
 
-        switchNetwork(chain ? chain.id : MAINNET_CHAIN_ID);
+        switchNetwork(chainId);
+        setLocalChainId(chainId);
       } else {
         switchNetwork(MAINNET_CHAIN_ID);
-        navigateToChain(MAINNET_CHAIN_ID);
+        switchToChain(MAINNET_CHAIN_ID);
       }
     } else {
-      if (chainId) {
-        const chain = getChainById(chainId);
-        setLocalChainId(chainId);
-
-        if (!chain) {
-          navigateToChain(MAINNET_CHAIN_ID);
-        }
+      if (chainIdParam) {
+        const chain = getChainById(chainIdParam);
+        chain ? setLocalChainId(chain.id) : switchToChain(MAINNET_CHAIN_ID);
       } else {
-        navigateToChain(MAINNET_CHAIN_ID);
+        switchToChain(MAINNET_CHAIN_ID);
       }
     }
-  }, [setLocalChainId, switchNetwork, router, navigateToChain]);
+  }, [switchNetwork, router, switchToChain, setLocalChainId]);
 
   return null;
 };
