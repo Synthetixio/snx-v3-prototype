@@ -1,13 +1,7 @@
-import { useMulticall } from "../../../utils/index";
 import EditPosition from "../EditPosition/index";
 import Balance from "./Balance";
 import CollateralTypeSelector from "./CollateralTypeSelector";
-import {
-  EditIcon,
-  LockIcon,
-  InfoOutlineIcon,
-  CalendarIcon,
-} from "@chakra-ui/icons";
+import { LockIcon, InfoOutlineIcon } from "@chakra-ui/icons";
 import {
   Box,
   Text,
@@ -24,15 +18,6 @@ import {
   ModalBody,
   useDisclosure,
   useToast,
-  Grid,
-  GridItem,
-  Heading,
-  Progress,
-  FormControl,
-  FormLabel,
-  InputGroup,
-  InputRightAddon,
-  ButtonGroup,
   Link,
 } from "@chakra-ui/react";
 import { BigNumber } from "ethers";
@@ -243,7 +228,7 @@ export default function Stake({ createAccount }) {
           </ModalBody>
         </ModalContent>
       </Modal>
-
+      {/*
       <Modal size="2xl" isOpen={isOpenLock} onClose={onCloseLock}>
         <ModalOverlay />
         <ModalContent bg="black" color="white">
@@ -330,6 +315,7 @@ export default function Stake({ createAccount }) {
           </ModalBody>
         </ModalContent>
       </Modal>
+      */}
     </>
   );
 }

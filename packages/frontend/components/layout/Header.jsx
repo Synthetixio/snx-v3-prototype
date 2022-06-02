@@ -37,11 +37,15 @@ export default function Header() {
               Stake
             </Link>
           </NextLink>
-          <NextLink href={"/dao"} passHref>
-            <Link _focus={{ boxShadow: "none" }} mx="3" fontWeight="semibold">
-              DAO
-            </Link>
-          </NextLink>
+          <Link
+            _focus={{ boxShadow: "none" }}
+            mx="3"
+            fontWeight="semibold"
+            href={"https://governance.synthetix.io/"}
+            isExternal
+          >
+            DAO
+          </Link>
           <Link
             _focus={{ boxShadow: "none" }}
             mx="3"

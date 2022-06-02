@@ -3,8 +3,12 @@ import NextLink from "next/link";
 import { Container, Tag, Tooltip, Box, Heading, Text, Flex, Button, TableContainer, Table, Thead, Tr, Th, Tbody, Td } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import Position from '../../components/accounts/Position/index'
+import { useRouter } from "next/router";
 
 export default function Fund() {
+  const router = useRouter();
+  const { id } = router.query;
+
   return (
     <Box>
       <Head>
@@ -13,16 +17,18 @@ export default function Fund() {
       </Head>
       <Container maxW='container.sm'>
         <Box>
+          {/*
           <Tooltip label='This synth has been verified by the Spartan Council'>
             <Tag mb="4" mr="2" colorScheme="green" size="sm">Verified</Tag>
           </Tooltip>
+          */}
           <Flex mb="6" flexDirection="column">
             <Text color="gray.400">
-              Fund #1324
+              Fund #{id}
             </Text>
-            <Heading size="lg" mr="auto" lineHeight="1.2">Spartan Council</Heading>
+            {/*<Heading size="lg" mr="auto" lineHeight="1.2">Spartan Council</Heading>*/}
           </Flex>
-
+          {/*
           <Heading size="md" mb="3">Market Allocation</Heading>
           <Box mb="8">
             <Position />
@@ -64,13 +70,15 @@ export default function Fund() {
               </Tbody>
             </Table>
           </TableContainer>
-
+  */}
           {/* controlling account? delegated accounts? collateral value over time? */}
 
         </Box>
+        {/*
         <Flex mt="8">
           <NextLink href={"/funds/create"} passHref><Button size="xs" colorScheme="green"><AddIcon w="2" h="2" />&nbsp;&nbsp;Create a Fund</Button></NextLink>
         </Flex>
+        */}
       </Container >
     </Box >
   )
