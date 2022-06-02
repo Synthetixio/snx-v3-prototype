@@ -35,6 +35,7 @@ export default function StakerOption({ name, defaultChecked }) {
           </NextLink>
         </Text>
       </Box>
+      {/*
       <Box pl="4">
         <Text fontSize="xs">
           Projected Rewards: <strong>20% APY</strong> (SNX)
@@ -43,6 +44,7 @@ export default function StakerOption({ name, defaultChecked }) {
           Projected Fees: <strong>20% APY</strong> (sUSD)
         </Text>
       </Box>
+      */}
     </Flex>
   );
 }

@@ -219,7 +219,7 @@ export default function Stake({ createAccount }) {
       <Modal size="2xl" isOpen={isOpenFund} onClose={onCloseFund}>
         <ModalOverlay />
         <ModalContent bg="black" color="white">
-          <ModalHeader>Manage Staking Position</ModalHeader>
+          <ModalHeader>Select Fund</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <EditPosition />
