@@ -1,7 +1,7 @@
 import { chainIdState } from '../../state';
-import { getChainById } from '../constants';
+import { useContract } from './useContract';
 import { useRecoilState } from 'recoil';
-import { useContractRead, erc20ABI, useNetwork } from 'wagmi';
+import { useContractRead } from 'wagmi';
 
 type ContractReadParams = Parameters<typeof useContractRead>;
 
@@ -9,9 +9,7 @@ export const useSynthetixRead = (
   funcName: string,
   args: ContractReadParams[2]
 ) => {
-  const [localChainId] = useRecoilState(chainIdState);
-  const chain = getChainById(localChainId);
-  const contractJSON = require(`./deployments/${chain?.name}/sythentix.proxy.json`);
+  const { contractJSON } = useContract();
   return useDeploymentsRead(
     {
       addressOrName: contractJSON.address,
