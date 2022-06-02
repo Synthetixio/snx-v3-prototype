@@ -1,5 +1,5 @@
-import { chainIdState } from '../../state';
-import { supportedChains } from '../../utils/constants';
+import { chainIdState } from '../../state'
+import { supportedChains } from '../../utils/constants'
 import {
   Flex,
   Button,
@@ -7,20 +7,20 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-} from '@chakra-ui/react';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
-import { useConnect, useNetwork } from 'wagmi';
+} from '@chakra-ui/react'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { useRouter } from 'next/router'
+import { useRecoilState } from 'recoil'
+import { useConnect, useNetwork } from 'wagmi'
 
 export function NetworkController() {
-  const { activeConnector } = useConnect();
-  const router = useRouter();
-  const { chains: networkChains } = useNetwork();
-  const [localChainId, setLocalChainId] = useRecoilState(chainIdState);
+  const { activeConnector } = useConnect()
+  const router = useRouter()
+  const { chains: networkChains } = useNetwork()
+  const [localChainId, setLocalChainId] = useRecoilState(chainIdState)
 
-  const chains = networkChains.length ? networkChains : supportedChains;
-  const localChain = chains.find(chain => chain.id === localChainId);
+  const chains = networkChains.length ? networkChains : supportedChains
+  const localChain = chains.find((chain) => chain.id === localChainId)
 
   // Look in here for logged out chains to render images https://github.com/rainbow-me/rainbowkit/blob/main/packages/rainbowkit/src/components/ConnectButton/ConnectButtonRenderer.tsx
 
@@ -114,7 +114,7 @@ export function NetworkController() {
                   border="1px solid rgba(255,255,255,0.33)"
                 >
                   {chains &&
-                    chains.map(chainOption => (
+                    chains.map((chainOption) => (
                       <MenuItem
                         key={chainOption.id}
                         alignItems="left"
@@ -124,7 +124,7 @@ export function NetworkController() {
                         _focus={{ bg: 'gray.800' }}
                         _active={{ bg: 'gray.800' }}
                         onClick={() => {
-                          setLocalChainId(chainOption.id);
+                          setLocalChainId(chainOption.id)
                           router.replace(
                             {
                               pathname: router.basePath,
@@ -135,8 +135,8 @@ export function NetworkController() {
                             undefined,
                             {
                               shallow: true,
-                            }
-                          );
+                            },
+                          )
                         }}
                       >
                         {chainOption.hasIcon && (
@@ -175,7 +175,7 @@ export function NetworkController() {
                   >
                     Connect Wallet
                   </Button>
-                );
+                )
               }
               if (chain.unsupported) {
                 return (
@@ -186,7 +186,7 @@ export function NetworkController() {
                   >
                     Wrong network
                   </Button>
-                );
+                )
               }
               return (
                 <Button
@@ -196,13 +196,15 @@ export function NetworkController() {
                   type="button"
                 >
                   {account.displayName}
-                  {account.displayBalance ? ` (${account.displayBalance})` : ''}
+                  {false && account.displayBalance
+                    ? ` (${account.displayBalance})`
+                    : ''}
                 </Button>
-              );
+              )
             })()}
           </Flex>
-        );
+        )
       }}
     </ConnectButton.Custom>
-  );
+  )
 }
