@@ -15,19 +15,6 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "accountId",
-        type: "uint256",
-      },
-    ],
-    name: "createAccount",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
         name: "fundId",
         type: "uint256",
       },
@@ -89,24 +76,6 @@ const _abi = [
       },
     ],
     name: "stake",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "accountId",
-        type: "uint256",
-      },
-    ],
-    name: "transferAccount",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

@@ -26,26 +26,15 @@ import type {
 
 export interface ISynthetixProxyInterface extends utils.Interface {
   functions: {
-    "createAccount(uint256)": FunctionFragment;
     "delegateCollateral(uint256,uint256,address,uint256,uint256)": FunctionFragment;
     "getPreferredFund()": FunctionFragment;
     "stake(uint256,address,uint256)": FunctionFragment;
-    "transferAccount(address,uint256)": FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic:
-      | "createAccount"
-      | "delegateCollateral"
-      | "getPreferredFund"
-      | "stake"
-      | "transferAccount"
+    nameOrSignatureOrTopic: "delegateCollateral" | "getPreferredFund" | "stake"
   ): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: "createAccount",
-    values: [BigNumberish]
-  ): string;
   encodeFunctionData(
     functionFragment: "delegateCollateral",
     values: [BigNumberish, BigNumberish, string, BigNumberish, BigNumberish]
@@ -58,15 +47,7 @@ export interface ISynthetixProxyInterface extends utils.Interface {
     functionFragment: "stake",
     values: [BigNumberish, string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "transferAccount",
-    values: [string, BigNumberish]
-  ): string;
 
-  decodeFunctionResult(
-    functionFragment: "createAccount",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "delegateCollateral",
     data: BytesLike
@@ -76,10 +57,6 @@ export interface ISynthetixProxyInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "stake", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "transferAccount",
-    data: BytesLike
-  ): Result;
 
   events: {};
 }
@@ -111,11 +88,6 @@ export interface ISynthetixProxy extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    createAccount(
-      accountId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     delegateCollateral(
       fundId: BigNumberish,
       accountId: BigNumberish,
@@ -133,18 +105,7 @@ export interface ISynthetixProxy extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    transferAccount(
-      to: string,
-      accountId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
   };
-
-  createAccount(
-    accountId: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   delegateCollateral(
     fundId: BigNumberish,
@@ -164,18 +125,7 @@ export interface ISynthetixProxy extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  transferAccount(
-    to: string,
-    accountId: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   callStatic: {
-    createAccount(
-      accountId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     delegateCollateral(
       fundId: BigNumberish,
       accountId: BigNumberish,
@@ -191,12 +141,6 @@ export interface ISynthetixProxy extends BaseContract {
       accountId: BigNumberish,
       collateralType: string,
       amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    transferAccount(
-      to: string,
-      accountId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -204,11 +148,6 @@ export interface ISynthetixProxy extends BaseContract {
   filters: {};
 
   estimateGas: {
-    createAccount(
-      accountId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     delegateCollateral(
       fundId: BigNumberish,
       accountId: BigNumberish,
@@ -226,20 +165,9 @@ export interface ISynthetixProxy extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    transferAccount(
-      to: string,
-      accountId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    createAccount(
-      accountId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     delegateCollateral(
       fundId: BigNumberish,
       accountId: BigNumberish,
@@ -255,12 +183,6 @@ export interface ISynthetixProxy extends BaseContract {
       accountId: BigNumberish,
       collateralType: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    transferAccount(
-      to: string,
-      accountId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

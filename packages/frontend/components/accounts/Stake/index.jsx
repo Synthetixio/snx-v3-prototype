@@ -37,11 +37,13 @@ export default function Stake({ createAccount }) {
     onOpen: onOpenFund,
     onClose: onCloseFund,
   } = useDisclosure();
+  /*
   const {
     isOpen: isOpenLock,
     onOpen: onOpenLock,
     onClose: onCloseLock,
   } = useDisclosure();
+  */
 
   const { data: accountData } = useAccount();
   const accountAddress = accountData?.address;
@@ -82,17 +84,10 @@ export default function Stake({ createAccount }) {
     e.preventDefault();
     setLoading(true);
 
+    const wethAddress = "0x0000"; // call require with current network to get deployment
+
     // Can we have global error handling, toasts for reversions, etc.?
     if (createAccount) {
-      /*
-      const accountId = await getAvailableAccountId();
-      const { data, isError, isLoading, write } = useMulticall([
-        [], // Mint account token
-        [], // Stake specified collateral (collateralType.address) -> convert to wETH if necessary
-        [], // Join the Spartan Council fund // spartan council fund id is retrieved from the configurable value on-chain
-      ]);
-      write();
-      */
       toast({
         title: "Approve the transaction to create your account",
         description: "You’ll be redirected once your transaction is processed.",
@@ -100,13 +95,42 @@ export default function Stake({ createAccount }) {
         duration: 9000,
         isClosable: true,
       });
-      // https://wagmi.sh/docs/hooks/useWaitForTransaction or, probably worse option, wait on an 'account token created' event, then redirect below
-      Router.push({
-        pathname: "/accounts/1234",
-        query: Object.fromEntries(new URLSearchParams(window.location.search)),
-      });
+
+      if (collateralType == wethAddress) {
+        // multicall with
+        // > wETH.deposit
+        // > onboarding.onboard
+      } else {
+        const { writeAsync } = useDeploymentsWrite("Onboarding", "onboard", [
+          collateralType.address,
+          amount.toString(),
+        ]);
+        const txResp = await writeAsync();
+        const { data } = useWaitForTransaction({
+          hash: txResp.hash,
+        });
+        Router.push({
+          pathname: `/accounts/${data.events.accountId}`,
+          query: Object.fromEntries(
+            new URLSearchParams(window.location.search)
+          ),
+        });
+      }
     } else {
-      // toast
+      toast({
+        title: "Approve the transaction to stake this collateral",
+        description: "Check your wallet application for next steps.",
+        status: "info",
+        duration: 9000,
+        isClosable: true,
+      });
+
+      // multicall
+      // > if wETH, wrap it
+      // > IERC20(collateralType).approve(address(synthetix), amount);
+      // > synthetix.stake(lastIdUsed, collateralType, amount);
+      // > synthetix.delegateCollateral(fundId, lastIdUsed, collateralType, amount, 1 ether);
+
       setLoading(false);
     }
   };
