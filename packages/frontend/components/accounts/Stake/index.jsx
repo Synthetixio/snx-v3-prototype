@@ -47,7 +47,7 @@ export default function Stake({ createAccount }) {
   const accountAddress = accountData?.address;
   const { data: balanceData } = useContractRead(
     {
-      addressOrName: '0xa36085f69e2889c224210f603d836748e7dc0088',
+      addressOrName: collateralType?.address,
       contractInterface: erc20ABI,
     },
     'balanceOf',

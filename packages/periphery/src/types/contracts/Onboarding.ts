@@ -164,7 +164,7 @@ export interface Onboarding extends BaseContract {
       collateralType: string,
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
 
     trustedForwarder(overrides?: CallOverrides): Promise<string>;
 
