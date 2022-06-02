@@ -1,45 +1,49 @@
-import { ChakraProvider, Flex, Box, extendTheme } from '@chakra-ui/react'
-import Header from '../components/layout/Header'
-import Footer from '../components/layout/Footer'
-import { RecoilRoot } from 'recoil';
-import '@rainbow-me/rainbowkit/styles.css';
+import { Initializer } from '../components/Initializer';
+import Footer from '../components/layout/Footer';
+import Header from '../components/layout/Header';
+import '../styles/index.css';
+import { ChakraProvider, Flex, Box, extendTheme } from '@chakra-ui/react';
 import {
   getDefaultWallets,
   RainbowKitProvider,
   darkTheme,
 } from '@rainbow-me/rainbowkit';
+import '@rainbow-me/rainbowkit/styles.css';
+import { AppProps } from 'next/app';
+import { RecoilRoot } from 'recoil';
 import { chain, createClient, WagmiConfig, configureChains } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
-import Initializer from "../components/Initializer";
-import '../styles/index.css'
 
 const { chains, provider } = configureChains(
-  [chain.mainnet, chain.kovan, chain.localhost],
+  [chain.mainnet, chain.kovan, chain.hardhat],
   [publicProvider()]
 );
+
 const { connectors } = getDefaultWallets({
   appName: 'Synthetix',
-  chains
+  chains,
 });
 
 const wagmiClient = createClient({
   autoConnect: true,
   connectors,
-  provider
-})
+  provider,
+});
 
-function Synthetix({ Component, pageProps }) {
+function Synthetix({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
       <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider theme={darkTheme({
-          accentColor: 'rgb(49, 130, 206)',
-          accentColorForeground: 'white',
-          borderRadius: 'small',
-          fontStack: 'system',
-        })} chains={chains}>
+        <RainbowKitProvider
+          theme={darkTheme({
+            accentColor: 'rgb(49, 130, 206)',
+            accentColorForeground: 'white',
+            borderRadius: 'small',
+            fontStack: 'system',
+          })}
+          chains={chains}
+        >
           <ChakraProvider>
-            <Initializer />
             <Box
               as="main"
               background="black"
@@ -49,6 +53,7 @@ function Synthetix({ Component, pageProps }) {
               flexDirection="column"
             >
               <Flex flex="1" flexDirection="column">
+                <Initializer />
                 <Header />
                 <Component {...pageProps} />
               </Flex>
@@ -58,6 +63,6 @@ function Synthetix({ Component, pageProps }) {
         </RainbowKitProvider>
       </WagmiConfig>
     </RecoilRoot>
-  )
+  );
 }
-export default Synthetix
+export default Synthetix;

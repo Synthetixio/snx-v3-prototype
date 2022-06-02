@@ -1,13 +1,13 @@
-import { useMulticall } from "../../../utils/index";
-import EditPosition from "../EditPosition/index";
-import Balance from "./Balance";
-import CollateralTypeSelector from "./CollateralTypeSelector";
+import { useMulticall } from '../../../utils/index';
+import EditPosition from '../EditPosition/index';
+import Balance from './Balance';
+import CollateralTypeSelector from './CollateralTypeSelector';
 import {
   EditIcon,
   LockIcon,
   InfoOutlineIcon,
   CalendarIcon,
-} from "@chakra-ui/icons";
+} from '@chakra-ui/icons';
 import {
   Box,
   Text,
@@ -34,19 +34,19 @@ import {
   InputRightAddon,
   ButtonGroup,
   Link,
-} from "@chakra-ui/react";
-import { BigNumber } from "ethers";
-import Router from "next/router";
-import { useState } from "react";
-import { useAccount, useContractRead, erc20ABI } from "wagmi";
+} from '@chakra-ui/react';
+import { BigNumber } from 'ethers';
+import Router from 'next/router';
+import { useState } from 'react';
+import { useAccount, useContractRead, erc20ABI } from 'wagmi';
 
 export default function Stake({ createAccount }) {
   // on loading dropdown and token amount maybe use https://chakra-ui.com/docs/components/feedback/skeleton
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState(BigNumber.from(0));
-  const [inputAmount, setInputAmount] = useState(""); // accounts for decimals
-  const [collateralType, setCollateralType] = useState({});
+  const [inputAmount, setInputAmount] = useState(''); // accounts for decimals
+  const [collateralType, setCollateralType] = useState();
   const {
     isOpen: isOpenFund,
     onOpen: onOpenFund,
@@ -62,28 +62,29 @@ export default function Stake({ createAccount }) {
   const accountAddress = accountData?.address;
   const { data: balanceData } = useContractRead(
     {
-      addressOrName: collateralType?.address,
+      addressOrName: '0xa36085f69e2889c224210f603d836748e7dc0088',
       contractInterface: erc20ABI,
     },
-    "balanceOf",
+    'balanceOf',
     {
       args: accountAddress,
+      chainId: 42,
     }
   );
   let balance = balanceData || BigNumber.from(0);
   let sufficientFunds = balance.gte(amount);
 
-  const updateAmount = (val) => {
+  const updateAmount = val => {
     setAmount(val);
     setInputAmount(
       collateralType?.decimals && val
         ? BigNumber.from(val).div(BigNumber.from(collateralType.decimals))
-        : ""
+        : ''
     );
   };
 
-  const updateInputAmount = (val) => {
-    setInputAmount(val || ""); // use '' if 0
+  const updateInputAmount = val => {
+    setInputAmount(val || ''); // use '' if 0
     setAmount(
       val && collateralType.decimals
         ? BigNumber.from(val).mul(
@@ -93,7 +94,7 @@ export default function Stake({ createAccount }) {
     );
   };
 
-  const onSubmit = async (e) => {
+  const onSubmit = async e => {
     e.preventDefault();
     setLoading(true);
 
@@ -109,15 +110,15 @@ export default function Stake({ createAccount }) {
       write();
       */
       toast({
-        title: "Approve the transaction to create your account",
-        description: "You’ll be redirected once your transaction is processed.",
-        status: "info",
+        title: 'Approve the transaction to create your account',
+        description: 'You’ll be redirected once your transaction is processed.',
+        status: 'info',
         duration: 9000,
         isClosable: true,
       });
       // https://wagmi.sh/docs/hooks/useWaitForTransaction or, probably worse option, wait on an 'account token created' event, then redirect below
       Router.push({
-        pathname: "/accounts/1234",
+        pathname: '/accounts/1234',
         query: Object.fromEntries(new URLSearchParams(window.location.search)),
       });
     } else {
@@ -139,12 +140,12 @@ export default function Stake({ createAccount }) {
               placeholder="0.0"
               mr="4"
               value={inputAmount}
-              onChange={(e) => {
+              onChange={e => {
                 updateInputAmount(e.target.value);
               }}
             />
             <CollateralTypeSelector
-              handleChange={(selectedCollateralType) => {
+              handleChange={selectedCollateralType => {
                 setCollateralType(selectedCollateralType);
                 updateAmount(0);
               }}
@@ -177,7 +178,7 @@ export default function Stake({ createAccount }) {
               px="8"
               type="submit"
             >
-              {sufficientFunds ? "Stake" : "Insufficient Funds"}
+              {sufficientFunds ? 'Stake' : 'Insufficient Funds'}
             </Button>
           </Flex>
         </form>
@@ -185,13 +186,13 @@ export default function Stake({ createAccount }) {
           <Box mr="auto">
             <Balance
               balance={balance}
-              tokenAddress={collateralType?.address}
-              onUseMax={(maxAmount) => updateInputAmount(maxAmount)}
+              collateralType={collateralType}
+              onUseMax={maxAmount => updateInputAmount(maxAmount)}
             />
           </Box>
           {createAccount ? (
             <Text fontSize="xs" textAlign="right">
-              Receive an snxAccount token{" "}
+              Receive an snxAccount token{' '}
               <Tooltip
                 textAlign="center"
                 label="You will be minted an NFT that represents your account. You can easily transfer it between wallets."
@@ -201,15 +202,12 @@ export default function Stake({ createAccount }) {
             </Text>
           ) : (
             <Text fontSize="xs" textAlign="right">
-              Fund:
-              <Link
-                ml="1"
-                _hover={{ textDecoration: "none" }}
-                onClick={onOpenFund}
-                display="inline"
-                borderBottom="1px dotted rgba(255,255,255,0.5)"
-              >
-                None
+              Staking Position: None{' '}
+              <Link color="blue.400">
+                <EditIcon
+                  onClick={onOpenFund}
+                  style={{ transform: 'translateY(-2px)' }}
+                />
               </Link>
             </Text>
           )}
