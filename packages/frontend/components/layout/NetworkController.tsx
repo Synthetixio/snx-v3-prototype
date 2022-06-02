@@ -196,7 +196,7 @@ export function NetworkController() {
                   type="button"
                 >
                   {account.displayName}
-                  {false && account.displayBalance
+                  {false && account?.displayBalance
                     ? ` (${account.displayBalance})`
                     : ''}
                 </Button>
