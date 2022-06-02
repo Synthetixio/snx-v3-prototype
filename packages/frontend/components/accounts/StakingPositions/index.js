@@ -9,10 +9,7 @@ import {
 } from '@chakra-ui/react'
 import StakingPosition from './StakingPosition'
 
-export default function StakingPositions() {
-
-  const stakingPositions = [] // contract read call here
-
+export default function StakingPositions({ stakingPositions }) {
   return (
     <Box>
       <Heading size="md" mb="2">Staking Positions</Heading>

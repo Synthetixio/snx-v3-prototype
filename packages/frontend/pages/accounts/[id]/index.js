@@ -6,10 +6,10 @@ import StakingPositions from '../../../components/accounts/StakingPositions/inde
 import { useRouter } from "next/router";
 
 export default function Account() {
-  // If the connect wallet doesn’t own this LP token, remove the c-ratio maintenance component, unstake component, and hedging component. The edit component should be a read component and add a button that opens the edit ui when the connect wallet owns the LP token. Also, editable version here for easy mode need to be rethought. Also, informing the user how changing their position will effect the c-ratio and rewards. This whole view probably needs and advanced mode to handle burning on a per pool basis.
-
   const router = useRouter();
   const { id } = router.query;
+  const stakingPosition = []; //TODO: useSynthetixRead();
+
   return (
     <Box>
       <Head>
@@ -19,8 +19,8 @@ export default function Account() {
       <Container maxW='container.sm'>
         <Box>
           <Subnav />
-          <StakingPositions />
-          <Heading size="md" mb="3">Stake Additional Collateral</Heading>
+          <StakingPositions stakingPosition={stakingPosition} />
+          <Heading size="md" mb="3">Stake {stakingPosition.length && 'Additional'} Collateral</Heading>
           <Stake />
         </Box>
       </Container>
