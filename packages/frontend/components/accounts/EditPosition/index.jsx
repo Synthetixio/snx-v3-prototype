@@ -1,3 +1,4 @@
+import { useSynthetixRead } from "../../../utils/wagmi/useContractRead";
 import StakerOption from "./StakerOption";
 import SynthOption from "./SynthOption";
 import {
@@ -19,11 +20,15 @@ import {
 import { useState } from "react";
 
 export default function Position() {
-  const [delegate, setDelegate] = useState("1");
+  const preferredFund = useSynthetixRead("getPreferredFund");
+  const approvedFunds = useSynthetixRead("getApprovedFunds");
+
+  const [tabIndex, setTabIndex] = useState(0);
+  const [fundId, setFundId] = useState(0);
 
   return (
     <Box>
-      <Tabs isFitted>
+      <Tabs onChange={(index) => setTabIndex(index)} isFitted>
         <TabList>
           <Tab>Join Fund</Tab>
           {/* <Tab>Manual Staking</Tab> */}
