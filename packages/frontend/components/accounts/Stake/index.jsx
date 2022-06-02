@@ -1,7 +1,7 @@
 import EditPosition from "../EditPosition/index";
 import Balance from "./Balance";
 import CollateralTypeSelector from "./CollateralTypeSelector";
-import { LockIcon, InfoOutlineIcon } from "@chakra-ui/icons";
+import { LockIcon, InfoOutlineIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
   Text,

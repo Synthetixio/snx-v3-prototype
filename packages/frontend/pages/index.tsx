@@ -1,6 +1,6 @@
-import EditPosition from '../components/accounts/EditPosition/index';
-import Stake from '../components/accounts/Stake/index';
-import { AddIcon } from '@chakra-ui/icons';
+import EditPosition from '../components/accounts/EditPosition/index'
+import Stake from '../components/accounts/Stake/index'
+import { AddIcon } from '@chakra-ui/icons'
 import {
   Container,
   Box,
@@ -13,16 +13,16 @@ import {
   Badge,
   UnorderedList,
   ListItem,
-} from '@chakra-ui/react';
-import Head from 'next/head';
-import NextLink from 'next/link';
-import { useState } from 'react';
+} from '@chakra-ui/react'
+import Head from 'next/head'
+import NextLink from 'next/link'
+import { useState } from 'react'
 
 // This renders the staker create view if no -wallet is connected or no lp token is in the connected wallet
 // This renders the show lp token view if there's only on token with a 'create new lp token/staker' button on the bottom
 // Otherwise, this renders a list of lp tokens with a create new button on it.
 export default function Home() {
-  const [easyMode, setEasyMode] = useState(true);
+  const [easyMode, setEasyMode] = useState(true)
 
   return (
     <Flex flex="1">
@@ -32,7 +32,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container maxW="container.sm" py="8">
-        <Flex d="none">
+        <Flex display="none">
           <Heading size="md" mb="2" mr="auto">
             Synthetix Staking Application
           </Heading>
@@ -117,5 +117,5 @@ export default function Home() {
         )}
       </Container>
     </Flex>
-  );
+  )
 }

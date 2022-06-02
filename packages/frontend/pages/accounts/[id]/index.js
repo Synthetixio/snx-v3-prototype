@@ -20,7 +20,7 @@ export default function Account() {
         <Box>
           <Subnav />
           <StakingPositions stakingPosition={stakingPosition} />
-          <Heading size="md" mb="3">Stake {stakingPosition.length && 'Additional'} Collateral</Heading>
+          <Heading size="md" mb="3">Stake {stakingPosition.length > 0 && 'Additional'} Collateral</Heading>
           <Stake />
         </Box>
       </Container>
