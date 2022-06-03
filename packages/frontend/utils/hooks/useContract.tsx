@@ -14,7 +14,7 @@ export const useContract = (name: string) => {
       return null
     }
 
-    const contractInfo = require(`./deployments/${chain.name}/${name}.json`)
+    const contractInfo = require(`../../deployments/${chain.name}/${name}.json`)
 
     return {
       address: contractInfo.address,
