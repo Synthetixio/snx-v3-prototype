@@ -9,18 +9,18 @@ export const useSynthetixRead = (
   funcName: string,
   args: ContractReadParams[2]
 ) => {
-  const { contractJSON } = useContract();
-  return useDeploymentsRead(
+  const contractInfo = useContract('synthetix.Proxy');
+  return useDeploymentRead(
     {
-      addressOrName: contractJSON.address,
-      contractInterface: contractJSON.abi,
+      addressOrName: contractInfo!.address,
+      contractInterface: contractInfo!.abi,
     },
     funcName,
     args
   );
 };
 
-const useDeploymentsRead = (
+export const useDeploymentRead = (
   addressArgs: ContractReadParams[0],
   funcName: string,
   args: ContractReadParams[2]

@@ -2,15 +2,16 @@ import { useContract } from './useContract';
 import { useContractWrite } from 'wagmi';
 
 type ContractWriteParams = Parameters<typeof useContractWrite>;
-export const useSynthetixWrite = (
+export const useDeploymentWrite = (
+  contractName: string,
   funcName: string,
-  args: ContractWriteParams[2]
+  args?: ContractWriteParams[2]
 ) => {
-  const { contractJSON } = useContract();
+  const contract = useContract(contractName);
   return useContractWrite(
     {
-      addressOrName: contractJSON.address,
-      contractInterface: contractJSON.abi,
+      addressOrName: contract?.address,
+      contractInterface: contract?.abi,
     },
     funcName,
     {
