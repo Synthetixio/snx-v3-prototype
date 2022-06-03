@@ -20,7 +20,8 @@ export default function SynthOption({ name, ticker }) {
           <Image
             alt="placeholder"
             src="https://place-hold.it/48x48"
-            style={{ borderRadius: 24, marginTop: 4 }}
+            borderRadius={24}
+            marginTop={4}
           />
           <Text mt="1" fontSize="xs" opacity="0.5">
             {ticker}

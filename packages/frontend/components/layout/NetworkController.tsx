@@ -68,9 +68,10 @@ export function NetworkController() {
                   >
                     {chain?.iconUrl && (
                       <Image
+                        width={20}
+                        height={20}
                         alt={chain?.name ?? 'Chain icon'}
                         src={chain?.iconUrl}
-                        style={{ width: 20, height: 20 }}
                       />
                     )}
                   </div>
@@ -100,9 +101,10 @@ export function NetworkController() {
                     >
                       {chain?.iconUrl && (
                         <Image
+                          height={20}
+                          width={20}
                           alt={chain?.name ?? 'Chain icon'}
                           src={chain?.iconUrl}
-                          style={{ width: 20, height: 20 }}
                         />
                       )}
                     </div>
