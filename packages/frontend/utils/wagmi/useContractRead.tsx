@@ -9,11 +9,11 @@ export const useSynthetixRead = (
   funcName: string,
   args: ContractReadParams[2]
 ) => {
-  const { contractJSON } = useContract();
+  const { address, abi } = useContract();
   return useDeploymentsRead(
     {
-      addressOrName: contractJSON.address,
-      contractInterface: contractJSON.abi,
+      addressOrName: address,
+      contractInterface: abi,
     },
     funcName,
     args

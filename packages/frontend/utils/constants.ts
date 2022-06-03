@@ -26,4 +26,10 @@ export const supportedChains = [chain.mainnet, chain.kovan, chain.localhost];
 export const getChainById = (chainId: number) =>
   supportedChains.find(chain => chain.id === chainId);
 
+export const getChainByName = (chainName: string) =>
+  supportedChains.find(chain => chain.name === chainName);
+
+export const getChainNameById = (chainId: number) =>
+  getChainById(chainId)?.name;
+
 export const MAINNET_CHAIN_ID = 1;

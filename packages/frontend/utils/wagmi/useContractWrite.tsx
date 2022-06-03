@@ -6,11 +6,11 @@ export const useSynthetixWrite = (
   funcName: string,
   args: ContractWriteParams[2]
 ) => {
-  const { contractJSON } = useContract();
+  const { address, abi } = useContract();
   return useContractWrite(
     {
-      addressOrName: contractJSON.address,
-      contractInterface: contractJSON.abi,
+      addressOrName: address,
+      contractInterface: abi,
     },
     funcName,
     {

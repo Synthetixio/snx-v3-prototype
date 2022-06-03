@@ -1,5 +1,10 @@
 import { chainIdState } from '../state';
-import { getChainById, MAINNET_CHAIN_ID } from '../utils/constants';
+import {
+  getChainById,
+  getChainByName,
+  getChainNameById,
+  MAINNET_CHAIN_ID,
+} from '../utils/constants';
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
 import { useEffect, useCallback } from 'react';
@@ -14,11 +19,12 @@ export const Initializer = () => {
 
   const switchToChain = useCallback(
     (chainId: number) => {
+      const chain = getChainNameById(chainId);
       router.replace(
         {
           pathname: router.basePath,
           query: {
-            chainId,
+            chain,
           },
         },
         undefined,
@@ -52,12 +58,11 @@ export const Initializer = () => {
       return;
     }
 
-    const chainIdParam =
-      router.query.chainId && parseInt(router.query.chainId.toString());
+    const chainParam = router.query.chain?.toString();
 
     if (switchNetwork) {
-      if (chainIdParam) {
-        const chain = getChainById(chainIdParam);
+      if (chainParam) {
+        const chain = getChainByName(chainParam);
         const chainId = chain ? chain.id : MAINNET_CHAIN_ID;
 
         switchNetwork(chainId);
@@ -67,8 +72,8 @@ export const Initializer = () => {
         switchToChain(MAINNET_CHAIN_ID);
       }
     } else {
-      if (chainIdParam) {
-        const chain = getChainById(chainIdParam);
+      if (chainParam) {
+        const chain = getChainByName(chainParam);
         chain ? setLocalChainId(chain.id) : switchToChain(MAINNET_CHAIN_ID);
       } else {
         switchToChain(MAINNET_CHAIN_ID);

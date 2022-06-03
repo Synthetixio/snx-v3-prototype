@@ -5,8 +5,9 @@ import { useRecoilState } from 'recoil';
 export const useContract = () => {
   const [localChainId] = useRecoilState(chainIdState);
   const chain = getChainById(localChainId);
+  const contractJSON = require(`../../deployments/${chain?.name}/sythentix.proxy.json`);
   return {
-    contractJSON: require(`./deployments/${chain?.name} / sythentix.proxy.json`),
-    chainId: localChainId,
+    address: contractJSON.address,
+    abi: contractJSON.abi,
   };
 };
