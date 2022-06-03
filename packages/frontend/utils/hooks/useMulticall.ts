@@ -1,13 +1,15 @@
 import { useContract } from './useContract';
-import ethers from 'ethers';
+import ethers, { CallOverrides } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useContractWrite, useWaitForTransaction } from 'wagmi';
 
 // contact, funcion name, arguments
-export type MulticallCall = [ethers.Contract, string, any[]];
+export type MulticallCall = [ethers.Contract, string, any[], CallOverrides?];
 
 const CONTRACT_SYNTHETIX_PROXY = 'synthetix.Proxy';
 const CONTRACT_MULTICALL = 'Multicall';
+
+type ContractWriteParams = Parameters<typeof useContractWrite>;
 
 /**
  * Executes the given list of transactions on a multicall contract as required.
@@ -23,7 +25,7 @@ const CONTRACT_MULTICALL = 'Multicall';
  * operations to run in multiple steps, and the inner array indicates operations to run in the same transaction.
  * @returns a lot of stuff
  */
-export const useMulticall = (calls: MulticallCall[][]) => {
+export const useMulticall = (calls: MulticallCall[][], overrides: ContractWriteParams[2] = {}) => {
   const [step, setStep] = useState(0);
   const completed = step >= calls.length;
 
@@ -48,10 +50,11 @@ export const useMulticall = (calls: MulticallCall[][]) => {
       if (calls[step].find(c => c[0].address !== snxProxy.address)) {
         // Multicall3
         callContract = multicall.contract;
-        callFunc = 'aggregate3';
+        callFunc = 'aggregate3Value';
         callArgs = calls[step].map(c => ({
           target: c[0].address,
           callData: c[0].populateTransaction[c[1]](...(c[2] || [])),
+          value: c[0][3]?.value || 0,
           allowFailure: false,
         }));
       } else {
@@ -74,7 +77,7 @@ export const useMulticall = (calls: MulticallCall[][]) => {
       contractInterface: callContract!.interface,
     },
     callFunc!,
-    { args: callArgs }
+    { ...overrides, args: callArgs }
   );
 
   const started = step !== 0 || currentTxn.status !== 'idle';
