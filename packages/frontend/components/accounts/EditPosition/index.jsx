@@ -1,4 +1,4 @@
-import { useSynthetixRead } from "../../../utils/wagmi/useContractRead";
+import { useSynthetixRead } from "../../../utils/hooks/useDeploymentRead";
 import StakerOption from "./StakerOption";
 import SynthOption from "./SynthOption";
 import {
