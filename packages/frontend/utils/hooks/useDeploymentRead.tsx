@@ -1,33 +1,31 @@
-import { chainIdState } from '../../state';
-import { useContract } from './useContract';
-import { useRecoilState } from 'recoil';
-import { useContractRead } from 'wagmi';
+import { useContract } from './useContract'
+import { useContractRead } from 'wagmi'
 
-type ContractReadParams = Parameters<typeof useContractRead>;
+type ContractReadParams = Parameters<typeof useContractRead>
 
+// A convenience hook for reading from the main Synthetix proxy contract.
 export const useSynthetixRead = (
   funcName: string,
-  args: ContractReadParams[2]
+  args: ContractReadParams[2],
 ) => {
-  const contractInfo = useContract('synthetix.Proxy');
-  return useDeploymentRead(
+  return useDeploymentRead('synthetix.Proxy', funcName, args)
+}
+
+// Similar to https://wagmi.sh/docs/hooks/useContractRead, but its aware of the currently selected network and the user specifies the contract name rather than address.
+export const useDeploymentRead = (
+  contractName: string,
+  funcName: string,
+  args: ContractReadParams[2],
+) => {
+  const contract = useContract(contractName)
+  return useContractRead(
     {
-      addressOrName: contractInfo!.address,
-      contractInterface: contractInfo!.abi,
+      addressOrName: contract?.address,
+      contractInterface: contract?.abi,
     },
     funcName,
-    args
-  );
-};
-
-export const useDeploymentRead = (
-  addressArgs: ContractReadParams[0],
-  funcName: string,
-  args: ContractReadParams[2]
-) => {
-  const [localChainId] = useRecoilState(chainIdState);
-  return useContractRead(addressArgs, funcName, {
-    ...args,
-    chainId: localChainId,
-  });
-};
+    {
+      ...args,
+    },
+  )
+}
