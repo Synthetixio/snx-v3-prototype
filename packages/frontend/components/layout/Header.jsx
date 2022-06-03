@@ -69,7 +69,7 @@ export default function Header() {
             <PopoverContent border="none">
               <PopoverArrow bg="gray.800" />
               <PopoverBody bg="gray.800" color="white" p="5">
-                <a href="http://kwenta.io" target="_blank">
+                <a href="http://kwenta.io" target="_blank" rel="noreferrer">
                   <Flex mb="2" cursor="pointer">
                     <Image src={kwenta} alt="Kwenta" width={36} height={36} />
                     <Box pl="3">
@@ -80,7 +80,7 @@ export default function Header() {
                     </Box>
                   </Flex>
                 </a>
-                <a href="http://lyra.finance" target="_blank">
+                <a href="http://lyra.finance" target="_blank" rel="noreferrer">
                   <Flex cursor="pointer">
                     <Image src={lyra} alt="Lyra" width={36} height={36} />
                     <Box pl="3">

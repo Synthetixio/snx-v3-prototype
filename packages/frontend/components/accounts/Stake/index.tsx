@@ -1,8 +1,11 @@
-import ethers from 'ethers';
-import EditPosition from "../EditPosition/index";
-import Balance from "./Balance";
-import CollateralTypeSelector from "./CollateralTypeSelector";
-import { LockIcon, InfoOutlineIcon, EditIcon } from "@chakra-ui/icons";
+import { collateralTypesState } from '../../../state';
+import { CollateralType } from '../../../utils/constants';
+import { useContract } from '../../../utils/hooks/useContract';
+import { useMulticall, MulticallCall } from '../../../utils/hooks/useMulticall';
+import EditPosition from '../EditPosition/index';
+import Balance from './Balance';
+import CollateralTypeSelector from './CollateralTypeSelector';
+import { LockIcon, InfoOutlineIcon, EditIcon } from '@chakra-ui/icons';
 import {
   Box,
   Text,
@@ -20,19 +23,21 @@ import {
   useDisclosure,
   useToast,
   Link,
-} from "@chakra-ui/react";
-import { BigNumber } from "ethers";
-import { useState } from "react";
-import { useAccount, useContractRead, erc20ABI } from "wagmi";
-import { useMulticall, MulticallCall } from "../../../utils/hooks/useMulticall";
-import { useContract } from "../../../utils/hooks/useContract";
+} from '@chakra-ui/react';
+import { ethers } from 'ethers';
+import { BigNumber } from 'ethers';
+import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { useAccount, useContractRead, erc20ABI } from 'wagmi';
 
-export default function Stake() {
+export default function Stake({ createAccount }: { createAccount: boolean }) {
   // on loading dropdown and token amount maybe use https://chakra-ui.com/docs/components/feedback/skeleton
   const toast = useToast();
-  const [amount, setAmount] = useState(BigNumber.from(0));
-  const [inputAmount, setInputAmount] = useState(""); // accounts for decimals
-  //TODO const [collateralType, setCollateralType] = useState();
+  const [inputAmount, setInputAmount] = useState('0'); // accounts for decimals
+  const [collateralTypes] = useRecoilState(collateralTypesState);
+  const [collateralType, setCollateralType] = useState<CollateralType>(
+    collateralTypes[0]
+  );
   const collateralContract = useContract('lusd.token');
   const snxProxy = useContract('synthetix.Proxy');
   const onboarding = useContract('Onboarding');
@@ -41,96 +46,77 @@ export default function Stake() {
     onOpen: onOpenFund,
     onClose: onCloseFund,
   } = useDisclosure();
-  /*
-  const {
-    isOpen: isOpenLock,
-    onOpen: onOpenLock,
-    onClose: onCloseLock,
-  } = useDisclosure();
-  */
 
   const { data: accountData } = useAccount();
   const accountAddress = accountData?.address;
-  const { data: balanceData } = useContractRead(
+  const { data: balanceData, refetch } = useContractRead(
     {
-      addressOrName: collateralContract?.address,
+      addressOrName: collateralType.address,
       contractInterface: erc20ABI,
     },
-    "balanceOf",
+    'balanceOf',
     {
       args: accountAddress,
-      chainId: 42,
     }
   );
   let balance = balanceData || BigNumber.from(0);
-  let sufficientFunds = balance.gte(amount);
+  let sufficientFunds = balance.gte(
+    ethers.utils.parseUnits(inputAmount, collateralType.decimals)
+  );
 
   const { data: allowanceData } = useContractRead(
     {
-      addressOrName: collateralContract?.address,
+      addressOrName: collateralType?.address,
       contractInterface: erc20ABI,
     },
-    "allowance",
+    'allowance',
     {
-      args: [accountAddress, snxProxy?.address],
-      chainId: 42,
+      args: [accountAddress, onboarding?.address],
     }
   );
   let allowance = allowanceData || BigNumber.from(0);
-  let sufficientAllowance = allowance.gte(amount);
-
-  /*const updateAmount = (val) => {
-    setAmount(val);
-    setInputAmount(
-      collateralType?.decimals && val
-        ? BigNumber.from(val).div(BigNumber.from(collateralType.decimals))
-        : ""
-    );
-  };
-
-  const updateInputAmount = (val) => {
-    setInputAmount(val || ""); // use '' if 0
-    setAmount(
-      val && collateralType.decimals
-        ? BigNumber.from(val).mul(
-            BigNumber.from(10).pow(collateralType.decimals)
-          )
-        : 0
-    );
-  };*/
+  let sufficientAllowance = allowance.gte(
+    ethers.utils.parseUnits(inputAmount, collateralType.decimals)
+  );
 
   const calls: MulticallCall[][] = [
     [
-      [onboarding!.contract, "onboard", [collateralContract?.address, amount.toString()]]
-    ]
+      [
+        onboarding!.contract,
+        'onboard',
+        [collateralContract?.address, ethers.utils.parseUnits(inputAmount)],
+      ],
+    ],
   ];
 
   if (!sufficientAllowance) {
-    // TODO: could use permit here as well, in which case its an unshift 
+    // TODO: could use permit here as well, in which case its an unshift
     calls.unshift([
-      [collateralContract!.contract, 'approve', [snxProxy?.address, ethers.constants.MaxUint256]]
+      [
+        collateralContract!.contract,
+        'approve',
+        [snxProxy?.address, ethers.constants.MaxUint256],
+      ],
     ]);
   }
 
   if (collateralContract?.address === 'WETH') {
-    calls[0].unshift([
-      [collateralContract!.contract, 'deposit', [amount]]
-    ])
+    calls[0].unshift([collateralContract!.contract, 'deposit', [inputAmount]]);
   }
 
-  const multiTxn = useMulticall(calls)
+  const multiTxn = useMulticall(calls);
 
   /*const onSubmit = async (e) => {
     e.preventDefault();
 
-    const wethAddress = "0x0000"; // call require with current network to get deployment
+    const wethAddress = '0x0000'; // call require with current network to get deployment
 
     // Can we have global error handling, toasts for reversions, etc.?
     if (createAccount) {
       toast({
-        title: "Approve the transaction to create your account",
-        description: "You’ll be redirected once your transaction is processed.",
-        status: "info",
+        title: 'Approve the transaction to create your account',
+        description: 'You’ll be redirected once your transaction is processed.',
+        status: 'info',
         duration: 9000,
         isClosable: true,
       });
@@ -157,9 +143,9 @@ export default function Stake() {
       }
     } else {
       toast({
-        title: "Approve the transaction to stake this collateral",
-        description: "Check your wallet application for next steps.",
-        status: "info",
+        title: 'Approve the transaction to stake this collateral',
+        description: 'Check your wallet application for next steps.',
+        status: 'info',
         duration: 9000,
         isClosable: true,
       });
@@ -187,20 +173,20 @@ export default function Stake() {
               placeholder="0.0"
               mr="4"
               value={inputAmount}
-              onChange={(e) => {
-                updateInputAmount(e.target.value);
+              onChange={e => {
+                setInputAmount(e.target.value);
               }}
             />
             <CollateralTypeSelector
-              handleChange={(selectedCollateralType) => {
+              handleChange={(selectedCollateralType: CollateralType) => {
                 setCollateralType(selectedCollateralType);
-                updateAmount(0);
+                // refetch();
               }}
             />
             {false && (
               <Tooltip label="Configure Lock Duration">
                 <IconButton
-                  onClick={onOpenLock}
+                  onClick={() => {}}
                   ml="3"
                   bg="blue.900"
                   color="blue.200"
@@ -218,14 +204,14 @@ export default function Stake() {
             */}
             <Button
               isLoading={multiTxn.started}
-              isDisabled={!amount || !sufficientFunds}
+              isDisabled={!inputAmount || !sufficientFunds}
               size="lg"
               colorScheme="blue"
               ml="4"
               px="8"
               type="submit"
             >
-              {sufficientFunds ? "Stake" : "Insufficient Funds"}
+              {sufficientFunds ? 'Stake' : 'Insufficient Funds'}
             </Button>
           </Flex>
         </form>
@@ -234,12 +220,19 @@ export default function Stake() {
             <Balance
               balance={balance}
               collateralType={collateralType}
-              onUseMax={(maxAmount) => updateInputAmount(maxAmount)}
+              onUseMax={(maxAmount: string) => {
+                const amount = ethers.utils.formatUnits(
+                  maxAmount,
+                  collateralType.decimals
+                );
+
+                setInputAmount(amount);
+              }}
             />
           </Box>
           {createAccount ? (
             <Text fontSize="xs" textAlign="right">
-              Receive an snxAccount token{" "}
+              Receive an snxAccount token{' '}
               <Tooltip
                 textAlign="center"
                 label="You will be minted an NFT that represents your account. You can easily transfer it between wallets."
@@ -249,11 +242,11 @@ export default function Stake() {
             </Text>
           ) : (
             <Text fontSize="xs" textAlign="right">
-              Staking Position: None{" "}
+              Staking Position: None{' '}
               <Link color="blue.400">
                 <EditIcon
                   onClick={onOpenFund}
-                  style={{ transform: "translateY(-2px)" }}
+                  style={{ transform: 'translateY(-2px)' }}
                 />
               </Link>
             </Text>

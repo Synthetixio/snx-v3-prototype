@@ -44,17 +44,17 @@ export default function CollateralTypeSelector({ handleChange }) {
               alt="collateral image"
               width="24"
               height="24"
-              src={collateralType?.icon}
+              src={collateralType?.logoURI}
             />
           </Box>
-          <Text fontWeight="600">{collateralType?.ticker}</Text>
+          <Text fontWeight="600">{collateralType?.symbol}</Text>
           <ChevronDownIcon opacity="0.66" w="5" h="5" ml="4" mr="2" />
         </Flex>
       </MenuButton>
       <MenuList px={2} bg="black" border="1px solid rgba(255,255,255,0.33)">
         {Object.values(collateralTypes).map(collateralType => (
           <MenuItem
-            key={collateralType.ticker}
+            key={collateralType.symbol}
             alignItems="left"
             mb={1}
             flexDirection="column"
@@ -73,14 +73,14 @@ export default function CollateralTypeSelector({ handleChange }) {
                 overflow="hidden"
                 mr="2"
               >
-                <img
+                <Image
                   alt="collateral image"
                   width="24"
                   height="24"
-                  src={collateralType?.icon}
+                  src={collateralType?.logoURI}
                 />
               </Box>
-              <Text fontWeight="600">{collateralType?.ticker}</Text>
+              <Text fontWeight="600">{collateralType?.symbol}</Text>
             </Flex>
           </MenuItem>
         ))}

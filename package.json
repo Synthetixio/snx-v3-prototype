@@ -7,7 +7,9 @@
   "scripts": {
     "hardhat": "npm run --workspace=@snx-v3/periphery",
     "fe": "npm run --workspace=@snx-v3/frontend",
-    "dev": "npm run fe dev"
+    "dev": "npm run fe dev",
+    "tsc": "npm run fe tsc",
+    "build": "npm run fe build"
   },
   "engines": {
     "npm": ">=8.0.0",

@@ -1,31 +1,29 @@
 import { collateralTypesState } from '../../../state/index';
 import { Text, Badge, Link } from '@chakra-ui/react';
-import { BigNumber } from 'ethers';
-import { useRecoilState } from 'recoil';
+import { ethers } from 'ethers';
 
 export default function Balance({ balance, collateralType, onUseMax }) {
-  if (collateralType) {
-    balance = balance.div(BigNumber.from(10).pow(collateralType.decimals));
-  }
   // Needs a special case for ETH/wETH?
 
   return collateralType ? (
     <Text fontSize="xs">
-      Balance: {balance.toLocaleString()} {collateralType.ticker}
-      {balance == 0 ? (
-        false && (
-          <Link>
-            <Badge
-              as="button"
-              ml="2"
-              variant="outline"
-              colorScheme="blue"
-              transform="translateY(-2px)"
-            >
-              Buy {collateralType.ticker}
-            </Badge>
-          </Link>
-        )
+      Balance:{' '}
+      {ethers.utils.commify(
+        ethers.utils.formatUnits(balance, collateralType.decimals)
+      )}{' '}
+      {collateralType.symbol}
+      {balance.eq(0) ? (
+        <Link>
+          <Badge
+            as="button"
+            ml="2"
+            variant="outline"
+            colorScheme="blue"
+            transform="translateY(-2px)"
+          >
+            Buy {collateralType.symbol}
+          </Badge>
+        </Link>
       ) : (
         <Badge
           as="button"

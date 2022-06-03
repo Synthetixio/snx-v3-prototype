@@ -1,5 +1,5 @@
-import { chainIdState } from '../../state'
-import { supportedChains } from '../../utils/constants'
+import { chainIdState } from '../../state';
+import { getChainNameById, supportedChains } from '../../utils/constants';
 import {
   Flex,
   Button,
@@ -7,20 +7,21 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-} from '@chakra-ui/react'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { useRouter } from 'next/router'
-import { useRecoilState } from 'recoil'
-import { useConnect, useNetwork } from 'wagmi'
+} from '@chakra-ui/react';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
+import { useConnect, useNetwork } from 'wagmi';
 
 export function NetworkController() {
-  const { activeConnector } = useConnect()
-  const router = useRouter()
-  const { chains: networkChains } = useNetwork()
-  const [localChainId, setLocalChainId] = useRecoilState(chainIdState)
+  const { activeConnector } = useConnect();
+  const router = useRouter();
+  const { chains: networkChains } = useNetwork();
+  const [localChainId, setLocalChainId] = useRecoilState(chainIdState);
 
-  const chains = networkChains.length ? networkChains : supportedChains
-  const localChain = chains.find((chain) => chain.id === localChainId)
+  const chains = networkChains.length ? networkChains : supportedChains;
+  const localChain = chains.find(chain => chain.id === localChainId);
 
   // Look in here for logged out chains to render images https://github.com/rainbow-me/rainbowkit/blob/main/packages/rainbowkit/src/components/ConnectButton/ConnectButtonRenderer.tsx
 
@@ -66,10 +67,11 @@ export function NetworkController() {
                     }}
                   >
                     {chain?.iconUrl && (
-                      <img
+                      <Image
+                        width={20}
+                        height={20}
                         alt={chain?.name ?? 'Chain icon'}
                         src={chain?.iconUrl}
-                        style={{ width: 20, height: 20 }}
                       />
                     )}
                   </div>
@@ -98,10 +100,11 @@ export function NetworkController() {
                       }}
                     >
                       {chain?.iconUrl && (
-                        <img
+                        <Image
+                          height={20}
+                          width={20}
                           alt={chain?.name ?? 'Chain icon'}
                           src={chain?.iconUrl}
-                          style={{ width: 20, height: 20 }}
                         />
                       )}
                     </div>
@@ -114,7 +117,7 @@ export function NetworkController() {
                   border="1px solid rgba(255,255,255,0.33)"
                 >
                   {chains &&
-                    chains.map((chainOption) => (
+                    chains.map(chainOption => (
                       <MenuItem
                         key={chainOption.id}
                         alignItems="left"
@@ -124,19 +127,20 @@ export function NetworkController() {
                         _focus={{ bg: 'gray.800' }}
                         _active={{ bg: 'gray.800' }}
                         onClick={() => {
-                          setLocalChainId(chainOption.id)
+                          setLocalChainId(chainOption.id);
+                          const chain = getChainNameById(chainOption.id);
                           router.replace(
                             {
                               pathname: router.basePath,
                               query: {
-                                chainId: chainOption.id,
+                                chain,
                               },
                             },
                             undefined,
                             {
                               shallow: true,
-                            },
-                          )
+                            }
+                          );
                         }}
                       >
                         {/* chainOption.hasIcon && (
@@ -175,7 +179,7 @@ export function NetworkController() {
                   >
                     Connect Wallet
                   </Button>
-                )
+                );
               }
               if (chain.unsupported) {
                 return (
@@ -186,7 +190,7 @@ export function NetworkController() {
                   >
                     Wrong network
                   </Button>
-                )
+                );
               }
               return (
                 <Button
@@ -200,11 +204,11 @@ export function NetworkController() {
                     ? ` (${account?.displayBalance})`
                     : ''}
                 </Button>
-              )
+              );
             })()}
           </Flex>
-        )
+        );
       }}
     </ConnectButton.Custom>
-  )
+  );
 }

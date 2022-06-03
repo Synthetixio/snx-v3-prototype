@@ -4,7 +4,6 @@ description = "Synthetix system supplemental contracts"
 [setting.owner]
 defaultValue = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
 
-
 [setting.erc20_version]
 defaultValue = "0.4.0"
 
@@ -26,7 +25,7 @@ defaultValue = "1000000000000000000000"
 [import.lusd]
 source = "erc20:<%= settings.erc20_version %>"
 options.name = "Liquity USD"
-options.symbol = "LSUD"
+options.symbol = "LUSD"
 
 [import.snx]
 source = "erc20:<%= settings.erc20_version %>"
@@ -106,3 +105,12 @@ args = [
     true,
 ]
 step = 2
+
+[invoke.mint_snx]
+on = ["snx.token"]
+func = "mint"
+args = [
+    "<%= settings.owner %>",
+    "2000000000000000000"
+]
+step = 3
