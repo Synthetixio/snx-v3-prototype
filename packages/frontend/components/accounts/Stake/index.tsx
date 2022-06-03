@@ -1,8 +1,11 @@
-import ethers from 'ethers'
-import EditPosition from '../EditPosition/index'
-import Balance from './Balance'
-import CollateralTypeSelector from './CollateralTypeSelector'
-import { LockIcon, InfoOutlineIcon, EditIcon } from '@chakra-ui/icons'
+import { collateralTypesState } from '../../../state';
+import { CollateralType } from '../../../utils/constants';
+import { useContract } from '../../../utils/hooks/useContract';
+import { useMulticall, MulticallCall } from '../../../utils/hooks/useMulticall';
+import EditPosition from '../EditPosition/index';
+import Balance from './Balance';
+import CollateralTypeSelector from './CollateralTypeSelector';
+import { LockIcon, InfoOutlineIcon, EditIcon } from '@chakra-ui/icons';
 import {
   Box,
   Text,
@@ -20,94 +23,71 @@ import {
   useDisclosure,
   useToast,
   Link,
-} from '@chakra-ui/react'
-import { BigNumber } from 'ethers'
-import { useState } from 'react'
-import { useAccount, useContractRead, erc20ABI } from 'wagmi'
-import { useMulticall, MulticallCall } from '../../../utils/hooks/useMulticall'
-import { useContract } from '../../../utils/hooks/useContract'
+} from '@chakra-ui/react';
+import { ethers } from 'ethers';
+import { BigNumber } from 'ethers';
+import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { useAccount, useContractRead, erc20ABI } from 'wagmi';
 
 export default function Stake({ createAccount }: { createAccount: boolean }) {
   // on loading dropdown and token amount maybe use https://chakra-ui.com/docs/components/feedback/skeleton
-  const toast = useToast()
-  const [amount, setAmount] = useState(BigNumber.from(0))
-  const [inputAmount, setInputAmount] = useState('') // accounts for decimals
-  //TODO const [collateralType, setCollateralType] = useState();
-  const collateralContract = useContract('lusd.token')
-  const snxProxy = useContract('synthetix.Proxy')
-  const onboarding = useContract('Onboarding')
+  const toast = useToast();
+  const [inputAmount, setInputAmount] = useState('0'); // accounts for decimals
+  const [collateralTypes] = useRecoilState(collateralTypesState);
+  const [collateralType, setCollateralType] = useState<CollateralType>(
+    collateralTypes[0]
+  );
+  const collateralContract = useContract('lusd.token');
+  const snxProxy = useContract('synthetix.Proxy');
+  const onboarding = useContract('Onboarding');
   const {
     isOpen: isOpenFund,
     onOpen: onOpenFund,
     onClose: onCloseFund,
-  } = useDisclosure()
-  /*
-  const {
-    isOpen: isOpenLock,
-    onOpen: onOpenLock,
-    onClose: onCloseLock,
   } = useDisclosure();
-  */
 
-  const { data: accountData } = useAccount()
-  const accountAddress = accountData?.address
-  const { data: balanceData } = useContractRead(
+  const { data: accountData } = useAccount();
+  const accountAddress = accountData?.address;
+  const { data: balanceData, refetch } = useContractRead(
     {
-      addressOrName: collateralContract?.address,
+      addressOrName: collateralType.address,
       contractInterface: erc20ABI,
     },
     'balanceOf',
     {
       args: accountAddress,
-      chainId: 42,
-    },
-  )
-  let balance = balanceData || BigNumber.from(0)
-  let sufficientFunds = balance.gte(amount)
+    }
+  );
+  let balance = balanceData || BigNumber.from(0);
+  let sufficientFunds = balance.gte(
+    ethers.utils.parseUnits(inputAmount, collateralType.decimals)
+  );
 
   const { data: allowanceData } = useContractRead(
     {
-      addressOrName: collateralContract?.address,
+      addressOrName: collateralType?.address,
       contractInterface: erc20ABI,
     },
     'allowance',
     {
-      args: [accountAddress, snxProxy?.address],
-      chainId: 42,
-    },
-  )
-  let allowance = allowanceData || BigNumber.from(0)
-  let sufficientAllowance = allowance.gte(amount)
-
-  /*const updateAmount = (val) => {
-    setAmount(val);
-    setInputAmount(
-      collateralType?.decimals && val
-        ? BigNumber.from(val).div(BigNumber.from(collateralType.decimals))
-        : ''
-    );
-  };
-
-  const updateInputAmount = val => {
-    setInputAmount(val || ''); // use '' if 0
-    setAmount(
-      val && collateralType.decimals
-        ? BigNumber.from(val).mul(
-            BigNumber.from(10).pow(collateralType.decimals)
-          )
-        : 0
-    );
-  };*/
+      args: [accountAddress, onboarding?.address],
+    }
+  );
+  let allowance = allowanceData || BigNumber.from(0);
+  let sufficientAllowance = allowance.gte(
+    ethers.utils.parseUnits(inputAmount, collateralType.decimals)
+  );
 
   const calls: MulticallCall[][] = [
     [
       [
         onboarding!.contract,
         'onboard',
-        [collateralContract?.address, amount.toString()],
+        [collateralContract?.address, ethers.utils.parseUnits(inputAmount)],
       ],
     ],
-  ]
+  ];
 
   if (!sufficientAllowance) {
     // TODO: could use permit here as well, in which case its an unshift
@@ -117,14 +97,14 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
         'approve',
         [snxProxy?.address, ethers.constants.MaxUint256],
       ],
-    ])
+    ]);
   }
 
   if (collateralContract?.address === 'WETH') {
-    calls[0].unshift([collateralContract!.contract, 'deposit', [amount]])
+    calls[0].unshift([collateralContract!.contract, 'deposit', [amount]]);
   }
 
-  const multiTxn = useMulticall(calls)
+  const multiTxn = useMulticall(calls);
 
   /*const onSubmit = async (e) => {
     e.preventDefault();
@@ -193,14 +173,14 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
               placeholder="0.0"
               mr="4"
               value={inputAmount}
-              onChange={(e) => {
-                setInputAmount(e.target.value)
+              onChange={e => {
+                setInputAmount(e.target.value);
               }}
             />
             <CollateralTypeSelector
-              handleChange={(selectedCollateralType) => {
-                setCollateralType(selectedCollateralType)
-                updateAmount(0)
+              handleChange={(selectedCollateralType: CollateralType) => {
+                setCollateralType(selectedCollateralType);
+                // refetch();
               }}
             />
             {false && (
@@ -224,7 +204,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
             */}
             <Button
               isLoading={multiTxn.started}
-              isDisabled={!amount || !sufficientFunds}
+              isDisabled={!inputAmount || !sufficientFunds}
               size="lg"
               colorScheme="blue"
               ml="4"
@@ -240,7 +220,15 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
             <Balance
               balance={balance}
               collateralType={collateralType}
-              onUseMax={(maxAmount) => updateInputAmount(maxAmount)}
+              onUseMax={maxAmount => {
+                console.log('BIGNUMBER', maxAmount, amount);
+                const amount = ethers.utils.formatUnits(
+                  maxAmount,
+                  collateralType.decimals
+                );
+
+                setInputAmount(amount);
+              }}
             />
           </Box>
           {createAccount ? (
@@ -383,5 +371,5 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       </Modal>
       */}
     </>
-  )
+  );
 }

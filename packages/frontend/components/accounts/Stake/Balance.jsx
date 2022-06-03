@@ -1,17 +1,17 @@
-import { collateralTypesState } from "../../../state/index";
-import { Text, Badge, Link } from "@chakra-ui/react";
-import ethers from "ethers";
+import { collateralTypesState } from '../../../state/index';
+import { Text, Badge, Link } from '@chakra-ui/react';
+import { ethers } from 'ethers';
 
 export default function Balance({ balance, collateralType, onUseMax }) {
   // Needs a special case for ETH/wETH?
 
   return collateralType ? (
     <Text fontSize="xs">
-      Balance:{" "}
+      Balance:{' '}
       {ethers.utils.commify(
         ethers.utils.formatUnits(balance, collateralType.decimals)
-      )}{" "}
-      {collateralType.ticker}
+      )}{' '}
+      {collateralType.symbol}
       {balance.eq(0) ? (
         <Link>
           <Badge
@@ -21,7 +21,7 @@ export default function Balance({ balance, collateralType, onUseMax }) {
             colorScheme="blue"
             transform="translateY(-2px)"
           >
-            Buy {collateralType.ticker}
+            Buy {collateralType.symbol}
           </Badge>
         </Link>
       ) : (
