@@ -46,7 +46,6 @@ export const Initializer = () => {
 
       web3Provider.on('network', (newNetwork, oldNetwork) => {
         if (oldNetwork) {
-          console.log('NETWORK CHANGE', newNetwork);
           switchToChain(newNetwork.chainId);
         }
       });
