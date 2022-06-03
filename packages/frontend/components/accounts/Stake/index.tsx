@@ -101,7 +101,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
   }
 
   if (collateralContract?.address === 'WETH') {
-    calls[0].unshift([collateralContract!.contract, 'deposit', [amount]]);
+    calls[0].unshift([collateralContract!.contract, 'deposit', [inputAmount]]);
   }
 
   const multiTxn = useMulticall(calls);
@@ -186,7 +186,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
             {false && (
               <Tooltip label="Configure Lock Duration">
                 <IconButton
-                  onClick={onOpenLock}
+                  onClick={() => {}}
                   ml="3"
                   bg="blue.900"
                   color="blue.200"
@@ -220,8 +220,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
             <Balance
               balance={balance}
               collateralType={collateralType}
-              onUseMax={maxAmount => {
-                console.log('BIGNUMBER', maxAmount, amount);
+              onUseMax={(maxAmount: string) => {
                 const amount = ethers.utils.formatUnits(
                   maxAmount,
                   collateralType.decimals
