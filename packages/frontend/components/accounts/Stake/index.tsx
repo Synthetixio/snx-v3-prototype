@@ -1,7 +1,8 @@
-import EditPosition from '../EditPosition/index';
-import Balance from './Balance';
-import CollateralTypeSelector from './CollateralTypeSelector';
-import { LockIcon, InfoOutlineIcon, EditIcon } from '@chakra-ui/icons';
+import ethers from 'ethers'
+import EditPosition from '../EditPosition/index'
+import Balance from './Balance'
+import CollateralTypeSelector from './CollateralTypeSelector'
+import { LockIcon, InfoOutlineIcon, EditIcon } from '@chakra-ui/icons'
 import {
   Box,
   Text,
@@ -19,24 +20,27 @@ import {
   useDisclosure,
   useToast,
   Link,
-} from '@chakra-ui/react';
-import { BigNumber } from 'ethers';
-import Router from 'next/router';
-import { useState } from 'react';
-import { useAccount, useContractRead, erc20ABI } from 'wagmi';
+} from '@chakra-ui/react'
+import { BigNumber } from 'ethers'
+import { useState } from 'react'
+import { useAccount, useContractRead, erc20ABI } from 'wagmi'
+import { useMulticall, MulticallCall } from '../../../utils/hooks/useMulticall'
+import { useContract } from '../../../utils/hooks/useContract'
 
-export default function Stake({ createAccount }) {
+export default function Stake({ createAccount }: { createAccount: boolean }) {
   // on loading dropdown and token amount maybe use https://chakra-ui.com/docs/components/feedback/skeleton
-  const toast = useToast();
-  const [loading, setLoading] = useState(false);
-  const [amount, setAmount] = useState(BigNumber.from(0));
-  const [inputAmount, setInputAmount] = useState(''); // accounts for decimals
-  const [collateralType, setCollateralType] = useState();
+  const toast = useToast()
+  const [amount, setAmount] = useState(BigNumber.from(0))
+  const [inputAmount, setInputAmount] = useState('') // accounts for decimals
+  //TODO const [collateralType, setCollateralType] = useState();
+  const collateralContract = useContract('lusd.token')
+  const snxProxy = useContract('synthetix.Proxy')
+  const onboarding = useContract('Onboarding')
   const {
     isOpen: isOpenFund,
     onOpen: onOpenFund,
     onClose: onCloseFund,
-  } = useDisclosure();
+  } = useDisclosure()
   /*
   const {
     isOpen: isOpenLock,
@@ -45,23 +49,37 @@ export default function Stake({ createAccount }) {
   } = useDisclosure();
   */
 
-  const { data: accountData } = useAccount();
-  const accountAddress = accountData?.address;
+  const { data: accountData } = useAccount()
+  const accountAddress = accountData?.address
   const { data: balanceData } = useContractRead(
     {
-      addressOrName: collateralType?.address,
+      addressOrName: collateralContract?.address,
       contractInterface: erc20ABI,
     },
     'balanceOf',
     {
       args: accountAddress,
       chainId: 42,
-    }
-  );
-  let balance = balanceData || BigNumber.from(0);
-  let sufficientFunds = balance.gte(amount);
+    },
+  )
+  let balance = balanceData || BigNumber.from(0)
+  let sufficientFunds = balance.gte(amount)
 
-  const updateAmount = val => {
+  const { data: allowanceData } = useContractRead(
+    {
+      addressOrName: collateralContract?.address,
+      contractInterface: erc20ABI,
+    },
+    'allowance',
+    {
+      args: [accountAddress, snxProxy?.address],
+      chainId: 42,
+    },
+  )
+  let allowance = allowanceData || BigNumber.from(0)
+  let sufficientAllowance = allowance.gte(amount)
+
+  /*const updateAmount = (val) => {
     setAmount(val);
     setInputAmount(
       collateralType?.decimals && val
@@ -79,11 +97,37 @@ export default function Stake({ createAccount }) {
           )
         : 0
     );
-  };
+  };*/
 
-  const onSubmit = async e => {
+  const calls: MulticallCall[][] = [
+    [
+      [
+        onboarding!.contract,
+        'onboard',
+        [collateralContract?.address, amount.toString()],
+      ],
+    ],
+  ]
+
+  if (!sufficientAllowance) {
+    // TODO: could use permit here as well, in which case its an unshift
+    calls.unshift([
+      [
+        collateralContract!.contract,
+        'approve',
+        [snxProxy?.address, ethers.constants.MaxUint256],
+      ],
+    ])
+  }
+
+  if (collateralContract?.address === 'WETH') {
+    calls[0].unshift([collateralContract!.contract, 'deposit', [amount]])
+  }
+
+  const multiTxn = useMulticall(calls)
+
+  /*const onSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
     const wethAddress = '0x0000'; // call require with current network to get deployment
 
@@ -102,15 +146,14 @@ export default function Stake({ createAccount }) {
         // > wETH.deposit
         // > onboarding.onboard
       } else {
-        // TODO: move this to the top level
-        // const { writeAsync } = useDeploymentsWrite("Onboarding", "onboard", [
-        //   collateralType.address,
-        //   amount.toString(),
-        // ]);
-        // const txResp = await writeAsync();
-        // const { data } = useWaitForTransaction({
-        //   hash: txResp.hash,
-        // });
+        const { writeAsync } = useDeploymentWrite("Onboarding", "onboard", [
+          collateralType.address,
+          amount.toString(),
+        ]);
+        const txResp = await writeAsync();
+        const { data } = useWaitForTransaction({
+          hash: txResp.hash,
+        });
         Router.push({
           pathname: `/accounts/${data.events.accountId}`,
           query: Object.fromEntries(
@@ -135,12 +178,12 @@ export default function Stake({ createAccount }) {
 
       setLoading(false);
     }
-  };
+  };*/
 
   return (
     <>
       <Box bg="gray.900" mb="8" p="6" pb="4" borderRadius="12px">
-        <form onSubmit={onSubmit}>
+        <form onSubmit={multiTxn.exec}>
           <Flex mb="3">
             <Input
               flex="1"
@@ -150,14 +193,14 @@ export default function Stake({ createAccount }) {
               placeholder="0.0"
               mr="4"
               value={inputAmount}
-              onChange={e => {
-                updateInputAmount(e.target.value);
+              onChange={(e) => {
+                setInputAmount(e.target.value)
               }}
             />
             <CollateralTypeSelector
-              handleChange={selectedCollateralType => {
-                setCollateralType(selectedCollateralType);
-                updateAmount(0);
+              handleChange={(selectedCollateralType) => {
+                setCollateralType(selectedCollateralType)
+                updateAmount(0)
               }}
             />
             {false && (
@@ -180,7 +223,7 @@ export default function Stake({ createAccount }) {
               </Tooltip>
             */}
             <Button
-              isLoading={loading}
+              isLoading={multiTxn.started}
               isDisabled={!amount || !sufficientFunds}
               size="lg"
               colorScheme="blue"
@@ -197,7 +240,7 @@ export default function Stake({ createAccount }) {
             <Balance
               balance={balance}
               collateralType={collateralType}
-              onUseMax={maxAmount => updateInputAmount(maxAmount)}
+              onUseMax={(maxAmount) => updateInputAmount(maxAmount)}
             />
           </Box>
           {createAccount ? (
@@ -340,5 +383,5 @@ export default function Stake({ createAccount }) {
       </Modal>
       */}
     </>
-  );
+  )
 }
