@@ -68,11 +68,14 @@ export default function Home() {
                 By default, your staking position will be managed by the{' '}
                 <Link>Spartan Council</Link>, a DAO elected by SNX token
                 holders.{' '}
-                <NextLink href={'/dao'} passHref>
-                  <Link fontWeight="semibold" color="blue.400">
-                    Go vote
-                  </Link>
-                </NextLink>
+                <Link
+                  fontWeight="semibold"
+                  color="blue.400"
+                  isExternal
+                  href="https://governance.synthetix.io"
+                >
+                  Go vote
+                </Link>
               </ListItem>
               <ListItem mb="1">
                 Currently, your projected rewards are{' '}
