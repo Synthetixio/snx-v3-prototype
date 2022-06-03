@@ -1,3 +1,4 @@
+import { ExternalLinkIcon } from '@chakra-ui/icons';
 import {
   Box,
   Heading,
@@ -7,16 +8,17 @@ import {
   InputGroup,
   InputRightAddon,
   Link,
-} from "@chakra-ui/react";
-import NextLink from "next/link";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+} from '@chakra-ui/react';
+import Image from 'next/image';
+import NextLink from 'next/link';
 
 export default function SynthOption({ name, ticker }) {
   return (
     <Box borderBottom="1px solid rgba(255,255,255,0.3)" pb="4" mb="4">
       <Flex alignItems="center">
         <Box textAlign="center">
-          <img
+          <Image
+            alt="placeholder"
             src="https://place-hold.it/48x48"
             style={{ borderRadius: 24, marginTop: 4 }}
           />
@@ -27,7 +29,7 @@ export default function SynthOption({ name, ticker }) {
         <Box flex="1" pl="4">
           <Heading size="sm" mb="0.5">
             {name}&nbsp;
-            <NextLink href={"/synths/example"} passHref>
+            <NextLink href={'/synths/example'} passHref>
               <Link color="blue.400">
                 <ExternalLinkIcon />
               </Link>

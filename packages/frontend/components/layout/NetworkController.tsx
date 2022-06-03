@@ -9,6 +9,7 @@ import {
   MenuItem,
 } from '@chakra-ui/react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { useConnect, useNetwork } from 'wagmi';
@@ -66,7 +67,7 @@ export function NetworkController() {
                     }}
                   >
                     {chain?.iconUrl && (
-                      <img
+                      <Image
                         alt={chain?.name ?? 'Chain icon'}
                         src={chain?.iconUrl}
                         style={{ width: 20, height: 20 }}
@@ -98,7 +99,7 @@ export function NetworkController() {
                       }}
                     >
                       {chain?.iconUrl && (
-                        <img
+                        <Image
                           alt={chain?.name ?? 'Chain icon'}
                           src={chain?.iconUrl}
                           style={{ width: 20, height: 20 }}

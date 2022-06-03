@@ -1,4 +1,5 @@
-import NextLink from "next/link"
+import EditPosition from '../EditPosition';
+import { EditIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import {
   Box,
   Heading,
@@ -18,27 +19,37 @@ import {
   Flex,
   Input,
   Badge,
-  Tooltip
-} from '@chakra-ui/react'
-import { EditIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
+  Tooltip,
+} from '@chakra-ui/react';
+import NextLink from 'next/link';
 
 export default function StakingPosition() {
   // If the connected wallet doesn’t own this LP token, remove the c-ratio maintenance component, unstake component, and hedging component. The edit component should be a read component and add a button that opens the edit ui when the connect wallet owns the LP token. Also, editable version here for easy mode need to be rethought. Also, informing the user how changing their position will effect the c-ratio and rewards. This whole view probably needs and advanced mode to handle burning on a per pool basis.
 
-  const { isOpen: isOpenFund, onOpen: onOpenFund, onClose: onCloseFund } = useDisclosure()
-  const { isOpen: isOpenDebt, onOpen: onOpenDebt, onClose: onCloseDebt } = useDisclosure()
+  const {
+    isOpen: isOpenFund,
+    onOpen: onOpenFund,
+    onClose: onCloseFund,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenDebt,
+    onOpen: onOpenDebt,
+    onClose: onCloseDebt,
+  } = useDisclosure();
 
   return (
     <Tr>
       <Td py="4">
         $5,264.34
-        <Text fontSize="xs" opacity="0.66" mt="1'">1,000 SNX</Text>
+        <Text fontSize="xs" opacity="0.66" mt="1'">
+          1,000 SNX
+        </Text>
       </Td>
       <Td py="4">
         $3,200
         <Text fontSize="xs" mt="1'">
           <Link
-            _hover={{ textDecoration: "none" }}
+            _hover={{ textDecoration: 'none' }}
             onClick={onOpenDebt}
             display="inline"
             color="blue.500"
@@ -52,23 +63,58 @@ export default function StakingPosition() {
               <ModalCloseButton />
               <ModalBody>
                 <Box mb="8">
-                  <Heading fontSize="lg" mb="1">You have $3,200 of debt associated with this collateral.</Heading>
-                  <Text>You have $9,600 of collateral associated with this debt, giving you a C-Ratio of 300%. The value of your collateral fluctates with market conditions. <em>If your C-Ratio drops below 200% you may be liquidated and lose your collateral.</em></Text>
+                  <Heading fontSize="lg" mb="1">
+                    You have $3,200 of debt associated with this collateral.
+                  </Heading>
+                  <Text>
+                    You have $9,600 of collateral associated with this debt,
+                    giving you a C-Ratio of 300%. The value of your collateral
+                    fluctates with market conditions.{' '}
+                    <em>
+                      If your C-Ratio drops below 200% you may be liquidated and
+                      lose your collateral.
+                    </em>
+                  </Text>
                 </Box>
 
                 <Box mb="8">
-                  <Heading fontSize="lg" mb="1">$1,200 of this debt has been accrued from the <Text borderBottom="1px dotted rgba(255,255,255,0.8)" display="inline">Spartan Council</Text> fund.</Heading>
-                  <Text>This will fluctuate depending on the markets where this fund has allocated liquidity.</Text>
+                  <Heading fontSize="lg" mb="1">
+                    $1,200 of this debt has been accrued from the{' '}
+                    <Text
+                      borderBottom="1px dotted rgba(255,255,255,0.8)"
+                      display="inline"
+                    >
+                      Spartan Council
+                    </Text>{' '}
+                    fund.
+                  </Heading>
+                  <Text>
+                    This will fluctuate depending on the markets where this fund
+                    has allocated liquidity.
+                  </Text>
                 </Box>
 
                 <Box mb="4">
-                  <Heading fontSize="lg" mb="4">$2,000 of this debt has been accrued from minting and burning sUSD.</Heading>
+                  <Heading fontSize="lg" mb="4">
+                    $2,000 of this debt has been accrued from minting and
+                    burning sUSD.
+                  </Heading>
                   <SimpleGrid columns={2} spacing={4}>
                     <Box>
-                      <Heading fontSize="md" mb="1">Mint sUSD</Heading>
-                      <Text fontSize="sm" mb="1">Increase your debt and harm your C-Ratio.</Text>
+                      <Heading fontSize="md" mb="1">
+                        Mint sUSD
+                      </Heading>
+                      <Text fontSize="sm" mb="1">
+                        Increase your debt and harm your C-Ratio.
+                      </Text>
 
-                      <Box bg="gray.900" mb="2" p="6" pb="4" borderRadius="12px">
+                      <Box
+                        bg="gray.900"
+                        mb="2"
+                        p="6"
+                        pb="4"
+                        borderRadius="12px"
+                      >
                         <form>
                           <Flex mb="3">
                             <Input
@@ -77,8 +123,8 @@ export default function StakingPosition() {
                               border="none"
                               placeholder="0.0"
                               value={null}
-                              onChange={(e) => {
-                                null
+                              onChange={e => {
+                                null;
                               }}
                             />
                             <Button
@@ -97,8 +143,12 @@ export default function StakingPosition() {
                           <Box mr="auto">
                             <Text fontSize="xs">
                               Max Mint: $1,200
-                              <Tooltip label="You can't mint sUSD that takes your C-Ratio below the target c-ratio of 300%."><QuestionOutlineIcon
-                                transform="translateY(-1.5px)" ml="1" /></Tooltip>
+                              <Tooltip label="You can't mint sUSD that takes your C-Ratio below the target c-ratio of 300%.">
+                                <QuestionOutlineIcon
+                                  transform="translateY(-1.5px)"
+                                  ml="1"
+                                />
+                              </Tooltip>
                             </Text>
                           </Box>
                           <Link>
@@ -114,14 +164,27 @@ export default function StakingPosition() {
                           </Link>
                         </Flex>
                       </Box>
-                      <Text fontSize="sm">This is effectively taking out a zero-interest loan against your collateral.</Text>
+                      <Text fontSize="sm">
+                        This is effectively taking out a zero-interest loan
+                        against your collateral.
+                      </Text>
                     </Box>
 
                     <Box>
-                      <Heading fontSize="md" mb="1">Burn sUSD</Heading>
-                      <Text fontSize="sm" mb="1">Reduce your debt and improve your C-Ratio.</Text>
+                      <Heading fontSize="md" mb="1">
+                        Burn sUSD
+                      </Heading>
+                      <Text fontSize="sm" mb="1">
+                        Reduce your debt and improve your C-Ratio.
+                      </Text>
 
-                      <Box bg="gray.900" mb="2" p="6" pb="4" borderRadius="12px">
+                      <Box
+                        bg="gray.900"
+                        mb="2"
+                        p="6"
+                        pb="4"
+                        borderRadius="12px"
+                      >
                         <form>
                           <Flex mb="3">
                             <Input
@@ -130,8 +193,8 @@ export default function StakingPosition() {
                               border="none"
                               placeholder="0.0"
                               value={null}
-                              onChange={(e) => {
-                                null
+                              onChange={e => {
+                                null;
                               }}
                             />
                             <Button
@@ -148,9 +211,7 @@ export default function StakingPosition() {
                         </form>
                         <Flex alignItems="center">
                           <Box mr="auto">
-                            <Text fontSize="xs">
-                              Balance: $2,000
-                            </Text>
+                            <Text fontSize="xs">Balance: $2,000</Text>
                           </Box>
                           <Link>
                             <Badge
@@ -165,7 +226,17 @@ export default function StakingPosition() {
                           </Link>
                         </Flex>
                       </Box>
-                      <Text fontSize="sm">You can purchase sUSD from most major exchanges like <Link display="inline" _hover={{ textDecoration: "none" }} borderBottom="1px dotted rgba(255,255,255,0.5)">one we like</Link>.</Text>
+                      <Text fontSize="sm">
+                        You can purchase sUSD from most major exchanges like{' '}
+                        <Link
+                          display="inline"
+                          _hover={{ textDecoration: 'none' }}
+                          borderBottom="1px dotted rgba(255,255,255,0.5)"
+                        >
+                          one we like
+                        </Link>
+                        .
+                      </Text>
                     </Box>
                   </SimpleGrid>
                 </Box>
@@ -177,15 +248,26 @@ export default function StakingPosition() {
       <Td py="4">
         400%
         {/* <Text fontWeight="bold" color="red">232% <WarningIcon transform="translateY(-1px)" /></Text> */}
-        <Text fontSize="xs" opacity="0.66" mt="1'">{/*target here as well?*/}300% Min.</Text>
+        <Text fontSize="xs" opacity="0.66" mt="1'">
+          {/*target here as well?*/}300% Min.
+        </Text>
       </Td>
 
       <Td>
-        <NextLink href={"/funds/example"} passHref>
-          <Link _hover={{ textDecoration: 'none' }} display="inline" borderBottom="1px dotted rgba(255,255,255,0.5)">Spartan Council</Link>
+        <NextLink href={'/funds/example'} passHref>
+          <Link
+            _hover={{ textDecoration: 'none' }}
+            display="inline"
+            borderBottom="1px dotted rgba(255,255,255,0.5)"
+          >
+            Spartan Council
+          </Link>
         </NextLink>
         <Link color="blue.400" ml="1">
-          <EditIcon onClick={onOpenFund} style={{ transform: 'translateY(-2px)' }} />
+          <EditIcon
+            onClick={onOpenFund}
+            style={{ transform: 'translateY(-2px)' }}
+          />
         </Link>
         {/*
         For 0 fund:
@@ -195,7 +277,6 @@ export default function StakingPosition() {
           </Link>
               */}
         {/*<Text fontSize="xs" opacity="0.66" mt="1'">&times;1 Leverage</Text>*/}
-
 
         <Modal size="2xl" isOpen={isOpenFund} onClose={onCloseFund}>
           <ModalOverlay />
@@ -226,9 +307,10 @@ export default function StakingPosition() {
         </Modal>
       </Td>
       <Td isNumeric>
-        <Button size="xs" colorScheme="red">Unstake</Button>
+        <Button size="xs" colorScheme="red">
+          Unstake
+        </Button>
       </Td>
     </Tr>
-
-  )
+  );
 }

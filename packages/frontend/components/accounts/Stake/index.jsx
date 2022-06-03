@@ -1,7 +1,7 @@
-import EditPosition from "../EditPosition/index";
-import Balance from "./Balance";
-import CollateralTypeSelector from "./CollateralTypeSelector";
-import { LockIcon, InfoOutlineIcon, EditIcon } from "@chakra-ui/icons";
+import EditPosition from '../EditPosition/index';
+import Balance from './Balance';
+import CollateralTypeSelector from './CollateralTypeSelector';
+import { LockIcon, InfoOutlineIcon, EditIcon } from '@chakra-ui/icons';
 import {
   Box,
   Text,
@@ -19,18 +19,18 @@ import {
   useDisclosure,
   useToast,
   Link,
-} from "@chakra-ui/react";
-import { BigNumber } from "ethers";
-import Router from "next/router";
-import { useState } from "react";
-import { useAccount, useContractRead, erc20ABI } from "wagmi";
+} from '@chakra-ui/react';
+import { BigNumber } from 'ethers';
+import Router from 'next/router';
+import { useState } from 'react';
+import { useAccount, useContractRead, erc20ABI } from 'wagmi';
 
 export default function Stake({ createAccount }) {
   // on loading dropdown and token amount maybe use https://chakra-ui.com/docs/components/feedback/skeleton
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState(BigNumber.from(0));
-  const [inputAmount, setInputAmount] = useState(""); // accounts for decimals
+  const [inputAmount, setInputAmount] = useState(''); // accounts for decimals
   const [collateralType, setCollateralType] = useState();
   const {
     isOpen: isOpenFund,
@@ -52,7 +52,7 @@ export default function Stake({ createAccount }) {
       addressOrName: collateralType?.address,
       contractInterface: erc20ABI,
     },
-    "balanceOf",
+    'balanceOf',
     {
       args: accountAddress,
       chainId: 42,
@@ -61,17 +61,17 @@ export default function Stake({ createAccount }) {
   let balance = balanceData || BigNumber.from(0);
   let sufficientFunds = balance.gte(amount);
 
-  const updateAmount = (val) => {
+  const updateAmount = val => {
     setAmount(val);
     setInputAmount(
       collateralType?.decimals && val
         ? BigNumber.from(val).div(BigNumber.from(collateralType.decimals))
-        : ""
+        : ''
     );
   };
 
-  const updateInputAmount = (val) => {
-    setInputAmount(val || ""); // use '' if 0
+  const updateInputAmount = val => {
+    setInputAmount(val || ''); // use '' if 0
     setAmount(
       val && collateralType.decimals
         ? BigNumber.from(val).mul(
@@ -81,18 +81,18 @@ export default function Stake({ createAccount }) {
     );
   };
 
-  const onSubmit = async (e) => {
+  const onSubmit = async e => {
     e.preventDefault();
     setLoading(true);
 
-    const wethAddress = "0x0000"; // call require with current network to get deployment
+    const wethAddress = '0x0000'; // call require with current network to get deployment
 
     // Can we have global error handling, toasts for reversions, etc.?
     if (createAccount) {
       toast({
-        title: "Approve the transaction to create your account",
-        description: "You’ll be redirected once your transaction is processed.",
-        status: "info",
+        title: 'Approve the transaction to create your account',
+        description: 'You’ll be redirected once your transaction is processed.',
+        status: 'info',
         duration: 9000,
         isClosable: true,
       });
@@ -102,14 +102,15 @@ export default function Stake({ createAccount }) {
         // > wETH.deposit
         // > onboarding.onboard
       } else {
-        const { writeAsync } = useDeploymentsWrite("Onboarding", "onboard", [
-          collateralType.address,
-          amount.toString(),
-        ]);
-        const txResp = await writeAsync();
-        const { data } = useWaitForTransaction({
-          hash: txResp.hash,
-        });
+        // TODO: move this to the top level
+        // const { writeAsync } = useDeploymentsWrite("Onboarding", "onboard", [
+        //   collateralType.address,
+        //   amount.toString(),
+        // ]);
+        // const txResp = await writeAsync();
+        // const { data } = useWaitForTransaction({
+        //   hash: txResp.hash,
+        // });
         Router.push({
           pathname: `/accounts/${data.events.accountId}`,
           query: Object.fromEntries(
@@ -119,9 +120,9 @@ export default function Stake({ createAccount }) {
       }
     } else {
       toast({
-        title: "Approve the transaction to stake this collateral",
-        description: "Check your wallet application for next steps.",
-        status: "info",
+        title: 'Approve the transaction to stake this collateral',
+        description: 'Check your wallet application for next steps.',
+        status: 'info',
         duration: 9000,
         isClosable: true,
       });
@@ -149,12 +150,12 @@ export default function Stake({ createAccount }) {
               placeholder="0.0"
               mr="4"
               value={inputAmount}
-              onChange={(e) => {
+              onChange={e => {
                 updateInputAmount(e.target.value);
               }}
             />
             <CollateralTypeSelector
-              handleChange={(selectedCollateralType) => {
+              handleChange={selectedCollateralType => {
                 setCollateralType(selectedCollateralType);
                 updateAmount(0);
               }}
@@ -187,7 +188,7 @@ export default function Stake({ createAccount }) {
               px="8"
               type="submit"
             >
-              {sufficientFunds ? "Stake" : "Insufficient Funds"}
+              {sufficientFunds ? 'Stake' : 'Insufficient Funds'}
             </Button>
           </Flex>
         </form>
@@ -196,12 +197,12 @@ export default function Stake({ createAccount }) {
             <Balance
               balance={balance}
               collateralType={collateralType}
-              onUseMax={(maxAmount) => updateInputAmount(maxAmount)}
+              onUseMax={maxAmount => updateInputAmount(maxAmount)}
             />
           </Box>
           {createAccount ? (
             <Text fontSize="xs" textAlign="right">
-              Receive an snxAccount token{" "}
+              Receive an snxAccount token{' '}
               <Tooltip
                 textAlign="center"
                 label="You will be minted an NFT that represents your account. You can easily transfer it between wallets."
@@ -211,11 +212,11 @@ export default function Stake({ createAccount }) {
             </Text>
           ) : (
             <Text fontSize="xs" textAlign="right">
-              Staking Position: None{" "}
+              Staking Position: None{' '}
               <Link color="blue.400">
                 <EditIcon
                   onClick={onOpenFund}
-                  style={{ transform: "translateY(-2px)" }}
+                  style={{ transform: 'translateY(-2px)' }}
                 />
               </Link>
             </Text>

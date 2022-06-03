@@ -73,7 +73,7 @@ export default function CollateralTypeSelector({ handleChange }) {
                 overflow="hidden"
                 mr="2"
               >
-                <img
+                <Image
                   alt="collateral image"
                   width="24"
                   height="24"
