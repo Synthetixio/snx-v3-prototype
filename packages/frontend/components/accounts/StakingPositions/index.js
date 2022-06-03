@@ -10,7 +10,7 @@ import {
 import StakingPosition from './StakingPosition'
 
 export default function StakingPositions({ stakingPositions }) {
-  return stakingPositions?.length && (
+  return stakingPositions?.length ? (
     <Box>
       <Heading size="md" mb="2">Staking Positions</Heading>
 
@@ -56,5 +56,5 @@ export default function StakingPositions({ stakingPositions }) {
         </Tbody>
       </Table>
     </Box>
-  )
+  ) : null
 }
