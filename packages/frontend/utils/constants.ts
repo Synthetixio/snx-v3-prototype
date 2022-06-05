@@ -1,4 +1,4 @@
-import { chain } from 'wagmi';
+import { chain, chainId as chainMapping } from 'wagmi';
 
 export type CollateralType = {
   address: string;
@@ -36,10 +36,12 @@ export const supportedChains = [chain.mainnet, chain.kovan, chain.localhost];
 export const getChainById = (chainId: number) =>
   supportedChains.find(chain => chain.id === chainId);
 
-export const getChainByName = (chainName: string) =>
-  supportedChains.find(chain => chain.name === chainName);
+export const getChainNameById = (chainId: number) => {
+  const chain = Object.entries(chainMapping).find(
+    entry => entry[1] === chainId
+  );
 
-export const getChainNameById = (chainId: number) =>
-  getChainById(chainId)?.name;
+  return chain ? chain[0] : '';
+};
 
 export const MAINNET_CHAIN_ID = 1;

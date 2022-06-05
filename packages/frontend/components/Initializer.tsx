@@ -3,12 +3,16 @@ import { getChainNameById, MAINNET_CHAIN_ID } from '../utils/constants';
 import { ChainName } from '@wagmi/core/dist/declarations/src/constants/chains';
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useRef, FC } from 'react';
 import { useRecoilState } from 'recoil';
 import { useNetwork, chainId as chainMapping } from 'wagmi';
 
-export const Initializer = () => {
-  const [_, setLocalChainId] = useRecoilState(chainIdState);
+type Props = {
+  children?: (loading: boolean) => React.ReactElement;
+};
+
+export const Initializer: FC<Props> = ({ children }) => {
+  const [localChainId, setLocalChainId] = useRecoilState(chainIdState);
   const router = useRouter();
   const enableAutoSwitchNetwork = useRef(true);
 
@@ -105,5 +109,5 @@ export const Initializer = () => {
     switchNetwork,
   ]);
 
-  return null;
+  return children ? children(!Boolean(localChainId)) : null;
 };

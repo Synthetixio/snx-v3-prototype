@@ -8,5 +8,5 @@ export const collateralTypesState = atom({
 
 export const chainIdState = atom({
   key: 'localChainId',
-  default: 1,
+  default: 0,
 });

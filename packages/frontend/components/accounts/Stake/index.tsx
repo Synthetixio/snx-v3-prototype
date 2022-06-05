@@ -1,5 +1,6 @@
 import { chainIdState, collateralTypesState } from '../../../state';
 import { CollateralType, getChainById } from '../../../utils/constants';
+import { tryToBN } from '../../../utils/convert';
 import { useContract } from '../../../utils/hooks/useContract';
 import { useMulticall, MulticallCall } from '../../../utils/hooks/useMulticall';
 import EditPosition from '../EditPosition/index';
@@ -29,7 +30,6 @@ import { BigNumber } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { useAccount, useContractRead, erc20ABI, useBalance } from 'wagmi';
-import { tryToBN } from '../../../utils/convert';
 
 export default function Stake({ createAccount }: { createAccount: boolean }) {
   // on loading dropdown and token amount maybe use https://chakra-ui.com/docs/components/feedback/skeleton
@@ -51,19 +51,20 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     onOpen: onOpenFund,
     onClose: onCloseFund,
   } = useDisclosure();
-  
+
   const [localChainId] = useRecoilState(chainIdState);
 
-
-
-  const isNativeCurrency = collateralType.symbol === getChainById(localChainId)?.nativeCurrency?.symbol;
+  const isNativeCurrency =
+    collateralType.symbol ===
+    getChainById(localChainId)?.nativeCurrency?.symbol;
 
   const { data: accountData } = useAccount();
   const accountAddress = accountData?.address;
-  const { data: balanceData } = useBalance({ addressOrName: accountAddress, token: isNativeCurrency ? undefined : collateralType.address });
-  let sufficientFunds = balanceData?.value.gte(
-    amount || 0
-  );
+  const { data: balanceData } = useBalance({
+    addressOrName: accountAddress,
+    token: isNativeCurrency ? undefined : collateralType.address,
+  });
+  let sufficientFunds = balanceData?.value.gte(amount || 0);
 
   const { data: allowance } = useContractRead(
     {
@@ -73,28 +74,25 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     'allowance',
     {
       args: [accountAddress, onboarding?.address],
-      enabled: !isNativeCurrency
+      enabled: !isNativeCurrency,
     }
   );
-  let sufficientAllowance = allowance?.gte(
-    amount || 0
-  );
+  let sufficientAllowance = allowance?.gte(amount || 0);
 
   const calls: MulticallCall[][] = [
-    [
-      [
-        onboarding!.contract,
-        'onboard',
-        [collateralContract?.address, amount],
-      ],
-    ],
+    [[onboarding!.contract, 'onboard', [collateralContract?.address, amount]]],
   ];
 
   const overrides: CallOverrides = {};
 
   // add extra step to convert to wrapped token if native (ex. ETH)
   if (isNativeCurrency) {
-    calls[0].unshift([collateralContract!.contract, 'deposit', [], { value: amount || 0 }]);
+    calls[0].unshift([
+      collateralContract!.contract,
+      'deposit',
+      [],
+      { value: amount || 0 },
+    ]);
     overrides.value = amount!;
   }
   // add extra step to "approve" the token if needed before running the multicall
@@ -115,34 +113,43 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     if (multiTxn.started) {
       if (!sufficientAllowance && multiTxn.step === 0) {
         toast({
-          title: `(${multiTxn.step + 1} / ${calls.length}) Approve collateral for transfer`,
-          description: 'The next transaction will finish staking your collateral.',
+          title: `(${multiTxn.step + 1} / ${
+            calls.length
+          }) Approve collateral for transfer`,
+          description:
+            'The next transaction will finish staking your collateral.',
           status: 'info',
           duration: 9000,
           isClosable: true,
         });
-      }
-      else {
+      } else {
         toast({
           title: `(${multiTxn.step + 1} / ${calls.length}) Create your account`,
-          description: 'You’ll be redirected once your transaction is processed.',
+          description:
+            'You’ll be redirected once your transaction is processed.',
           status: 'info',
           duration: 9000,
           isClosable: true,
         });
       }
     }
-  }, [multiTxn.step, multiTxn.started, calls.length, sufficientAllowance, toast]);
-
-  console.log(amount);
+  }, [
+    multiTxn.step,
+    multiTxn.started,
+    calls.length,
+    sufficientAllowance,
+    toast,
+  ]);
 
   return (
     <>
       <Box bg="gray.900" mb="8" p="6" pb="4" borderRadius="12px">
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          multiTxn.exec();
-        }}>
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+            multiTxn.exec();
+          }}
+        >
           <Flex mb="3">
             <Input
               flex="1"
