@@ -1,23 +1,18 @@
 import { chainIdState } from '../state';
-import {
-  getChainById,
-  getChainByName,
-  getChainNameById,
-  MAINNET_CHAIN_ID,
-} from '../utils/constants';
+import { getChainNameById, MAINNET_CHAIN_ID } from '../utils/constants';
+import { ChainName } from '@wagmi/core/dist/declarations/src/constants/chains';
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { useRecoilState } from 'recoil';
-import { useNetwork } from 'wagmi';
+import { useNetwork, chainId as chainMapping } from 'wagmi';
 
 export const Initializer = () => {
-  const [localChainId, setLocalChainId] = useRecoilState(chainIdState);
+  const [_, setLocalChainId] = useRecoilState(chainIdState);
   const router = useRouter();
+  const enableAutoSwitchNetwork = useRef(true);
 
-  const { switchNetwork, activeChain } = useNetwork();
-
-  const switchToChain = useCallback(
+  const routeToChain = useCallback(
     (chainId: number) => {
       const chain = getChainNameById(chainId);
       router.replace(
@@ -32,10 +27,18 @@ export const Initializer = () => {
           shallow: true,
         }
       );
-      setLocalChainId(chainId);
+      return chain;
     },
-    [router, setLocalChainId]
+    [router]
   );
+
+  const { switchNetwork, activeChain } = useNetwork({
+    onSuccess: data => {
+      console.log('switch network success', data.id);
+      setLocalChainId(data.id);
+      routeToChain(data.id);
+    },
+  });
 
   useEffect(() => {
     if (window.ethereum) {
@@ -46,39 +49,61 @@ export const Initializer = () => {
 
       web3Provider.on('network', (newNetwork, oldNetwork) => {
         if (oldNetwork) {
-          switchToChain(newNetwork.chainId);
+          console.log('event emitted, new network');
+          routeToChain(newNetwork.chainId);
+          setLocalChainId(newNetwork.chainId);
         }
       });
     }
-  }, [switchToChain]);
+  }, [routeToChain, setLocalChainId]);
 
+  const chainParam = router.query.chain?.toString();
+  const chainIdParamExists = Boolean(chainParam);
+  const chainId = chainMapping[chainParam as ChainName];
+  const hasWalletConnected = Boolean(switchNetwork);
+
+  // MOUNT
+  // 1. if no query param and active chain id, route to active chain id
+  // 2. if no query param and no active chain id, route to mainnet
+  // 3. if query param and active chain id, if different, switch nework to query param
+  // 4. if query param and no active chain id, set local chain id to query param
+
+  // USER MANUALLY SWITCHES NETWORK
+  // 1. set local chain, and route to chain
   useEffect(() => {
-    if (!router.isReady) {
+    if (!router.isReady || !enableAutoSwitchNetwork.current) {
       return;
     }
-
-    const chainParam = router.query.chain?.toString();
-
-    if (switchNetwork) {
-      if (chainParam) {
-        const chain = getChainByName(chainParam);
-        const chainId = chain ? chain.id : MAINNET_CHAIN_ID;
-
-        switchNetwork(chainId);
-        setLocalChainId(chainId);
+    if (chainIdParamExists) {
+      if (hasWalletConnected) {
+        if (activeChain && activeChain.id !== chainId) {
+          enableAutoSwitchNetwork.current = false;
+          switchNetwork!(chainId);
+        }
       } else {
-        switchNetwork(MAINNET_CHAIN_ID);
-        switchToChain(MAINNET_CHAIN_ID);
+        setLocalChainId(chainId);
       }
     } else {
-      if (chainParam) {
-        const chain = getChainByName(chainParam);
-        chain ? setLocalChainId(chain.id) : switchToChain(MAINNET_CHAIN_ID);
+      if (activeChain) {
+        enableAutoSwitchNetwork.current = false;
+        setLocalChainId(activeChain.id);
+        routeToChain(activeChain.id);
       } else {
-        switchToChain(MAINNET_CHAIN_ID);
+        enableAutoSwitchNetwork.current = false;
+        setLocalChainId(MAINNET_CHAIN_ID);
+        routeToChain(MAINNET_CHAIN_ID);
       }
     }
-  }, [switchNetwork, router, switchToChain, setLocalChainId]);
+  }, [
+    activeChain,
+    chainId,
+    chainIdParamExists,
+    hasWalletConnected,
+    routeToChain,
+    router.isReady,
+    setLocalChainId,
+    switchNetwork,
+  ]);
 
   return null;
 };
