@@ -14,7 +14,7 @@ type Props = {
 export const Initializer: FC<Props> = ({ children }) => {
   const [localChainId, setLocalChainId] = useRecoilState(chainIdState);
   const router = useRouter();
-  const enableAutoSwitchNetwork = useRef(true);
+  const onInitialMount = useRef(true);
 
   const routeToChain = useCallback(
     (chainId: number) => {
@@ -38,7 +38,6 @@ export const Initializer: FC<Props> = ({ children }) => {
 
   const { switchNetwork, activeChain } = useNetwork({
     onSuccess: data => {
-      console.log('switch network success', data.id);
       setLocalChainId(data.id);
       routeToChain(data.id);
     },
@@ -53,7 +52,6 @@ export const Initializer: FC<Props> = ({ children }) => {
 
       web3Provider.on('network', (newNetwork, oldNetwork) => {
         if (oldNetwork) {
-          console.log('event emitted, new network');
           routeToChain(newNetwork.chainId);
           setLocalChainId(newNetwork.chainId);
         }
@@ -71,29 +69,31 @@ export const Initializer: FC<Props> = ({ children }) => {
   // 2. if no query param and no active chain id, route to mainnet
   // 3. if query param and active chain id, if different, switch nework to query param
   // 4. if query param and no active chain id, set local chain id to query param
-
-  // USER MANUALLY SWITCHES NETWORK
-  // 1. set local chain, and route to chain
   useEffect(() => {
-    if (!router.isReady || !enableAutoSwitchNetwork.current) {
+    if (!router.isReady || !onInitialMount.current) {
       return;
     }
     if (chainIdParamExists) {
-      if (hasWalletConnected) {
-        if (activeChain && activeChain.id !== chainId) {
-          enableAutoSwitchNetwork.current = false;
-          switchNetwork!(chainId);
+      if (activeChain) {
+        if (activeChain.id !== chainId) {
+          if (hasWalletConnected) {
+            onInitialMount.current = false;
+            switchNetwork!(chainId);
+          }
+        } else {
+          onInitialMount.current = false;
+          setLocalChainId(chainId);
         }
       } else {
         setLocalChainId(chainId);
       }
     } else {
       if (activeChain) {
-        enableAutoSwitchNetwork.current = false;
+        onInitialMount.current = false;
         setLocalChainId(activeChain.id);
         routeToChain(activeChain.id);
       } else {
-        enableAutoSwitchNetwork.current = false;
+        onInitialMount.current = false;
         setLocalChainId(MAINNET_CHAIN_ID);
         routeToChain(MAINNET_CHAIN_ID);
       }
