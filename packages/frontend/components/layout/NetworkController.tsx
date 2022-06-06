@@ -56,7 +56,7 @@ export function NetworkController() {
                 mr="4"
               >
                 {chain?.hasIcon && (
-                  <div
+                  <span
                     style={{
                       background: chain?.iconBackground,
                       width: 20,
@@ -74,7 +74,7 @@ export function NetworkController() {
                         src={chain?.iconUrl}
                       />
                     )}
-                  </div>
+                  </span>
                 )}
                 {chain?.name}
               </Button>

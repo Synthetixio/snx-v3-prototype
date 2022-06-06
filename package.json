@@ -9,7 +9,8 @@
     "fe": "npm run --workspace=@snx-v3/frontend",
     "dev": "npm run fe dev",
     "tsc": "npm run fe tsc",
-    "build": "npm run fe build"
+    "build": "npm run fe build",
+    "local-chain": "npm run hardhat local-chain"
   },
   "engines": {
     "npm": ">=8.0.0",
