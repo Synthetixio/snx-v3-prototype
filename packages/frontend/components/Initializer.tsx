@@ -1,5 +1,6 @@
 import { chainIdState, collateralTypesState } from "../state";
 import {
+  CollateralType,
   getChainNameById,
   localCollateralTypes,
   LOCALHOST_CHAIN_ID,
@@ -125,8 +126,20 @@ export const Initializer: FC<Props> = ({ children }) => {
       if (localChainId === LOCALHOST_CHAIN_ID) {
         setCollateralTypes(localCollateralTypes);
       } else {
-        console.log("DATA", data);
-        // TODO: use uniswap token list
+        // Convert addresses to the data from the token list
+        const tokensForLocalChain = tokens.filter(
+          (token) => token.chainId === localChainId
+        );
+        const enrichedCollateralTypes = data
+          .map((collateralType) =>
+            tokensForLocalChain.find(
+              (token) => token.address == collateralType.address
+            )
+          )
+          .filter(function (element) {
+            return element !== undefined;
+          });
+        setCollateralTypes(enrichedCollateralTypes as CollateralType[]);
       }
     },
   });
