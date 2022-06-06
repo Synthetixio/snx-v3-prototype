@@ -1,15 +1,24 @@
-import { collateralTypesState } from '../../../state/index';
-import { Text, Badge, Link } from '@chakra-ui/react';
-import { ethers } from 'ethers';
-import { CollateralType } from '../../../utils/constants';
+import { Text, Badge, Link } from '@chakra-ui/react'
+import { ethers } from 'ethers'
+import { CollateralType } from '../../../utils/constants'
 
-export default function Balance({ balance, collateralType, onUseMax }: { balance: ethers.BigNumber, collateralType: CollateralType, onUseMax: (max: ethers.BigNumber) => void }) {
+export default function Balance({
+  balance,
+  collateralType,
+  onUseMax,
+}: {
+  balance: ethers.BigNumber
+  collateralType: CollateralType
+  onUseMax: (max: ethers.BigNumber) => void
+}) {
   // Needs a special case for ETH/wETH?
 
   return collateralType ? (
     <Text fontSize="xs">
       Balance:{' '}
-      {parseFloat(ethers.utils.formatUnits(balance, collateralType.decimals)).toLocaleString()}{' '}
+      {parseFloat(
+        ethers.utils.formatUnits(balance, collateralType.decimals),
+      ).toLocaleString()}{' '}
       {collateralType.symbol}
       {balance.eq(0) ? (
         <Link>
@@ -31,12 +40,12 @@ export default function Balance({ balance, collateralType, onUseMax }: { balance
           colorScheme="blue"
           transform="translateY(-2px)"
           onClick={() => {
-            onUseMax(balance);
+            onUseMax(balance)
           }}
         >
           Use Max
         </Badge>
       )}
     </Text>
-  ) : null;
+  ) : null
 }

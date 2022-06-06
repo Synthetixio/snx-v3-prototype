@@ -1,18 +1,18 @@
-import { chainIdState, collateralTypesState } from '../state';
+import { chainIdState, collateralTypesState } from "../state";
 import {
   getChainNameById,
   localCollateralTypes,
   LOCALHOST_CHAIN_ID,
   MAINNET_CHAIN_ID,
-} from '../utils/constants';
-import { useDeploymentRead, useSynthetixRead } from '../utils/hooks';
-import { tokens } from '@uniswap/default-token-list';
-import { ChainName } from '@wagmi/core/dist/declarations/src/constants/chains';
-import { ethers } from 'ethers';
-import { useRouter } from 'next/router';
-import { useEffect, useCallback, useRef, FC } from 'react';
-import { useRecoilState } from 'recoil';
-import { useNetwork, chainId as chainMapping } from 'wagmi';
+} from "../utils/constants";
+import { useSynthetixRead } from "../utils/hooks";
+import { tokens } from "@uniswap/default-token-list";
+import { ChainName } from "@wagmi/core/dist/declarations/src/constants/chains";
+import { ethers } from "ethers";
+import { useRouter } from "next/router";
+import { useEffect, useCallback, useRef, FC } from "react";
+import { useRecoilState } from "recoil";
+import { useNetwork, chainId as chainMapping } from "wagmi";
 
 type Props = {
   children?: (loading: boolean) => React.ReactElement;
@@ -46,7 +46,7 @@ export const Initializer: FC<Props> = ({ children }) => {
   );
 
   const { switchNetwork, activeChain } = useNetwork({
-    onSuccess: data => {
+    onSuccess: (data) => {
       setLocalChainId(data.id);
       routeToChain(data.id);
     },
@@ -56,10 +56,10 @@ export const Initializer: FC<Props> = ({ children }) => {
     if (window.ethereum) {
       const web3Provider = new ethers.providers.Web3Provider(
         window.ethereum as ethers.providers.ExternalProvider,
-        'any'
+        "any"
       );
 
-      web3Provider.on('network', (newNetwork, oldNetwork) => {
+      web3Provider.on("network", (newNetwork, oldNetwork) => {
         if (oldNetwork) {
           routeToChain(newNetwork.chainId);
           setLocalChainId(newNetwork.chainId);
@@ -118,22 +118,18 @@ export const Initializer: FC<Props> = ({ children }) => {
     switchNetwork,
   ]);
 
-  const { refetch } = useDeploymentRead(
-    'synthetix.Proxy',
-    'getCollateralTypes',
-    {
-      enabled: false,
-      args: { hideDisabled: true },
-      onSuccess(data) {
-        if (localChainId === LOCALHOST_CHAIN_ID) {
-          setCollateralTypes(localCollateralTypes);
-        } else {
-          console.log('DATA', data);
-          // TODO: use uniswap token list
-        }
-      },
-    }
-  );
+  const { refetch } = useSynthetixRead("getCollateralTypes", {
+    enabled: false,
+    args: { hideDisabled: true },
+    onSuccess(data) {
+      if (localChainId === LOCALHOST_CHAIN_ID) {
+        setCollateralTypes(localCollateralTypes);
+      } else {
+        console.log("DATA", data);
+        // TODO: use uniswap token list
+      }
+    },
+  });
 
   useEffect(() => {
     const fetchCollateralTypes = async () => {

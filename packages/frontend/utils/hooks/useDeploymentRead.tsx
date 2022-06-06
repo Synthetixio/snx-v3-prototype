@@ -1,5 +1,5 @@
-import { useContract } from './useContract';
-import { useContractRead } from 'wagmi';
+import { useContract } from "./useContract";
+import { useContractRead } from "wagmi";
 
 type ContractReadParams = Parameters<typeof useContractRead>;
 
@@ -8,7 +8,8 @@ export const useSynthetixRead = (
   funcName: string,
   args: ContractReadParams[2]
 ) => {
-  return useDeploymentRead('synthetix.Proxy', funcName, args);
+  console.log(funcName, args);
+  return useDeploymentRead("synthetix.Proxy", funcName, args);
 };
 
 // Similar to https://wagmi.sh/docs/hooks/useContractRead, but its aware of the currently selected network and the user specifies the contract name rather than address.
@@ -21,11 +22,12 @@ export const useDeploymentRead = (
   return useContractRead(
     {
       addressOrName: contract?.address,
-      contractInterface: contract?.abi || '',
+      contractInterface: contract?.abi || "",
     },
     funcName,
     {
       ...args,
+      chainId: contract?.chainId,
     }
   );
 };
