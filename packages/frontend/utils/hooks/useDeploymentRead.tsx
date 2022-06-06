@@ -8,7 +8,6 @@ export const useSynthetixRead = (
   funcName: string,
   args: ContractReadParams[2]
 ) => {
-  console.log(funcName, args);
   return useDeploymentRead("synthetix.Proxy", funcName, args);
 };
 

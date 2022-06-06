@@ -1,6 +1,6 @@
-import { Container, Flex } from '@chakra-ui/react'
-import Head from 'next/head'
-import CreateAccount from '../components/accounts/CreateAccount'
+import CreateAccount from "../components/accounts/CreateAccount";
+import { Container, Flex } from "@chakra-ui/react";
+import Head from "next/head";
 
 // This renders the staker create view if no -wallet is connected or no lp token is in the connected wallet
 // This renders the show lp token view if there's only on token with a 'create new lp token/staker' button on the bottom
@@ -17,5 +17,5 @@ export default function Home() {
         <CreateAccount />
       </Container>
     </Flex>
-  )
+  );
 }

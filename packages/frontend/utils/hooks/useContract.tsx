@@ -15,7 +15,9 @@ export const useContract = (name: string) => {
     }
 
     const chainName =
-      chain.name.toLowerCase() == "localhost" ? "hardhat" : chain.name;
+      chain.name.toLowerCase() == "localhost"
+        ? "hardhat"
+        : chain.name.toLowerCase();
     const contractInfo = require(`../../deployments/${chainName}/${name}.json`);
 
     return {
