@@ -1,5 +1,12 @@
-import { chainIdState } from '../state';
-import { getChainNameById, MAINNET_CHAIN_ID } from '../utils/constants';
+import { chainIdState, collateralTypesState } from '../state';
+import {
+  getChainNameById,
+  localCollateralTypes,
+  LOCALHOST_CHAIN_ID,
+  MAINNET_CHAIN_ID,
+} from '../utils/constants';
+import { useDeploymentRead, useSynthetixRead } from '../utils/hooks';
+import { tokens } from '@uniswap/default-token-list';
 import { ChainName } from '@wagmi/core/dist/declarations/src/constants/chains';
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
@@ -13,6 +20,8 @@ type Props = {
 
 export const Initializer: FC<Props> = ({ children }) => {
   const [localChainId, setLocalChainId] = useRecoilState(chainIdState);
+  const [collateralTypes, setCollateralTypes] =
+    useRecoilState(collateralTypesState);
   const router = useRouter();
   const onInitialMount = useRef(true);
 
@@ -109,5 +118,37 @@ export const Initializer: FC<Props> = ({ children }) => {
     switchNetwork,
   ]);
 
-  return children ? children(!Boolean(localChainId)) : null;
+  const { refetch } = useDeploymentRead(
+    'synthetix.Proxy',
+    'getCollateralTypes',
+    {
+      enabled: false,
+      args: { hideDisabled: true },
+      onSuccess(data) {
+        if (localChainId === LOCALHOST_CHAIN_ID) {
+          setCollateralTypes(localCollateralTypes);
+        } else {
+          console.log('DATA', data);
+          // TODO: use uniswap token list
+        }
+      },
+    }
+  );
+
+  useEffect(() => {
+    const fetchCollateralTypes = async () => {
+      return await refetch();
+    };
+    if (localChainId) {
+      fetchCollateralTypes();
+    }
+  }, [localChainId, refetch]);
+
+  const isLoading = !Boolean(localChainId) || !Boolean(collateralTypes.length);
+
+  return children ? children(isLoading) : null;
 };
+
+// "Error: Query data cannot be undefined
+// at Object.onSuccess (webpack-internal:///../../node_modules/react-query/lib/core/query.mjs:320:19)
+// at resolve (webpack-internal:///../../node_modules/react-query/lib/core/retryer.mjs:64:50)"

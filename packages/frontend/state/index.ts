@@ -1,9 +1,9 @@
-import { collateralTypes } from '../utils/constants';
+import { CollateralType } from '../utils/constants';
 import { atom } from 'recoil';
 
-export const collateralTypesState = atom({
+export const collateralTypesState = atom<Array<CollateralType>>({
   key: 'collateralTypes',
-  default: collateralTypes,
+  default: [],
 });
 
 export const chainIdState = atom({

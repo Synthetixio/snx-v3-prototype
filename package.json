@@ -10,6 +10,7 @@
     "dev": "npm run fe dev",
     "tsc": "npm run fe tsc",
     "build": "npm run fe build",
+    "cannon-build": "npm run hardhat cannon-build",
     "local-chain": "npm run hardhat local-chain"
   },
   "engines": {

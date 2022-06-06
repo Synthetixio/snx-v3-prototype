@@ -3,7 +3,6 @@ import { getChainById } from '../constants';
 import { ethers } from 'ethers';
 import { useMemo } from 'react';
 import { useRecoilState } from 'recoil';
-import { erc20ABI } from 'wagmi';
 
 // Similar to https://wagmi.sh/docs/hooks/useContract, but its aware of the currently selected network.
 export const useContract = (name: string) => {
@@ -19,7 +18,7 @@ export const useContract = (name: string) => {
 
     return {
       address: contractInfo.address,
-      abi: erc20ABI,
+      abi: contractInfo.abi,
       contract: new ethers.Contract(contractInfo.address, contractInfo.abi),
       chainId: localChainId,
     };

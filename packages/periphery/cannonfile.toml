@@ -111,6 +111,6 @@ on = ["snx.token"]
 func = "mint"
 args = [
     "<%= settings.owner %>",
-    "2000000000000000000"
+    "200000000000000000000"
 ]
 step = 3
