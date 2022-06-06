@@ -36,7 +36,7 @@ export default function Position() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <RadioGroup onChange={setDelegate} value={delegate}>
+            <RadioGroup onChange={setFundId} value={fundId}>
               <StakerOption name="Spartan Council" defaultChecked={true} />
               <StakerOption name="Forex" />
               <StakerOption name="Commodities" />

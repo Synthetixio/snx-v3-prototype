@@ -1,12 +1,12 @@
-import { chainIdState, collateralTypesState } from '../../../state';
-import { CollateralType, getChainById } from '../../../utils/constants';
-import { tryToBN } from '../../../utils/convert';
-import { useContract } from '../../../utils/hooks/useContract';
-import { useMulticall, MulticallCall } from '../../../utils/hooks/useMulticall';
-import EditPosition from '../EditPosition/index';
-import Balance from './Balance';
-import CollateralTypeSelector from './CollateralTypeSelector';
-import { LockIcon, InfoOutlineIcon, EditIcon } from '@chakra-ui/icons';
+import { chainIdState, collateralTypesState } from '../../../state'
+import { CollateralType, getChainById } from '../../../utils/constants'
+import { tryToBN } from '../../../utils/convert'
+import { useContract } from '../../../utils/hooks/useContract'
+import { useMulticall, MulticallCall } from '../../../utils/hooks/useMulticall'
+import EditPosition from '../EditPosition/index'
+import Balance from './Balance'
+import CollateralTypeSelector from './CollateralTypeSelector'
+import { LockIcon, InfoOutlineIcon, EditIcon } from '@chakra-ui/icons'
 import {
   Box,
   Text,
@@ -24,47 +24,46 @@ import {
   useDisclosure,
   useToast,
   Link,
-} from '@chakra-ui/react';
-import { ethers, CallOverrides } from 'ethers';
-import { BigNumber } from 'ethers';
-import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { useAccount, useContractRead, erc20ABI, useBalance } from 'wagmi';
+} from '@chakra-ui/react'
+import { ethers, CallOverrides } from 'ethers'
+import { BigNumber } from 'ethers'
+import { useEffect, useState } from 'react'
+import { useRecoilState } from 'recoil'
+import { useAccount, useContractRead, erc20ABI, useBalance } from 'wagmi'
 
 export default function Stake({ createAccount }: { createAccount: boolean }) {
   // on loading dropdown and token amount maybe use https://chakra-ui.com/docs/components/feedback/skeleton
-  const toast = useToast();
-  const [inputAmount, setInputAmount] = useState('0'); // accounts for decimals
+  const toast = useToast()
+  const [inputAmount, setInputAmount] = useState('0') // accounts for decimals
 
-  const [collateralTypes] = useRecoilState(collateralTypesState);
+  const [collateralTypes] = useRecoilState(collateralTypesState)
   const [collateralType, setCollateralType] = useState<CollateralType>(
-    collateralTypes[0]
-  );
+    collateralTypes[0],
+  )
 
-  let amount = tryToBN(inputAmount, collateralType.decimals);
+  let amount = tryToBN(inputAmount, collateralType.decimals)
 
-  const collateralContract = useContract('lusd.token');
-  const snxProxy = useContract('synthetix.Proxy');
-  const onboarding = useContract('Onboarding');
+  const collateralContract = useContract('lusd.token')
+  const snxProxy = useContract('synthetix.Proxy')
+  const onboarding = useContract('Onboarding')
   const {
     isOpen: isOpenFund,
     onOpen: onOpenFund,
     onClose: onCloseFund,
-  } = useDisclosure();
+  } = useDisclosure()
 
-  const [localChainId] = useRecoilState(chainIdState);
+  const [localChainId] = useRecoilState(chainIdState)
 
   const isNativeCurrency =
-    collateralType.symbol ===
-    getChainById(localChainId)?.nativeCurrency?.symbol;
+    collateralType.symbol === getChainById(localChainId)?.nativeCurrency?.symbol
 
-  const { data: accountData } = useAccount();
-  const accountAddress = accountData?.address;
+  const { data: accountData } = useAccount()
+  const accountAddress = accountData?.address
   const { data: balanceData } = useBalance({
     addressOrName: accountAddress,
     token: isNativeCurrency ? undefined : collateralType.address,
-  });
-  let sufficientFunds = balanceData?.value.gte(amount || 0);
+  })
+  let sufficientFunds = balanceData?.value.gte(amount || 0)
 
   const { data: allowance } = useContractRead(
     {
@@ -75,15 +74,15 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     {
       args: [accountAddress, onboarding?.address],
       enabled: !isNativeCurrency,
-    }
-  );
-  let sufficientAllowance = allowance?.gte(amount || 0);
+    },
+  )
+  let sufficientAllowance = allowance?.gte(amount || 0)
 
   const calls: MulticallCall[][] = [
     [[onboarding!.contract, 'onboard', [collateralContract?.address, amount]]],
-  ];
+  ]
 
-  const overrides: CallOverrides = {};
+  const overrides: CallOverrides = {}
 
   // add extra step to convert to wrapped token if native (ex. ETH)
   if (isNativeCurrency) {
@@ -92,8 +91,8 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       'deposit',
       [],
       { value: amount || 0 },
-    ]);
-    overrides.value = amount!;
+    ])
+    overrides.value = amount!
   }
   // add extra step to "approve" the token if needed before running the multicall
   else if (!sufficientAllowance) {
@@ -104,10 +103,10 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
         'approve',
         [snxProxy?.address, ethers.constants.MaxUint256],
       ],
-    ]);
+    ])
   }
 
-  const multiTxn = useMulticall(calls, { overrides });
+  const multiTxn = useMulticall(calls, { overrides })
 
   useEffect(() => {
     if (multiTxn.started) {
@@ -121,7 +120,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
           status: 'info',
           duration: 9000,
           isClosable: true,
-        });
+        })
       } else {
         toast({
           title: `(${multiTxn.step + 1} / ${calls.length}) Create your account`,
@@ -130,7 +129,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
           status: 'info',
           duration: 9000,
           isClosable: true,
-        });
+        })
       }
     }
   }, [
@@ -139,15 +138,15 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     calls.length,
     sufficientAllowance,
     toast,
-  ]);
+  ])
 
   return (
     <>
       <Box bg="gray.900" mb="8" p="6" pb="4" borderRadius="12px">
         <form
-          onSubmit={e => {
-            e.preventDefault();
-            multiTxn.exec();
+          onSubmit={(e) => {
+            e.preventDefault()
+            multiTxn.exec()
           }}
         >
           <Flex mb="3">
@@ -159,13 +158,13 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
               placeholder="0.0"
               mr="4"
               value={inputAmount}
-              onChange={e => {
-                setInputAmount(e.target.value);
+              onChange={(e) => {
+                setInputAmount(e.target.value)
               }}
             />
             <CollateralTypeSelector
               handleChange={(selectedCollateralType: CollateralType) => {
-                setCollateralType(selectedCollateralType);
+                setCollateralType(selectedCollateralType)
                 // refetch();
               }}
             />
@@ -209,10 +208,10 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
               onUseMax={(maxAmount: ethers.BigNumber) => {
                 const amount = ethers.utils.formatUnits(
                   maxAmount,
-                  collateralType.decimals
-                );
+                  collateralType.decimals,
+                )
 
-                setInputAmount(amount);
+                setInputAmount(amount)
               }}
             />
           </Box>
@@ -228,7 +227,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
             </Text>
           ) : (
             <Text fontSize="xs" textAlign="right">
-              Staking Position: None{' '}
+              Fund: None{' '}
               <Link color="blue.400">
                 <EditIcon
                   onClick={onOpenFund}
@@ -356,5 +355,5 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       </Modal>
       */}
     </>
-  );
+  )
 }

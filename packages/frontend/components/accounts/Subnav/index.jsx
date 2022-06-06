@@ -22,8 +22,7 @@ export default function Subnav() {
   return (
     <Flex mb="6" alignItems="center">
       <Text fontWeight="semibold" fontSize="md">
-        Account #{id}
-        {/*
+        {id ? `Account #${id}` : `Create Account`}
         <Menu>
           <MenuButton ml="1" transform="translateY(-1px)">
             <ChevronDownIcon />
@@ -34,6 +33,9 @@ export default function Subnav() {
             bg="black"
             border="1px solid rgba(255,255,255,0.33)"
           >
+            {/*
+              TODO: List all accounts owned by connected wallet here
+
             <MenuItem
               _hover={{ bg: "gray.800" }}
               _focus={{ bg: "gray.800" }}
@@ -48,16 +50,24 @@ export default function Subnav() {
             >
               Account #321
             </MenuItem>
+        */}
             <MenuItem
               _hover={{ bg: "gray.800" }}
               _focus={{ bg: "gray.800" }}
               _active={{ bg: "gray.800" }}
             >
-              Create new account
+              <NextLink href={"/accounts/create"} passHref>
+                <Link
+                  _focus={{ boxShadow: "none" }}
+                  _hover={{ textDecoration: "none" }}
+                  fontWeight="semibold"
+                >
+                  Create new account
+                </Link>
+              </NextLink>
             </MenuItem>
           </MenuList>
         </Menu>
-        */}
       </Text>
 
       {false && router.route.split("/").length == 3 && (
