@@ -8,7 +8,6 @@ import { useRouter } from 'next/router';
 export default function Account() {
   const router = useRouter();
   const { id } = router.query;
-  const stakingPositions = []; //TODO: useSynthetixRead();
 
   return (
     <Box>
@@ -19,9 +18,9 @@ export default function Account() {
       <Container maxW="container.sm">
         <Box>
           <Subnav />
-          <StakingPositions stakingPositions={stakingPositions} />
+          <StakingPositions accountId={id} />
           <Heading size="md" mb="3">
-            Stake {stakingPositions.length > 0 && 'Additional'} Collateral
+            Stake Collateral
           </Heading>
           <Stake />
         </Box>

@@ -9,7 +9,13 @@ import {
 } from '@chakra-ui/react'
 import StakingPosition from './StakingPosition'
 
-export default function StakingPositions({ stakingPositions }) {
+export default function StakingPositions({ accountId }) {
+  let stakingPositions = [];
+
+  // const liquidityItemIds = useSynthetixRead("liquidityItemIdsByAccount", accountId);
+  // This should also update when relevant events are emitted.
+
+
   return stakingPositions?.length ? (
     <Box>
       <Heading size="md" mb="2">Staking Positions</Heading>
