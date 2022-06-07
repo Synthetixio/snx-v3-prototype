@@ -1,5 +1,6 @@
 import { chainIdState } from '../../state';
 import { getChainNameById, supportedChains } from '../../utils/constants';
+import { routeToChain } from '../NetworkChain';
 import {
   Flex,
   Button,
@@ -127,20 +128,7 @@ export function NetworkController() {
                         _focus={{ bg: 'gray.800' }}
                         _active={{ bg: 'gray.800' }}
                         onClick={() => {
-                          setLocalChainId(chainOption.id);
-                          const chain = getChainNameById(chainOption.id);
-                          router.replace(
-                            {
-                              pathname: router.basePath,
-                              query: {
-                                chain,
-                              },
-                            },
-                            undefined,
-                            {
-                              shallow: true,
-                            }
-                          );
+                          routeToChain(router.basePath, chainOption.id);
                         }}
                       >
                         {/* chainOption.hasIcon && (

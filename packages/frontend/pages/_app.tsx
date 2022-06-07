@@ -4,13 +4,7 @@ import Footer from '../components/layout/Footer';
 import Header from '../components/layout/Header';
 import '../styles/index.css';
 import { supportedChains } from '../utils/constants';
-import {
-  ChakraProvider,
-  Flex,
-  Box,
-  Spinner,
-  extendTheme,
-} from '@chakra-ui/react';
+import { ChakraProvider, Flex, Box } from '@chakra-ui/react';
 import {
   getDefaultWallets,
   RainbowKitProvider,
@@ -18,7 +12,6 @@ import {
 } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 import { AppProps } from 'next/app';
-import { useMemo } from 'react';
 import { RecoilRoot } from 'recoil';
 import { createClient, WagmiConfig, configureChains } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
@@ -63,10 +56,8 @@ function Synthetix({ Component, pageProps }: AppProps) {
               <Flex flex="1" flexDirection="column">
                 <NetworkChain>
                   <Initializer>
-                    <>
-                      <Header />
-                      <Component {...pageProps} />
-                    </>
+                    <Header />
+                    <Component {...pageProps} />
                   </Initializer>
                 </NetworkChain>
               </Flex>

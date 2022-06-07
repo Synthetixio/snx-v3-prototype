@@ -1,31 +1,27 @@
 import { chainIdState, collateralTypesState } from '../state';
-import {
-  CollateralType,
-  localCollateralTypes,
-  LOCALHOST_CHAIN_ID,
-} from '../utils/constants';
+import { localCollateralTypes, LOCALHOST_CHAIN_ID } from '../utils/constants';
 import { useSynthetixRead } from '../utils/hooks';
 import { Spinner } from '@chakra-ui/react';
 import { tokens } from '@uniswap/default-token-list';
-import { useEffect, FC, useMemo } from 'react';
+import { FC } from 'react';
 import { useRecoilState } from 'recoil';
 
 type Props = {
-  children?: any;
+  children?: React.ReactNode;
 };
 
 export const Initializer: FC<Props> = ({ children }) => {
   const [localChainId] = useRecoilState(chainIdState);
-  console.log('LOCALCHAINDI', localChainId);
   const [collateralTypes, setCollateralTypes] =
     useRecoilState(collateralTypesState);
-  const { refetch } = useSynthetixRead('getCollateralTypes', {
-    args: { hideDisabled: true },
+  useSynthetixRead('getCollateralTypes', {
+    args: [true],
     onError(err) {
+      // TODO: throw up a toast
+      // report to sentry or some other tool
       console.log('ERR', err);
     },
     onSuccess(data) {
-      console.log('DATA', data);
       if (localChainId === LOCALHOST_CHAIN_ID) {
         setCollateralTypes(localCollateralTypes);
       } else {
@@ -46,10 +42,6 @@ export const Initializer: FC<Props> = ({ children }) => {
       }
     },
   });
-
-  useEffect(() => {
-    refetch();
-  }, [localChainId, refetch]);
 
   return collateralTypes.length ? (
     <>{children}</>
