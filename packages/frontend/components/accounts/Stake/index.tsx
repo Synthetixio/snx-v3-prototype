@@ -44,7 +44,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
 
   let amount = tryToBN(inputAmount, collateralType.decimals);
 
-  const collateralContract = useContract('lusd.token');
+  const collateralContract = useContract('snx.token');
   const snxProxy = useContract('synthetix.Proxy');
   const onboarding = useContract('Onboarding');
   const {
@@ -78,6 +78,8 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       enabled: !isNativeCurrency,
     }
   );
+
+  console.log('ALLOWANCE', allowance);
   let sufficientAllowance = allowance?.gte(amount || 0);
 
   const calls: MulticallCall[][] = [
@@ -100,11 +102,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
   else if (!sufficientAllowance) {
     // TODO: could use permit here as well, in which case its an unshift
     calls.unshift([
-      [
-        collateralContract!.contract,
-        'approve',
-        [snxProxy?.address, ethers.constants.MaxUint256],
-      ],
+      [collateralContract!.contract, 'approve', [onboarding?.address, amount]],
     ]);
   }
 

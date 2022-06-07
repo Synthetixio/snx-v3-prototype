@@ -8,7 +8,7 @@ defaultValue = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
 defaultValue = "0.4.0"
 
 [setting.synthetix_version]
-defaultValue = "1.0.0"
+defaultValue = "1.0.1"
 
 [setting.chainlink_version]
 defaultValue = "0.9-mock"
@@ -59,7 +59,7 @@ step = 1
 artifact = "Onboarding"
 args = [
     "<%= imports.synthetix.contracts.Proxy.address %>",
-    "<%= imports.synthetix.contracts.Account_init_account_Proxy_0.address %>",
+    "<%= imports.synthetix.contracts['Account.init_account_Proxy.0'].address %>",
 ]
 step = 1
 

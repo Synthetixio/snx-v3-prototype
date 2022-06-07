@@ -70,3 +70,5 @@ packages/periphery/src/types/*
 # factories
 !packages/periphery/src/types/factories
 packages/periphery/src/types/factories/*
+
+packages/periphery/staged-txns.txt

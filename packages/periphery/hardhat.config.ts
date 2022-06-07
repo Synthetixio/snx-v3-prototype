@@ -2,8 +2,9 @@ import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import { config as dotenvConfig } from "dotenv";
-import "hardhat-gas-reporter";
 import "hardhat-cannon";
+import "hardhat-gas-reporter";
+import "hardhat-interact";
 import { HardhatUserConfig } from "hardhat/config";
 import { NetworkUserConfig } from "hardhat/types";
 import { resolve } from "path";
@@ -120,16 +121,14 @@ const config: HardhatUserConfig = {
   cannon: {
     publisherPrivateKey: process.env.PRIVATE_KEY,
     ipfsConnection: {
-      protocol: 'https',
-      host: 'ipfs.infura.io',
+      protocol: "https",
+      host: "ipfs.infura.io",
       port: 5001,
       headers: {
-        authorization: `Basic ${Buffer.from(infuraIpfsId + ':' + infuraIpfsSecret).toString(
-          'base64'
-        )}`,
+        authorization: `Basic ${Buffer.from(infuraIpfsId + ":" + infuraIpfsSecret).toString("base64")}`,
       },
-    }
-  }
+    },
+  },
 };
 
 export default config;
