@@ -1,8 +1,8 @@
-import { chainIdState } from "../../state";
-import { getChainById } from "../constants";
-import { ethers } from "ethers";
-import { useMemo } from "react";
-import { useRecoilState } from "recoil";
+import { chainIdState } from '../../state';
+import { getChainById } from '../constants';
+import { ethers } from 'ethers';
+import { useMemo } from 'react';
+import { useRecoilState } from 'recoil';
 
 // Similar to https://wagmi.sh/docs/hooks/useContract, but its aware of the currently selected network.
 export const useContract = (name: string) => {
@@ -15,8 +15,8 @@ export const useContract = (name: string) => {
     }
 
     const chainName =
-      chain.name.toLowerCase() == "localhost"
-        ? "hardhat"
+      chain.name.toLowerCase() == 'localhost'
+        ? 'hardhat'
         : chain.name.toLowerCase();
     const contractInfo = require(`../../deployments/${chainName}/${name}.json`);
 
