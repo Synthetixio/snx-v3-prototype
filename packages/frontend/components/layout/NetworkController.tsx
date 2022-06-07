@@ -13,12 +13,14 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { useConnect, useNetwork } from 'wagmi';
+import { useContext } from 'react';
+import { InitContext } from '../Init';
 
 export function NetworkController() {
   const { activeConnector } = useConnect();
   const router = useRouter();
   const { chains: networkChains } = useNetwork();
-  const [localChainId, setLocalChainId] = useRecoilState(chainIdState);
+  const { localChainId, setLocalChainId } = useContext(InitContext);
 
   const chains = networkChains.length ? networkChains : supportedChains;
   const localChain = chains.find(chain => chain.id === localChainId);

@@ -1,5 +1,5 @@
 import { useContract } from './useContract';
-import ethers, { CallOverrides } from 'ethers';
+import { ethers, CallOverrides } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useContractWrite, useWaitForTransaction } from 'wagmi';
 
@@ -73,8 +73,8 @@ export const useMulticall = (calls: MulticallCall[][], overrides: ContractWriteP
 
   const currentTxn = useContractWrite(
     {
-      addressOrName: callContract!.address,
-      contractInterface: callContract!.interface,
+      addressOrName: callContract?.address || ethers.constants.AddressZero,
+      contractInterface: callContract?.interface || [],
     },
     callFunc!,
     { ...overrides, args: callArgs }

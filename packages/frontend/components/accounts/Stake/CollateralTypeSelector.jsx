@@ -10,17 +10,26 @@ import {
   MenuItem,
 } from '@chakra-ui/react';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useState, useEffect, useContext } from 'react';
+import { InitContext } from '../../Init';
 
 export default function CollateralTypeSelector({ handleChange }) {
   // on loading dropdown and token amount https://chakra-ui.com/docs/components/feedback/skeleton ?
 
-  const [collateralTypes] = useRecoilState(collateralTypesState);
+  const { collateralTypes } = useContext(InitContext);
   const [collateralType, setCollateralType] = useState(collateralTypes[0]);
   useEffect(() => {
     handleChange(collateralType);
   }, [collateralType, handleChange]);
+
+  useEffect(() => {
+    console.log('collateral type callback hit', collateralTypes.length);
+    if (collateralTypes.length) {
+      console.log('setting collateral type', collateralTypes[0].symbol);
+      setCollateralType(collateralTypes[0]);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collateralTypes.length]);
 
   return (
     <Menu>
@@ -40,12 +49,12 @@ export default function CollateralTypeSelector({ handleChange }) {
             ml="3.5"
             mr="2"
           >
-            <Image
+            {collateralType && <Image
               alt="collateral image"
               width="24"
               height="24"
               src={collateralType?.logoURI}
-            />
+            />}
           </Box>
           <Text fontWeight="600">{collateralType?.symbol}</Text>
           <ChevronDownIcon opacity="0.66" w="5" h="5" ml="4" mr="2" />
@@ -73,12 +82,12 @@ export default function CollateralTypeSelector({ handleChange }) {
                 overflow="hidden"
                 mr="2"
               >
-                <Image
+                {collateralType && <Image
                   alt="collateral image"
                   width="24"
                   height="24"
                   src={collateralType?.logoURI}
-                />
+                />}
               </Box>
               <Text fontWeight="600">{collateralType?.symbol}</Text>
             </Flex>

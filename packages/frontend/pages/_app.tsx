@@ -1,5 +1,4 @@
-import { Initializer } from '../components/Initializer';
-import { NetworkChain } from '../components/NetworkChain';
+import { Init } from '../components/Init';
 import Footer from '../components/layout/Footer';
 import Header from '../components/layout/Header';
 import '../styles/index.css';
@@ -61,14 +60,12 @@ function Synthetix({ Component, pageProps }: AppProps) {
               flexDirection="column"
             >
               <Flex flex="1" flexDirection="column">
-                <NetworkChain>
-                  <Initializer>
-                    <>
-                      <Header />
-                      <Component {...pageProps} />
-                    </>
-                  </Initializer>
-                </NetworkChain>
+                <Init>
+                  <>
+                    <Header />
+                    <Component {...pageProps} />
+                  </>
+                </Init>
               </Flex>
               <Footer />
             </Box>

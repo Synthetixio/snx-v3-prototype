@@ -1,7 +1,6 @@
 import { chainIdState, collateralTypesState } from '../../../state';
-import { CollateralType, getChainById } from '../../../utils/constants';
+import { CollateralType, getChainById, localCollateralTypes } from '../../../utils/constants';
 import { tryToBN } from '../../../utils/convert';
-import { useDeploymentRead } from '../../../utils/hooks';
 import { useContract } from '../../../utils/hooks/useContract';
 import { useMulticall, MulticallCall } from '../../../utils/hooks/useMulticall';
 import EditPosition from '../EditPosition/index';
@@ -27,19 +26,18 @@ import {
   Link,
 } from '@chakra-ui/react';
 import { ethers, CallOverrides } from 'ethers';
-import { BigNumber } from 'ethers';
-import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useContext, useEffect, useState } from 'react';
 import { useAccount, useContractRead, erc20ABI, useBalance } from 'wagmi';
+import { InitContext } from '../../Init';
 
 export default function Stake({ createAccount }: { createAccount: boolean }) {
   // on loading dropdown and token amount maybe use https://chakra-ui.com/docs/components/feedback/skeleton
   const toast = useToast();
   const [inputAmount, setInputAmount] = useState('0'); // accounts for decimals
 
-  const [collateralTypes] = useRecoilState(collateralTypesState);
+  const { collateralTypes, localChainId } = useContext(InitContext);
   const [collateralType, setCollateralType] = useState<CollateralType>(
-    collateralTypes[0]
+    collateralTypes[0] || localCollateralTypes[0]
   );
 
   let amount = tryToBN(inputAmount, collateralType.decimals);
@@ -52,8 +50,6 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     onOpen: onOpenFund,
     onClose: onCloseFund,
   } = useDisclosure();
-
-  const [localChainId] = useRecoilState(chainIdState);
 
   const isNativeCurrency =
     collateralType.symbol ===
@@ -80,16 +76,16 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
   );
   let sufficientAllowance = allowance?.gte(amount || 0);
 
-  const calls: MulticallCall[][] = [
-    [[onboarding!.contract, 'onboard', [collateralContract?.address, amount]]],
-  ];
+  const calls: MulticallCall[][] = onboarding ? [
+    [[onboarding.contract, 'onboard', [collateralContract?.address, amount]]],
+  ] : [];
 
   const overrides: CallOverrides = {};
 
   // add extra step to convert to wrapped token if native (ex. ETH)
-  if (isNativeCurrency) {
+  if (isNativeCurrency && collateralContract) {
     calls[0].unshift([
-      collateralContract!.contract,
+      collateralContract.contract,
       'deposit',
       [],
       { value: amount || 0 },
@@ -97,11 +93,11 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     overrides.value = amount!;
   }
   // add extra step to "approve" the token if needed before running the multicall
-  else if (!sufficientAllowance) {
+  else if (!sufficientAllowance && collateralContract) {
     // TODO: could use permit here as well, in which case its an unshift
     calls.unshift([
       [
-        collateralContract!.contract,
+        collateralContract.contract,
         'approve',
         [snxProxy?.address, ethers.constants.MaxUint256],
       ],
@@ -142,6 +138,15 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     toast,
   ]);
 
+  useEffect(() => {
+    console.log('collateral type callback hit', collateralTypes.length);
+    if (collateralTypes.length) {
+      console.log('setting collateral type', collateralTypes[0].symbol);
+      setCollateralType(collateralTypes[0]);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collateralTypes.length]);
+
   return (
     <>
       <Box bg="gray.900" mb="8" p="6" pb="4" borderRadius="12px">
@@ -166,7 +171,8 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
             />
             <CollateralTypeSelector
               handleChange={(selectedCollateralType: CollateralType) => {
-                setCollateralType(selectedCollateralType);
+                if (selectedCollateralType)
+                  setCollateralType(selectedCollateralType);
                 // refetch();
               }}
             />

@@ -32,7 +32,7 @@ export const localCollateralTypes: Array<CollateralType> = [
   },
 ];
 
-export const supportedChains = [chain.mainnet, chain.kovan, chain.localhost];
+export const supportedChains = [chain.mainnet, chain.kovan, chain.hardhat];
 export const getChainById = (chainId: number) =>
   supportedChains.find(chain => chain.id === chainId);
 
@@ -45,4 +45,4 @@ export const getChainNameById = (chainId: number) => {
 };
 
 export const MAINNET_CHAIN_ID = 1;
-export const LOCALHOST_CHAIN_ID = 1337;
+export const LOCALHOST_CHAIN_ID = chain.hardhat.id;
