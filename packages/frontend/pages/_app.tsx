@@ -1,40 +1,42 @@
-import { Initializer } from '../components/Initializer'
-import Footer from '../components/layout/Footer'
-import Header from '../components/layout/Header'
-import '../styles/index.css'
-import { supportedChains } from '../utils/constants'
+import { Initializer } from '../components/Initializer';
+import { NetworkChain } from '../components/NetworkChain';
+import Footer from '../components/layout/Footer';
+import Header from '../components/layout/Header';
+import '../styles/index.css';
+import { supportedChains } from '../utils/constants';
 import {
   ChakraProvider,
   Flex,
   Box,
   Spinner,
   extendTheme,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 import {
   getDefaultWallets,
   RainbowKitProvider,
   darkTheme,
-} from '@rainbow-me/rainbowkit'
-import '@rainbow-me/rainbowkit/styles.css'
-import { AppProps } from 'next/app'
-import { RecoilRoot } from 'recoil'
-import { createClient, WagmiConfig, configureChains } from 'wagmi'
-import { publicProvider } from 'wagmi/providers/public'
+} from '@rainbow-me/rainbowkit';
+import '@rainbow-me/rainbowkit/styles.css';
+import { AppProps } from 'next/app';
+import { useMemo } from 'react';
+import { RecoilRoot } from 'recoil';
+import { createClient, WagmiConfig, configureChains } from 'wagmi';
+import { publicProvider } from 'wagmi/providers/public';
 
 const { chains, provider } = configureChains(supportedChains, [
   publicProvider(),
-])
+]);
 
 const { connectors } = getDefaultWallets({
   appName: 'Synthetix',
   chains,
-})
+});
 
 const wagmiClient = createClient({
   autoConnect: true,
   connectors,
   provider,
-})
+});
 
 function Synthetix({ Component, pageProps }: AppProps) {
   return (
@@ -59,18 +61,14 @@ function Synthetix({ Component, pageProps }: AppProps) {
               flexDirection="column"
             >
               <Flex flex="1" flexDirection="column">
-                <Initializer>
-                  {(loading) =>
-                    loading ? (
-                      <Spinner mx="auto" my="auto" />
-                    ) : (
-                      <>
-                        <Header />
-                        <Component {...pageProps} />
-                      </>
-                    )
-                  }
-                </Initializer>
+                <NetworkChain>
+                  <Initializer>
+                    <>
+                      <Header />
+                      <Component {...pageProps} />
+                    </>
+                  </Initializer>
+                </NetworkChain>
               </Flex>
               <Footer />
             </Box>
@@ -78,6 +76,6 @@ function Synthetix({ Component, pageProps }: AppProps) {
         </RainbowKitProvider>
       </WagmiConfig>
     </RecoilRoot>
-  )
+  );
 }
-export default Synthetix
+export default Synthetix;
