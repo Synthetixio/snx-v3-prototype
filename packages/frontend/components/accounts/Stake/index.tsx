@@ -1,13 +1,16 @@
-import { chainIdState, collateralTypesState } from '../../../state';
-import { CollateralType, getChainById } from '../../../utils/constants';
-import { tryToBN } from '../../../utils/convert';
-import { useDeploymentRead } from '../../../utils/hooks';
-import { useContract } from '../../../utils/hooks/useContract';
-import { useMulticall, MulticallCall } from '../../../utils/hooks/useMulticall';
-import EditPosition from '../EditPosition/index';
-import Balance from './Balance';
-import CollateralTypeSelector from './CollateralTypeSelector';
-import { LockIcon, InfoOutlineIcon, EditIcon } from '@chakra-ui/icons';
+import { chainIdState, collateralTypesState } from "../../../state";
+import { CollateralType, getChainById } from "../../../utils/constants";
+import { tryToBN } from "../../../utils/convert";
+import { useContract } from "../../../utils/hooks/useContract";
+import {
+  useDeploymentRead,
+  useSynthetixRead,
+} from "../../../utils/hooks/useDeploymentRead";
+import { useMulticall, MulticallCall } from "../../../utils/hooks/useMulticall";
+import EditPosition from "../EditPosition/index";
+import Balance from "./Balance";
+import CollateralTypeSelector from "./CollateralTypeSelector";
+import { LockIcon, InfoOutlineIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
   Text,
@@ -25,17 +28,17 @@ import {
   useDisclosure,
   useToast,
   Link,
-} from '@chakra-ui/react';
-import { ethers, CallOverrides } from 'ethers';
-import { BigNumber } from 'ethers';
-import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { useAccount, useContractRead, erc20ABI, useBalance } from 'wagmi';
+} from "@chakra-ui/react";
+import { ethers, CallOverrides } from "ethers";
+import { BigNumber } from "ethers";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { useAccount, useContractRead, erc20ABI, useBalance } from "wagmi";
 
 export default function Stake({ createAccount }: { createAccount: boolean }) {
   // on loading dropdown and token amount maybe use https://chakra-ui.com/docs/components/feedback/skeleton
   const toast = useToast();
-  const [inputAmount, setInputAmount] = useState('0'); // accounts for decimals
+  const [inputAmount, setInputAmount] = useState("0"); // accounts for decimals
 
   const [collateralTypes] = useRecoilState(collateralTypesState);
   const [collateralType, setCollateralType] = useState<CollateralType>(
@@ -44,9 +47,9 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
 
   let amount = tryToBN(inputAmount, collateralType.decimals);
 
-  const collateralContract = useContract('snx.token');
-  const snxProxy = useContract('synthetix.Proxy');
-  const onboarding = useContract('Onboarding');
+  const collateralContract = useContract("snx.token");
+  const snxProxy = useContract("synthetix.Proxy");
+  const accountToken = useContract("synthetix.Account_init_account_Proxy_0");
   const {
     isOpen: isOpenFund,
     onOpen: onOpenFund,
@@ -72,18 +75,53 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       addressOrName: collateralType?.address,
       contractInterface: erc20ABI,
     },
-    'allowance',
+    "allowance",
     {
-      args: [accountAddress, onboarding?.address],
+      args: [accountAddress, snxProxy?.address],
       enabled: !isNativeCurrency,
     }
   );
 
-  console.log('ALLOWANCE', allowance);
+  console.log("ALLOWANCE", allowance);
   let sufficientAllowance = allowance?.gte(amount || 0);
 
+  const generateAccountId = () => {
+    return Math.floor(Math.random() * 10000000000);
+  }; // ten digit number
+  const [newAccountId, setNewAccountId] = useState(generateAccountId());
+  useDeploymentRead("accountToken", "ownerOf", {
+    args: newAccountId,
+    onSuccess() {
+      // newAccountId isn't available
+      setNewAccountId(generateAccountId());
+    },
+    onError(error) {
+      // newAccountId is available, so we should proceed.
+    },
+  });
+
+  const fundId = useSynthetixRead("getPreferredFund", {});
+
   const calls: MulticallCall[][] = [
-    [[onboarding!.contract, 'onboard', [collateralContract?.address, amount]]],
+    [
+      [accountToken!.contract, "mint", [accountAddress, newAccountId]],
+      [
+        snxProxy!.contract,
+        "stake",
+        [newAccountId, collateralType?.address, amount],
+      ],
+      [
+        snxProxy!.contract,
+        "delegateCollateral",
+        [
+          fundId,
+          newAccountId,
+          collateralType?.address,
+          amount,
+          ethers.constants.One,
+        ],
+      ],
+    ],
   ];
 
   const overrides: CallOverrides = {};
@@ -92,7 +130,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
   if (isNativeCurrency) {
     calls[0].unshift([
       collateralContract!.contract,
-      'deposit',
+      "deposit",
       [],
       { value: amount || 0 },
     ]);
@@ -102,7 +140,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
   else if (!sufficientAllowance) {
     // TODO: could use permit here as well, in which case its an unshift
     calls.unshift([
-      [collateralContract!.contract, 'approve', [onboarding?.address, amount]],
+      [collateralContract!.contract, "approve", [snxProxy?.address, amount]],
     ]);
   }
 
@@ -116,8 +154,8 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
             calls.length
           }) Approve collateral for transfer`,
           description:
-            'The next transaction will finish staking your collateral.',
-          status: 'info',
+            "The next transaction will finish staking your collateral.",
+          status: "info",
           duration: 9000,
           isClosable: true,
         });
@@ -125,8 +163,8 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
         toast({
           title: `(${multiTxn.step + 1} / ${calls.length}) Create your account`,
           description:
-            'You’ll be redirected once your transaction is processed.',
-          status: 'info',
+            "You’ll be redirected once your transaction is processed.",
+          status: "info",
           duration: 9000,
           isClosable: true,
         });
@@ -144,7 +182,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     <>
       <Box bg="gray.900" mb="8" p="6" pb="4" borderRadius="12px">
         <form
-          onSubmit={e => {
+          onSubmit={(e) => {
             e.preventDefault();
             multiTxn.exec();
           }}
@@ -158,7 +196,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
               placeholder="0.0"
               mr="4"
               value={inputAmount}
-              onChange={e => {
+              onChange={(e) => {
                 setInputAmount(e.target.value);
               }}
             />
@@ -196,7 +234,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
               px="8"
               type="submit"
             >
-              {sufficientFunds ? 'Stake' : 'Insufficient Funds'}
+              {sufficientFunds ? "Stake" : "Insufficient Funds"}
             </Button>
           </Flex>
         </form>
@@ -217,7 +255,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
           </Box>
           {createAccount ? (
             <Text fontSize="xs" textAlign="right">
-              Receive an snxAccount token{' '}
+              Receive an snxAccount token{" "}
               <Tooltip
                 textAlign="center"
                 label="You will be minted an NFT that represents your account. You can easily transfer it between wallets."
@@ -227,11 +265,11 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
             </Text>
           ) : (
             <Text fontSize="xs" textAlign="right">
-              Fund: None{' '}
+              Fund: None{" "}
               <Link color="blue.400">
                 <EditIcon
                   onClick={onOpenFund}
-                  style={{ transform: 'translateY(-2px)' }}
+                  style={{ transform: "translateY(-2px)" }}
                 />
               </Link>
             </Text>

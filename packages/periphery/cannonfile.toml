@@ -55,14 +55,6 @@ options.owner = "<%= settings.owner %>"
 artifact = "Multicall3"
 step = 1
 
-[contract.Onboarding]
-artifact = "Onboarding"
-args = [
-    "<%= imports.synthetix.contracts.Proxy.address %>",
-    "<%= imports.synthetix.contracts['Account.init_account_Proxy.0'].address %>",
-]
-step = 1
-
 [contract.WETH]
 artifact = "WETH9"
 step = 1
