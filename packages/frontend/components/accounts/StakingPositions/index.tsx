@@ -33,8 +33,8 @@ export default function StakingPositions({ accountId }) {
     // This is retrieved from recoil collateralType storage.
     collateralTargetCRatio: number;
 
-    // This is the amount of sUSD debt minted/burned (i.e. could be negative) from this fund (I think this needs to be added?)
-    usdDebt: number;
+    // This is the amount of debt accrued from minting/burning sUSD from this fund. This could be negative. (I think this needs to be added?)
+    loanDebt: number;
 
     // This is a function of "shares" and "initialDebt" (initialDebt could be negative) from the LiquidityItem struct and the fund's total debt and total debt shares. The latter will probably be made available in recoil, per above.
     marketDebt: number;
