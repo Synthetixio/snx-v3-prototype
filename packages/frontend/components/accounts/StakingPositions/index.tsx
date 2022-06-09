@@ -36,8 +36,8 @@ export default function StakingPositions({ accountId }) {
     // This is the amount of sUSD debt minted/burned (i.e. could be negative) from this fund (I think this needs to be added?)
     usdDebt: number;
 
-    // This is a function of "shares" and "initialDebt" from the LiquidityItem struct and the fund's total debt and total debt shares. The latter will probably be made available in recoil, per above.
-    fundDebt: number;
+    // This is a function of "shares" and "initialDebt" (initialDebt could be negative) from the LiquidityItem struct and the fund's total debt and total debt shares. The latter will probably be made available in recoil, per above.
+    marketDebt: number;
   };
 
   return stakingPositions?.length ? (
