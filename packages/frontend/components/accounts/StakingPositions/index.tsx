@@ -1,44 +1,62 @@
+import { useSynthetixRead } from "../../../utils/hooks";
 import StakingPosition from "./StakingPosition";
 import { Box, Heading, Table, Thead, Tr, Th, Tbody } from "@chakra-ui/react";
+import { useState } from "react";
 
-export default function StakingPositions({ accountId }) {
-  let stakingPositions = [];
+// This is a view of each LiquidityItem (https://github.com/Synthetixio/synthetix-v3/blob/feature-v3-mvp/packages/synthetix-main/contracts/interfaces/IFundModuleStorage.sol)
+// (We should consider consistent naming for this and the front-end.)
+// All LiquidityItems associated with the account can be retrieved by calling "getAccountLiquidityItems(accountId)" (Other related views are available: https://github.com/Synthetixio/synthetix-v3/blob/feature-v3-mvp/packages/synthetix-main/contracts/modules/FundModule.sol#L634)
+type StakingPosition = {
+  // This is the ID on of the LiquidityItem struct. (I think this needs to be added? Seems good to have.)
+  id: number;
 
-  // This is a view of each LiquidityItem (https://github.com/Synthetixio/synthetix-v3/blob/feature-v3-mvp/packages/synthetix-main/contracts/interfaces/IFundModuleStorage.sol)
-  // (We should consider consistent naming for this and the front-end.)
-  // All LiquidityItems associated with the account can be retrieved by calling "getAccountLiquidityItems(accountId)" (Other related views are available: https://github.com/Synthetixio/synthetix-v3/blob/feature-v3-mvp/packages/synthetix-main/contracts/modules/FundModule.sol#L634)
+  // This is the fundId on the LiquidityItem struct
+  fundId: number;
 
-  type StakingPosition = {
-    // This is the ID on of the LiquidityItem struct. (I think this needs to be added? Seems good to have.)
-    id: number;
+  // This would be retrieved from recoil most likely. We'll probably want a similar set up to CollateralTypes for the Preferred/Approved funds.
+  fundName: string;
 
-    // This is the fundId on the LiquidityItem struct
-    fundId: number;
+  // This is the collateralAmount on the LiquidityItem struct
+  collateralAmount: number;
 
-    // This would be retrieved from recoil most likely. We'll probably want a similar set up to CollateralTypes for the Preferred/Approved funds.
-    fundName: string;
+  // This is retrieved from recoil collateralType storage.
+  collateralSymbol: string;
 
-    // This is the collateralAmount on the LiquidityItem struct
-    collateralAmount: number;
+  // We'll need a concept of 'collateral type price' (probably stored in recoil?) and this would be the product of that value and collateralAmount.
+  collateralValue: number;
 
-    // This is retrieved from recoil collateralType storage.
-    collateralSymbol: string;
+  // This is retrieved from recoil collateralType storage.
+  collateralMinCRatio: number;
 
-    // We'll need a concept of 'collateral type price' (probably stored in recoil?) and this would be the product of that value and collateralAmount.
-    collateralValue: number;
+  // This is retrieved from recoil collateralType storage.
+  collateralTargetCRatio: number;
 
-    // This is retrieved from recoil collateralType storage.
-    collateralMinCRatio: number;
+  // This is the amount of debt accrued from minting/burning sUSD from this fund. This could be negative. (I think this needs to be added?)
+  loanDebt: number;
 
-    // This is retrieved from recoil collateralType storage.
-    collateralTargetCRatio: number;
+  // This is a function of "shares" and "initialDebt" (initialDebt could be negative) from the LiquidityItem struct and the fund's total debt and total debt shares. The latter will probably be made available in recoil, per above.
+  marketDebt: number;
+};
 
-    // This is the amount of debt accrued from minting/burning sUSD from this fund. This could be negative. (I think this needs to be added?)
-    loanDebt: number;
+export default function StakingPositions({ accountId }: { accountId: Number }) {
+  const [stakingPositions, setStakingPositions] = useState<StakingPosition[]>(
+    []
+  );
 
-    // This is a function of "shares" and "initialDebt" (initialDebt could be negative) from the LiquidityItem struct and the fund's total debt and total debt shares. The latter will probably be made available in recoil, per above.
-    marketDebt: number;
-  };
+  useSynthetixRead("getAccountLiquidityItems", {
+    args: [accountId],
+    onSuccess: (data) => {
+      let enrichedStakingPositionsData = data.map((d) =>
+        (({ id, fundId, collateralAmount }) => ({
+          id,
+          fundId,
+          collateralAmount,
+        }))(d)
+      );
+      // All the logic for fetching/transform per the definition above would go here?
+      setStakingPositions(enrichedStakingPositionsData as StakingPosition[]);
+    },
+  });
 
   return stakingPositions?.length ? (
     <Box>
@@ -66,7 +84,7 @@ export default function StakingPositions({ accountId }) {
         </Thead>
         <Tbody>
           {stakingPositions.map((position) => {
-            <StakingPosition position={position} />;
+            return <StakingPosition key={position.id} position={position} />;
           })}
           {/*
             <Tr>
