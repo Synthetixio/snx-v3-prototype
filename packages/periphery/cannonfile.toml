@@ -106,3 +106,21 @@ args = [
     "200000000000000000000"
 ]
 step = 3
+
+[invoke.createPreferredFund]
+on = ["synthetix.Proxy"]
+func = "createFund"
+args = [
+    1,
+    "<%= settings.owner %>",
+]
+step = 3
+
+[invoke.setPreferredFund]
+on = ["synthetix.Proxy"]
+func = "setPreferredFund"
+from = "<%= settings.owner %>"
+args = [
+    1,
+]
+step = 4

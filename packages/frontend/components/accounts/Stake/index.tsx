@@ -185,6 +185,15 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       ],
     ],
   ];
+  console.log('fundId: ', fundId);
+
+  console.log(
+    fundId,
+    newAccountId,
+    selectedCollateralType.address,
+    amount || BigNumber.from(0),
+    ethers.constants.One
+  );
 
   const overrides: CallOverrides = {};
 
