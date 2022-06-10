@@ -1,5 +1,5 @@
-import { collateralTypesState } from '../../../state/index';
-import { ChevronDownIcon } from '@chakra-ui/icons';
+import { collateralTypesState } from "../../../state/index";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
   Text,
@@ -8,10 +8,10 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-} from '@chakra-ui/react';
-import Image from 'next/image';
-import { useState, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+} from "@chakra-ui/react";
+import Image from "next/image";
+import { useState, useEffect } from "react";
+import { useRecoilState } from "recoil";
 
 export default function CollateralTypeSelector({ handleChange }) {
   // on loading dropdown and token amount https://chakra-ui.com/docs/components/feedback/skeleton ?
@@ -52,15 +52,15 @@ export default function CollateralTypeSelector({ handleChange }) {
         </Flex>
       </MenuButton>
       <MenuList px={2} bg="black" border="1px solid rgba(255,255,255,0.33)">
-        {Object.values(collateralTypes).map(collateralType => (
+        {Object.values(collateralTypes).map((collateralType) => (
           <MenuItem
             key={collateralType.symbol}
             alignItems="left"
             mb={1}
             flexDirection="column"
-            _hover={{ bg: 'gray.800' }}
-            _focus={{ bg: 'gray.800' }}
-            _active={{ bg: 'gray.800' }}
+            _hover={{ bg: "gray.800" }}
+            _focus={{ bg: "gray.800" }}
+            _active={{ bg: "gray.800" }}
             onClick={() => {
               setCollateralType(collateralType);
             }}

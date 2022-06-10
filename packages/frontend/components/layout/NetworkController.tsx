@@ -1,6 +1,6 @@
-import { chainIdState } from '../../state';
-import { getChainNameById, supportedChains } from '../../utils/constants';
-import { routeToChain } from '../NetworkChain';
+import { chainIdState } from "../../state";
+import { getChainNameById, supportedChains } from "../../utils/constants";
+import { routeToChain } from "../NetworkChain";
 import {
   Flex,
   Button,
@@ -8,12 +8,12 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-} from '@chakra-ui/react';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import Image from 'next/image';
-import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
-import { useConnect, useNetwork } from 'wagmi';
+} from "@chakra-ui/react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
+import { useConnect, useNetwork } from "wagmi";
 
 export function NetworkController() {
   const { activeConnector } = useConnect();
@@ -22,7 +22,7 @@ export function NetworkController() {
   const [localChainId, setLocalChainId] = useRecoilState(chainIdState);
 
   const chains = networkChains.length ? networkChains : supportedChains;
-  const localChain = chains.find(chain => chain.id === localChainId);
+  const localChain = chains.find((chain) => chain.id === localChainId);
 
   // Look in here for logged out chains to render images https://github.com/rainbow-me/rainbowkit/blob/main/packages/rainbowkit/src/components/ConnectButton/ConnectButtonRenderer.tsx
 
@@ -39,20 +39,20 @@ export function NetworkController() {
         return (
           <Flex
             {...(!mounted && {
-              'aria-hidden': true,
+              "aria-hidden": true,
               style: {
                 opacity: 0,
-                pointerEvents: 'none',
-                userSelect: 'none',
+                pointerEvents: "none",
+                userSelect: "none",
               },
             })}
           >
             {activeConnector ? (
               <Button
                 bg="gray.800"
-                _hover={{ bg: 'gray.700' }}
+                _hover={{ bg: "gray.700" }}
                 onClick={openChainModal}
-                style={{ display: 'flex', alignItems: 'center' }}
+                style={{ display: "flex", alignItems: "center" }}
                 type="button"
                 mr="4"
               >
@@ -63,7 +63,7 @@ export function NetworkController() {
                       width: 20,
                       height: 20,
                       borderRadius: 999,
-                      overflow: 'hidden',
+                      overflow: "hidden",
                       marginRight: 8,
                     }}
                   >
@@ -71,7 +71,7 @@ export function NetworkController() {
                       <Image
                         width={20}
                         height={20}
-                        alt={chain?.name ?? 'Chain icon'}
+                        alt={chain?.name ?? "Chain icon"}
                         src={chain?.iconUrl}
                       />
                     )}
@@ -84,10 +84,10 @@ export function NetworkController() {
                 <MenuButton
                   as={Button}
                   bg="gray.800"
-                  _hover={{ bg: 'gray.700' }}
-                  _active={{ bg: 'gray.700' }}
+                  _hover={{ bg: "gray.700" }}
+                  _active={{ bg: "gray.700" }}
                   mr="4"
-                  style={{ display: 'flex', alignItems: 'center' }}
+                  style={{ display: "flex", alignItems: "center" }}
                 >
                   {chain?.hasIcon && (
                     <div
@@ -96,7 +96,7 @@ export function NetworkController() {
                         width: 20,
                         height: 20,
                         borderRadius: 999,
-                        overflow: 'hidden',
+                        overflow: "hidden",
                         marginRight: 8,
                       }}
                     >
@@ -104,7 +104,7 @@ export function NetworkController() {
                         <Image
                           height={20}
                           width={20}
-                          alt={chain?.name ?? 'Chain icon'}
+                          alt={chain?.name ?? "Chain icon"}
                           src={chain?.iconUrl}
                         />
                       )}
@@ -118,15 +118,15 @@ export function NetworkController() {
                   border="1px solid rgba(255,255,255,0.33)"
                 >
                   {chains &&
-                    chains.map(chainOption => (
+                    chains.map((chainOption) => (
                       <MenuItem
                         key={chainOption.id}
                         alignItems="left"
                         mb={1}
                         flexDirection="column"
-                        _hover={{ bg: 'gray.800' }}
-                        _focus={{ bg: 'gray.800' }}
-                        _active={{ bg: 'gray.800' }}
+                        _hover={{ bg: "gray.800" }}
+                        _focus={{ bg: "gray.800" }}
+                        _active={{ bg: "gray.800" }}
                         onClick={() => {
                           routeToChain(router.basePath, chainOption.id);
                         }}
@@ -183,14 +183,14 @@ export function NetworkController() {
               return (
                 <Button
                   bg="gray.800"
-                  _hover={{ bg: 'gray.700' }}
+                  _hover={{ bg: "gray.700" }}
                   onClick={openAccountModal}
                   type="button"
                 >
                   {account.displayName}
                   {false && account?.displayBalance
                     ? ` (${account?.displayBalance})`
-                    : ''}
+                    : ""}
                 </Button>
               );
             })()}
