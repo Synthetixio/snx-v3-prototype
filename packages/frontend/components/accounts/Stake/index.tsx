@@ -171,19 +171,19 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
         ],
       ],
     ],
-    // [
-    //   [
-    //     snxProxy!.contract,
-    //     'delegateCollateral',
-    //     [
-    //       fundId,
-    //       newAccountId,
-    //       selectedCollateralType.address,
-    //       amount || BigNumber.from(0),
-    //       ethers.constants.One,
-    //     ],
-    //   ],
-    // ],
+    [
+      [
+        snxProxy!.contract,
+        'delegateCollateral',
+        [
+          fundId,
+          newAccountId,
+          selectedCollateralType.address,
+          amount || BigNumber.from(0),
+          ethers.constants.One,
+        ],
+      ],
+    ],
   ];
 
   const overrides: CallOverrides = {};
