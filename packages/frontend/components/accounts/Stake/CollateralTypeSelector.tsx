@@ -1,4 +1,5 @@
 import { collateralTypesState } from '../../../state/index';
+import { CollateralType } from '../../../utils/constants';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import {
   Box,
@@ -10,17 +11,19 @@ import {
   MenuItem,
 } from '@chakra-ui/react';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useFormContext, useWatch } from 'react-hook-form';
 
-export default function CollateralTypeSelector({ handleChange }) {
+type Props = {
+  collateralTypes: CollateralType[];
+};
+
+export default function CollateralTypeSelector({ collateralTypes }: Props) {
   // on loading dropdown and token amount https://chakra-ui.com/docs/components/feedback/skeleton ?
 
-  const [collateralTypes] = useRecoilState(collateralTypesState);
-  const [collateralType, setCollateralType] = useState(collateralTypes[0]);
-  useEffect(() => {
-    handleChange(collateralType);
-  }, [collateralType, handleChange]);
+  const { setValue, register } = useFormContext();
+  const selectedCollateralType = useWatch({
+    name: 'collateralType',
+  });
 
   return (
     <Menu>
@@ -44,10 +47,10 @@ export default function CollateralTypeSelector({ handleChange }) {
               alt="collateral image"
               width="24"
               height="24"
-              src={collateralType?.logoURI}
+              src={selectedCollateralType?.logoURI}
             />
           </Box>
-          <Text fontWeight="600">{collateralType?.symbol}</Text>
+          <Text fontWeight="600">{selectedCollateralType?.symbol}</Text>
           <ChevronDownIcon opacity="0.66" w="5" h="5" ml="4" mr="2" />
         </Flex>
       </MenuButton>
@@ -61,8 +64,9 @@ export default function CollateralTypeSelector({ handleChange }) {
             _hover={{ bg: 'gray.800' }}
             _focus={{ bg: 'gray.800' }}
             _active={{ bg: 'gray.800' }}
+            {...register('collateralType')}
             onClick={() => {
-              setCollateralType(collateralType);
+              setValue('collateralType', collateralType);
             }}
           >
             <Flex flexDirection="row">

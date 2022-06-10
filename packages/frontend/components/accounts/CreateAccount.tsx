@@ -1,5 +1,5 @@
-import Stake from './Stake/index'
-import { Heading, Text, Link, UnorderedList, ListItem } from '@chakra-ui/react'
+import Stake from './Stake';
+import { Heading, Text, Link, UnorderedList, ListItem } from '@chakra-ui/react';
 
 export default function CreateAccount() {
   return (
@@ -42,5 +42,5 @@ export default function CreateAccount() {
         </ListItem>
       </UnorderedList>
     </>
-  )
+  );
 }

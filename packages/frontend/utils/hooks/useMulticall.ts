@@ -1,15 +1,23 @@
 import { useContract } from './useContract';
-import ethers, { CallOverrides } from 'ethers';
-import { useEffect, useState } from 'react';
+import ethers, { CallOverrides, Contract, utils } from 'ethers';
+import { useEffect, useMemo, useState } from 'react';
 import { useContractWrite, useWaitForTransaction } from 'wagmi';
 
 // contact, funcion name, arguments
-export type MulticallCall = [ethers.Contract, string, any[], CallOverrides?];
+export type MulticallCall = [Contract, string, any[], CallOverrides?];
 
 const CONTRACT_SYNTHETIX_PROXY = 'synthetix.Proxy';
 const CONTRACT_MULTICALL = 'Multicall';
 
 type ContractWriteParams = Parameters<typeof useContractWrite>;
+
+type MulticallConfigType = {
+  onSuccess: () => void;
+  onStepSuccess: (stepNumber: number) => void;
+  onError: (e: Error) => void;
+};
+
+type MulticallStatusType = 'idle' | 'pending' | 'success' | 'error';
 
 /**
  * Executes the given list of transactions on a multicall contract as required.
@@ -25,9 +33,14 @@ type ContractWriteParams = Parameters<typeof useContractWrite>;
  * operations to run in multiple steps, and the inner array indicates operations to run in the same transaction.
  * @returns a lot of stuff
  */
-export const useMulticall = (calls: MulticallCall[][], overrides: ContractWriteParams[2] = {}) => {
+export const useMulticall = (
+  calls: MulticallCall[][],
+  overrides: ContractWriteParams[2] = {},
+  config?: Partial<MulticallConfigType>
+) => {
   const [step, setStep] = useState(0);
-  const completed = step >= calls.length;
+  const [lastExecutedStep, setLastExecutedStep] = useState(0);
+  const [status, setStatus] = useState<MulticallStatusType>('idle');
 
   const [receipts, setReceipts] = useState<
     ethers.providers.TransactionReceipt[]
@@ -51,25 +64,37 @@ export const useMulticall = (calls: MulticallCall[][], overrides: ContractWriteP
         // Multicall3
         callContract = multicall.contract;
         callFunc = 'aggregate3Value';
-        callArgs = calls[step].map(c => ({
-          target: c[0].address,
-          callData: c[0].populateTransaction[c[1]](...(c[2] || [])),
-          value: c[0][3]?.value || 0,
-          allowFailure: false,
-        }));
+
+        callArgs = [
+          calls[step].map(c => {
+            const callData = c[0].interface.encodeFunctionData(
+              c[1],
+              c[2] || []
+            );
+            return {
+              target: c[0].address,
+              callData,
+              value: c[0][3]?.value || 0,
+              allowFailure: false,
+            };
+          }),
+        ];
       } else {
         // Synthetix Multicall
         callContract = snxProxy.contract;
         callFunc = 'multicall';
-        callArgs = calls[step].map(c =>
-          c[0].populateTransaction[c[1]](...(c[2] || []))
-        );
+        callArgs = [
+          calls[step].map(c => {
+            const callData = c[0].interface.encodeFunctionData(
+              c[1],
+              c[2] || []
+            );
+            return callData;
+          }),
+        ];
       }
     }
   }
-
-  //let callContract = calls.length ? calls[step][0][0] : '';
-  //let callFunc = calls.length ?
 
   const currentTxn = useContractWrite(
     {
@@ -77,55 +102,59 @@ export const useMulticall = (calls: MulticallCall[][], overrides: ContractWriteP
       contractInterface: callContract!.interface,
     },
     callFunc!,
-    { ...overrides, args: callArgs }
+    {
+      args: callArgs,
+      onError: e => {
+        setStatus('error');
+        config?.onError && config.onError(e);
+      },
+      ...overrides,
+    }
   );
-
-  const started = step !== 0 || currentTxn.status !== 'idle';
 
   useWaitForTransaction({
     hash: currentTxn.data?.hash,
     timeout: 300000,
     enabled: !!currentTxn,
-    onSuccess: nextCall,
-    // todo: onError
+    onSuccess: _data => {
+      const newStep = step + 1;
+      config?.onStepSuccess && config.onStepSuccess(step);
+      if (newStep !== calls.length) {
+        setStep(newStep);
+      } else {
+        setStatus('success');
+        config?.onSuccess && config.onSuccess();
+      }
+    },
   });
 
-  useEffect(() => {
-    if (currentTxn.status === 'success') {
-    }
-  }, [currentTxn.status]);
-
   function reset() {
+    setStatus('idle');
     setStep(0);
+    setLastExecutedStep(0);
     setReceipts([]);
   }
 
   async function exec() {
-    if (!started) {
+    if (status === 'idle') {
+      setStatus('pending');
       await currentTxn.writeAsync();
     }
   }
 
   useEffect(() => {
-    if (step !== 0) {
+    if (step !== 0 && lastExecutedStep !== step) {
       currentTxn.write();
+      setLastExecutedStep(s => s + 1);
     }
-  }, [step, currentTxn]);
-
-  async function nextCall() {
-    const newStep = step + 1;
-    setStep(newStep);
-
-    // useEffect above will pick up the step once react recalculates everything
-  }
+  }, [step, currentTxn, lastExecutedStep]);
 
   return {
     step,
     receipts,
     reset,
     exec,
-    started,
-    completed,
+    status,
     currentTxn,
   };
 };
