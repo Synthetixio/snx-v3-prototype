@@ -24,8 +24,6 @@ export function NetworkController() {
   const chains = networkChains.length ? networkChains : supportedChains;
   const localChain = chains.find((chain) => chain.id === localChainId);
 
-  // Look in here for logged out chains to render images https://github.com/rainbow-me/rainbowkit/blob/main/packages/rainbowkit/src/components/ConnectButton/ConnectButtonRenderer.tsx
-
   return (
     <ConnectButton.Custom>
       {({
@@ -83,6 +81,7 @@ export function NetworkController() {
               <Menu>
                 <MenuButton
                   as={Button}
+                  textAlign="left"
                   bg="gray.800"
                   _hover={{ bg: "gray.700" }}
                   _active={{ bg: "gray.700" }}
@@ -114,12 +113,14 @@ export function NetworkController() {
                 </MenuButton>
                 <MenuList
                   px={2}
+                  minW="0"
                   bg="black"
                   border="1px solid rgba(255,255,255,0.33)"
                 >
                   {chains &&
                     chains.map((chainOption) => (
                       <MenuItem
+                        borderRadius="sm"
                         key={chainOption.id}
                         alignItems="left"
                         mb={1}
@@ -130,6 +131,7 @@ export function NetworkController() {
                         onClick={() => {
                           routeToChain(router.basePath, chainOption.id);
                         }}
+                        fontWeight="600"
                       >
                         {/* chainOption.hasIcon && (
                           <div
