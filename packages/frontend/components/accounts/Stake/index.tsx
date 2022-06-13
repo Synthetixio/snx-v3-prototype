@@ -5,6 +5,7 @@ import {
   useDeploymentRead,
   useSynthetixRead,
 } from '../../../utils/hooks/useDeploymentRead';
+import { useRouter } from 'next/router';
 import { useMulticall, MulticallCall } from '../../../utils/hooks/useMulticall';
 import EditPosition from '../EditPosition/index';
 import Balance from './Balance';
@@ -75,6 +76,8 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     onClose: onCloseFund,
   } = useDisclosure();
 
+  const router = useRouter();
+
   const [localChainId] = useRecoilState(chainIdState);
   const chain = getChainById(localChainId);
   const selectedCollateralType = useWatch({
@@ -117,7 +120,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
 
   const generateAccountId = () => {
     return Math.floor(Math.random() * 10000000000);
-  }; // ten digit number
+  }; // ten digit numberf
   const [newAccountId, setNewAccountId] = useState(generateAccountId());
   // useDeploymentRead('accountToken', 'ownerOf', {
   //   args: newAccountId,
@@ -218,9 +221,12 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
         // TODO: route to accounts page
         toast.closeAll();
         console.log('SUCCESS!!!');
+
+        router.push(`/accounts/${newAccountId}`);
+        
       },
       onStepSuccess: () => {
-        console.log('STEP SUCCESS');
+        console.log('STEP SUCCESS', newAccountId);
       },
       onError: e => {
         toast({
