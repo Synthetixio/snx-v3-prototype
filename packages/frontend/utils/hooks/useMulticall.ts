@@ -1,3 +1,4 @@
+import { CONTRACT_MULTICALL, CONTRACT_SYNTHETIX_PROXY } from '../constants';
 import { useContract } from './useContract';
 import ethers, { CallOverrides, Contract, utils } from 'ethers';
 import { useEffect, useMemo, useState } from 'react';
@@ -5,9 +6,6 @@ import { useContractWrite, useWaitForTransaction } from 'wagmi';
 
 // contact, funcion name, arguments
 export type MulticallCall = [Contract, string, any[], CallOverrides?];
-
-const CONTRACT_SYNTHETIX_PROXY = 'synthetix.Proxy';
-const CONTRACT_MULTICALL = 'Multicall';
 
 type ContractWriteParams = Parameters<typeof useContractWrite>;
 

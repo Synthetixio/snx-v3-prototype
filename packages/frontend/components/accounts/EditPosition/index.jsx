@@ -1,6 +1,9 @@
-import { useSynthetixRead } from "../../../utils/hooks/useDeploymentRead";
-import StakerOption from "./StakerOption";
-import SynthOption from "./SynthOption";
+import { useContract } from '../../../utils/hooks/useContract';
+import { useContractReads } from '../../../utils/hooks/useContractReads';
+import { useSynthetixRead } from '../../../utils/hooks/useDeploymentRead';
+import { useMulticall } from '../../../utils/hooks/useMulticall';
+import StakerOption from './StakerOption';
+import SynthOption from './SynthOption';
 import {
   Box,
   Heading,
@@ -16,19 +19,31 @@ import {
   Radio,
   RadioGroup,
   Spacer,
-} from "@chakra-ui/react";
-import { useState } from "react";
+} from '@chakra-ui/react';
+import { useState } from 'react';
 
 export default function Position() {
-  const preferredFund = useSynthetixRead("getPreferredFund");
-  const approvedFunds = useSynthetixRead("getApprovedFunds");
+  const snxProxy = useContract('synthetix.Proxy');
+  const { data: funds, isLoading } = useContractReads([
+    {
+      contract: snxProxy.contract,
+      funcName: 'getPreferredFund',
+    },
+    {
+      contract: snxProxy.contract,
+      funcName: 'getApprovedFunds',
+    },
+  ]);
+  console.log(funds, isLoading);
+  // const preferredFund = useSynthetixRead('getPreferredFund');
+  // const approvedFunds = useSynthetixRead('getApprovedFunds');
 
   const [tabIndex, setTabIndex] = useState(0);
   const [fundId, setFundId] = useState(0);
 
   return (
     <Box>
-      <Tabs onChange={(index) => setTabIndex(index)} isFitted>
+      <Tabs onChange={index => setTabIndex(index)} isFitted>
         <TabList>
           <Tab>Join Fund</Tab>
           {/* <Tab>Manual Staking</Tab> */}

@@ -188,7 +188,6 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       ],
     ],
   ];
-  console.log('fundId: ', fundId);
 
   console.log(
     fundId,
@@ -234,9 +233,15 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
         router.push(`/accounts/${newAccountId}`);
         
       },
+<<<<<<< Updated upstream
       onStepSuccess: () => {
         console.log('STEP SUCCESS', newAccountId);
       },
+=======
+      // onStepSuccess: () => {
+      //   console.log('STEP SUCCESS');
+      // },
+>>>>>>> Stashed changes
       onError: e => {
         toast({
           title: 'Could not complete account creation',
