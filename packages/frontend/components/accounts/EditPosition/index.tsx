@@ -1,3 +1,4 @@
+import { fundsData } from '../../../utils/constants';
 import { useContract } from '../../../utils/hooks/useContract';
 import { useContractReads } from '../../../utils/hooks/useContractReads';
 import { useSynthetixRead } from '../../../utils/hooks/useDeploymentRead';
@@ -20,41 +21,68 @@ import {
   RadioGroup,
   Spacer,
 } from '@chakra-ui/react';
+import { BigNumber } from 'ethers';
 import { useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 export default function Position() {
   const snxProxy = useContract('synthetix.Proxy');
-  const { data: funds, isLoading } = useContractReads([
+
+  const { isLoading, data } = useContractReads<[BigNumber, Array<BigNumber>]>([
     {
-      contract: snxProxy.contract,
+      contract: snxProxy!.contract,
       funcName: 'getPreferredFund',
     },
     {
-      contract: snxProxy.contract,
+      contract: snxProxy!.contract,
       funcName: 'getApprovedFunds',
     },
   ]);
-  console.log(funds, isLoading);
-  // const preferredFund = useSynthetixRead('getPreferredFund');
-  // const approvedFunds = useSynthetixRead('getApprovedFunds');
 
-  const [tabIndex, setTabIndex] = useState(0);
-  const [fundId, setFundId] = useState(0);
+  const funds = data
+    ? [
+        data[0].toString(),
+        ...data[1]
+          .filter(id => !id.eq(data[0]))
+          .map(fundId => fundId.toString()),
+      ]
+    : [];
+
+  const { setValue } = useFormContext();
+  const selectedFundId = useWatch({
+    name: 'fundId',
+  });
+
+  console.log(selectedFundId);
 
   return (
     <Box>
-      <Tabs onChange={index => setTabIndex(index)} isFitted>
+      <Tabs
+        onChange={index => {
+          // user switch to no fund tab
+          // if more tabs are added, this needs to change
+          if (index === 1) {
+            setValue('fundId', 0);
+          }
+        }}
+        isFitted
+      >
         <TabList>
           <Tab>Join Fund</Tab>
-          {/* <Tab>Manual Staking</Tab> */}
-          <Tab>No Fund</Tab>
+          <Tab tabIndex={100}>No Fund</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
-            <RadioGroup onChange={setFundId} value={fundId}>
-              <StakerOption name="Spartan Council" defaultChecked={true} />
-              <StakerOption name="Forex" />
-              <StakerOption name="Commodities" />
+            <RadioGroup
+              onChange={v => {
+                setValue('fundId', v);
+              }}
+              value={selectedFundId}
+            >
+              {funds.map(option => {
+                const { name } = fundsData[option];
+                return <StakerOption name={name} value={option} key={option} />;
+              })}
               {/*
               <Flex mb="2" pt="1">
                 <Box pt="2">

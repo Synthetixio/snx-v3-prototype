@@ -32,6 +32,12 @@ export const localCollateralTypes: Array<CollateralType> = [
   },
 ];
 
+export const fundsData: Record<string, { name: string }> = {
+  1: {
+    name: 'Spartan Council Fund',
+  },
+};
+
 export const supportedChains = [chain.mainnet, chain.kovan, chain.hardhat];
 export const getChainById = (chainId: number) =>
   supportedChains.find(chain => chain.id === chainId);

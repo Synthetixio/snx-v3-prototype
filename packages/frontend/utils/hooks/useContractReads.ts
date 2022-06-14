@@ -2,7 +2,8 @@ import { CONTRACT_MULTICALL } from '../constants';
 import { useContract } from './useContract';
 import { ReadContractConfig } from '@wagmi/core';
 import { ethers } from 'ethers';
-import { useContractRead } from 'wagmi';
+import { Result } from 'ethers/lib/utils';
+import { useEffect, useMemo, useState } from 'react';
 
 type ReadMulticallType = {
   contract: ethers.Contract;
@@ -10,8 +11,16 @@ type ReadMulticallType = {
   args?: ReadContractConfig['args'];
 };
 
-export const useContractReads = (calls: Array<ReadMulticallType>) => {
+type AggregateResult = {
+  success: boolean;
+  returnData: string;
+}[];
+
+export const useContractReads = <Data extends any[] = Result[]>(
+  calls: Array<ReadMulticallType>
+) => {
   const multicall = useContract(CONTRACT_MULTICALL);
+  const [multicallResponse, setMulticallResponse] = useState<Data>();
 
   const mappedCalls = calls.map(({ contract, funcName, args }) => {
     const params = Array.isArray(args) ? args : args ? [args] : [];
@@ -27,16 +36,32 @@ export const useContractReads = (calls: Array<ReadMulticallType>) => {
     };
   });
 
-  return useContractRead(
-    {
-      addressOrName: multicall?.address,
-      contractInterface: multicall?.abi,
-    },
-    'aggregate3',
-    {
-      args: [mappedCalls],
-      chainId: multicall?.chainId,
-      enabled: Boolean(multicall),
+  useEffect(() => {
+    const callFunc = async () => {
+      const resp = (await multicall?.contract.callStatic['aggregate3'](
+        mappedCalls
+      )) as AggregateResult;
+
+      const results = resp.map((d, i) => {
+        const { contract, funcName } = calls[i];
+        const result = contract.interface.decodeFunctionResult(
+          funcName,
+          d.returnData
+        );
+        return result[0];
+      }) as Data;
+
+      setMulticallResponse(results);
+    };
+
+    if (multicallResponse) {
+      return;
     }
-  );
+    callFunc();
+  }, [calls, mappedCalls, multicall, multicallResponse]);
+
+  return {
+    isLoading: !multicallResponse,
+    data: multicallResponse,
+  };
 };

@@ -1,8 +1,18 @@
-import { ExternalLinkIcon } from "@chakra-ui/icons";
-import { Heading, Box, Text, Flex, Radio, Link } from "@chakra-ui/react";
-import NextLink from "next/link";
+import { ExternalLinkIcon } from '@chakra-ui/icons';
+import { Heading, Box, Text, Flex, Radio, Link } from '@chakra-ui/react';
+import NextLink from 'next/link';
 
-export default function StakerOption({ name, defaultChecked }) {
+type PropsType = {
+  name: string;
+  value: string;
+  checked?: boolean;
+};
+
+export default function StakerOption({
+  name,
+  value,
+  checked = false,
+}: PropsType) {
   return (
     <Flex
       alignItems="center"
@@ -15,7 +25,8 @@ export default function StakerOption({ name, defaultChecked }) {
           size="lg"
           name={name}
           colorScheme="orange"
-          defaultChecked={defaultChecked}
+          checked={checked}
+          value={value}
         />
       </Box>
       <Box flex="1" pl="3">
@@ -24,7 +35,7 @@ export default function StakerOption({ name, defaultChecked }) {
         </Heading>
         <Text fontSize="xs" display="block" color="gray.400">
           Fund #231&nbsp;
-          <NextLink href={"/funds/example"} passHref>
+          <NextLink href={'/funds/example'} passHref>
             <Link
               color="blue.400"
               display="inline-block"

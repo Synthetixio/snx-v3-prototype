@@ -5,7 +5,6 @@ import {
   useDeploymentRead,
   useSynthetixRead,
 } from '../../../utils/hooks/useDeploymentRead';
-import { useRouter } from 'next/router';
 import { useMulticall, MulticallCall } from '../../../utils/hooks/useMulticall';
 import EditPosition from '../EditPosition/index';
 import Balance from './Balance';
@@ -37,6 +36,7 @@ import {
 } from '@chakra-ui/react';
 import { ethers, CallOverrides } from 'ethers';
 import { BigNumber } from 'ethers';
+import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm, FormProvider, useWatch } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
@@ -51,6 +51,7 @@ import {
 type FormType = {
   collateralType: CollateralType;
   amount: BigNumber;
+  fundId: BigNumber;
 };
 
 export default function Stake({ createAccount }: { createAccount: boolean }) {
@@ -189,14 +190,6 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     ],
   ];
 
-  console.log(
-    fundId,
-    newAccountId,
-    selectedCollateralType.address,
-    amount || BigNumber.from(0),
-    ethers.constants.One
-  );
-
   const overrides: CallOverrides = {};
 
   // add extra step to convert to wrapped token if native (ex. ETH)
@@ -231,17 +224,10 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
         console.log('SUCCESS!!!');
 
         router.push(`/accounts/${newAccountId}`);
-        
       },
-<<<<<<< Updated upstream
       onStepSuccess: () => {
         console.log('STEP SUCCESS', newAccountId);
       },
-=======
-      // onStepSuccess: () => {
-      //   console.log('STEP SUCCESS');
-      // },
->>>>>>> Stashed changes
       onError: e => {
         toast({
           title: 'Could not complete account creation',
@@ -308,8 +294,8 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
 
   return (
     <>
-      <Box bg="gray.900" mb="8" p="6" pb="4" borderRadius="12px">
-        <FormProvider {...methods}>
+      <FormProvider {...methods}>
+        <Box bg="gray.900" mb="8" p="6" pb="4" borderRadius="12px">
           <form
             onSubmit={handleSubmit(data => {
               multiTxn.exec();
@@ -374,52 +360,52 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
               </Button>
             </Flex>
           </form>
-        </FormProvider>
-        <Flex alignItems="center">
-          {hasWalletConnected && (
-            <Box mr="auto">
-              <Balance
-                balance={balanceData?.value || ethers.BigNumber.from(0)}
-                collateralType={selectedCollateralType}
-                onUseMax={(maxAmount: ethers.BigNumber) => {
-                  setValue('amount', maxAmount);
-                }}
-              />
-            </Box>
-          )}
 
-          {createAccount ? (
-            <Text fontSize="xs" textAlign="right">
-              Receive an snxAccount token{' '}
-              <Tooltip
-                textAlign="center"
-                label="You will be minted an NFT that represents your account. You can easily transfer it between wallets."
-              >
-                <InfoOutlineIcon transform="translateY(-1.5px)" />
-              </Tooltip>
-            </Text>
-          ) : (
-            <Text fontSize="xs" textAlign="right">
-              Fund: None{' '}
-              <Link color="blue.400">
-                <EditIcon
-                  onClick={onOpenFund}
-                  style={{ transform: 'translateY(-2px)' }}
+          <Flex alignItems="center">
+            {hasWalletConnected && (
+              <Box mr="auto">
+                <Balance
+                  balance={balanceData?.value || ethers.BigNumber.from(0)}
+                  collateralType={selectedCollateralType}
+                  onUseMax={(maxAmount: ethers.BigNumber) => {
+                    setValue('amount', maxAmount);
+                  }}
                 />
-              </Link>
-            </Text>
-          )}
-        </Flex>
-      </Box>
+              </Box>
+            )}
 
-      <Modal size="2xl" isOpen={isOpenFund} onClose={onCloseFund}>
-        <ModalOverlay />
-        <ModalContent bg="black" color="white">
-          <ModalHeader>Select Fund</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <EditPosition />
-            {/*
+            {createAccount ? (
+              <Text fontSize="xs" textAlign="right">
+                Receive an snxAccount token{' '}
+                <Tooltip
+                  textAlign="center"
+                  label="You will be minted an NFT that represents your account. You can easily transfer it between wallets."
+                >
+                  <InfoOutlineIcon transform="translateY(-1.5px)" />
+                </Tooltip>
+              </Text>
+            ) : (
+              <Text fontSize="xs" textAlign="right">
+                Fund: None{' '}
+                <Link color="blue.400">
+                  <EditIcon
+                    onClick={onOpenFund}
+                    style={{ transform: 'translateY(-2px)' }}
+                  />
+                </Link>
+              </Text>
+            )}
+          </Flex>
+        </Box>
+
+        <Modal size="2xl" isOpen={isOpenFund} onClose={onCloseFund}>
+          <ModalOverlay />
+          <ModalContent bg="black" color="white">
+            <ModalHeader>Select Fund</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <EditPosition />
+              {/*
               <Heading size="sm" mb="3">Leverage</Heading>
               <Grid templateColumns='repeat(12, 1fr)' gap={6} alignItems="center" mb="6">
                 <GridItem colSpan="3">
@@ -433,12 +419,13 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
                 </GridItem>
               </Grid>
             */}
-            <Button w="100%" colorScheme="blue">
-              Update
-            </Button>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+              <Button w="100%" colorScheme="blue">
+                Update
+              </Button>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </FormProvider>
       {/*
       <Modal size="2xl" isOpen={isOpenLock} onClose={onCloseLock}>
         <ModalOverlay />
