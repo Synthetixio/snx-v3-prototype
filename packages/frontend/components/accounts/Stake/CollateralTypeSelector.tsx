@@ -1,5 +1,6 @@
-import { collateralTypesState } from "../../../state/index";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { collateralTypesState } from '../../../state/index';
+import { CollateralType } from '../../../utils/constants';
+import { ChevronDownIcon } from '@chakra-ui/icons';
 import {
   Box,
   Text,
@@ -8,19 +9,21 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-} from "@chakra-ui/react";
-import Image from "next/image";
-import { useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
+} from '@chakra-ui/react';
+import Image from 'next/image';
+import { useFormContext, useWatch } from 'react-hook-form';
 
-export default function CollateralTypeSelector({ handleChange }) {
+type Props = {
+  collateralTypes: CollateralType[];
+};
+
+export default function CollateralTypeSelector({ collateralTypes }: Props) {
   // on loading dropdown and token amount https://chakra-ui.com/docs/components/feedback/skeleton ?
 
-  const [collateralTypes] = useRecoilState(collateralTypesState);
-  const [collateralType, setCollateralType] = useState(collateralTypes[0]);
-  useEffect(() => {
-    handleChange(collateralType);
-  }, [collateralType, handleChange]);
+  const { setValue, register } = useFormContext();
+  const selectedCollateralType = useWatch({
+    name: 'collateralType',
+  });
 
   return (
     <Menu>
@@ -44,17 +47,17 @@ export default function CollateralTypeSelector({ handleChange }) {
               alt="collateral image"
               width="24"
               height="24"
-              src={collateralType?.logoURI}
+              src={selectedCollateralType?.logoURI}
             />
           </Box>
-          <Text fontWeight="600">{collateralType?.symbol}</Text>
+          <Text fontWeight="600">{selectedCollateralType?.symbol}</Text>
           <ChevronDownIcon opacity="0.66" w="5" h="5" ml="4" mr="2" />
         </Flex>
       </MenuButton>
       <MenuList
         p={1}
         minW="0"
-        w={"125px"}
+        w={'125px'}
         bg="black"
         border="1px solid rgba(255,255,255,0.33)"
       >
@@ -62,15 +65,16 @@ export default function CollateralTypeSelector({ handleChange }) {
           <MenuItem
             key={collateralType.symbol}
             alignItems="left"
-            mb={collateralTypes.length !== i + 1 && 1}
+            // mb={collateralTypes.length !== i + 1 && 1}
             py={2}
             borderRadius="sm"
             flexDirection="column"
-            _hover={{ bg: "gray.800" }}
-            _focus={{ bg: "gray.800" }}
-            _active={{ bg: "gray.800" }}
+            _hover={{ bg: 'gray.800' }}
+            _focus={{ bg: 'gray.800' }}
+            _active={{ bg: 'gray.800' }}
+            {...register('collateralType')}
             onClick={() => {
-              setCollateralType(collateralType);
+              setValue('collateralType', collateralType);
             }}
           >
             <Flex flexDirection="row">

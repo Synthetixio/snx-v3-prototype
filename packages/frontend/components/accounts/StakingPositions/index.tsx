@@ -1,7 +1,7 @@
-import { useSynthetixRead } from "../../../utils/hooks";
-import StakingPosition from "./StakingPosition";
-import { Box, Heading, Table, Thead, Tr, Th, Tbody } from "@chakra-ui/react";
-import { useState } from "react";
+import { useSynthetixRead } from '../../../utils/hooks';
+import StakingPosition from './StakingPosition';
+import { Box, Heading, Table, Thead, Tr, Th, Tbody } from '@chakra-ui/react';
+import { useState } from 'react';
 
 // This is a view of each LiquidityItem (https://github.com/Synthetixio/synthetix-v3/blob/feature-v3-mvp/packages/synthetix-main/contracts/interfaces/IFundModuleStorage.sol)
 // (We should consider consistent naming for this and the front-end.)
@@ -43,10 +43,20 @@ export default function StakingPositions({ accountId }: { accountId: Number }) {
     []
   );
 
-  useSynthetixRead("getAccountLiquidityItems", {
+  const { data } = useSynthetixRead('getAccountLiquidityItems', {
     args: [accountId],
-    onSuccess: (data) => {
-      let enrichedStakingPositionsData = data.map((d) =>
+    onSuccess: data => {
+      /*
+        address collateralType;
+        uint256 fundId;
+        uint256 accountId;
+        uint256 leverage;
+        uint256 collateralAmount;
+        uint256 shares;
+        uint256 initialDebt;
+      */
+      // C-ratio === green text?
+      let enrichedStakingPositionsData = data.map(d =>
         (({ id, fundId, collateralAmount }) => ({
           id,
           fundId,
@@ -83,7 +93,7 @@ export default function StakingPositions({ accountId }: { accountId: Number }) {
           </Tr>
         </Thead>
         <Tbody>
-          {stakingPositions.map((position) => {
+          {stakingPositions.map(position => {
             return <StakingPosition key={position.id} position={position} />;
           })}
           {/*

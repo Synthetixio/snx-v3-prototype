@@ -8,7 +8,7 @@ defaultValue = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
 defaultValue = "0.4.0"
 
 [setting.synthetix_version]
-defaultValue = "1.0.0"
+defaultValue = "1.0.3"
 
 [setting.chainlink_version]
 defaultValue = "0.9-mock"
@@ -53,14 +53,6 @@ options.owner = "<%= settings.owner %>"
 
 [contract.Multicall]
 artifact = "Multicall3"
-step = 1
-
-[contract.Onboarding]
-artifact = "Onboarding"
-args = [
-    "<%= imports.synthetix.contracts.Proxy.address %>",
-    "<%= imports.synthetix.contracts.Account_init_account_Proxy_0.address %>",
-]
 step = 1
 
 [contract.WETH]
@@ -114,3 +106,21 @@ args = [
     "200000000000000000000"
 ]
 step = 3
+
+[invoke.createPreferredFund]
+on = ["synthetix.Proxy"]
+func = "createFund"
+args = [
+    1,
+    "<%= settings.owner %>",
+]
+step = 3
+
+[invoke.setPreferredFund]
+on = ["synthetix.Proxy"]
+func = "setPreferredFund"
+from = "<%= settings.owner %>"
+args = [
+    1,
+]
+step = 4
