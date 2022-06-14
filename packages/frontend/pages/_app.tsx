@@ -1,27 +1,28 @@
-import { Initializer } from '../components/Initializer';
-import { NetworkChain } from '../components/NetworkChain';
-import Footer from '../components/layout/Footer';
-import Header from '../components/layout/Header';
-import '../styles/index.css';
-import { supportedChains } from '../utils/constants';
-import { ChakraProvider, Flex, Box } from '@chakra-ui/react';
+import { Initializer } from "../components/Initializer";
+import { NetworkChain } from "../components/NetworkChain";
+import Footer from "../components/layout/Footer";
+import Header from "../components/layout/Header";
+import "../styles/index.css";
+import theme from "../styles/theme";
+import { supportedChains } from "../utils/constants";
+import { ChakraProvider, Flex, Box } from "@chakra-ui/react";
 import {
   getDefaultWallets,
   RainbowKitProvider,
   darkTheme,
-} from '@rainbow-me/rainbowkit';
-import '@rainbow-me/rainbowkit/styles.css';
-import { AppProps } from 'next/app';
-import { RecoilRoot } from 'recoil';
-import { createClient, WagmiConfig, configureChains } from 'wagmi';
-import { publicProvider } from 'wagmi/providers/public';
+} from "@rainbow-me/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
+import { AppProps } from "next/app";
+import { RecoilRoot } from "recoil";
+import { createClient, WagmiConfig, configureChains } from "wagmi";
+import { publicProvider } from "wagmi/providers/public";
 
 const { chains, provider } = configureChains(supportedChains, [
   publicProvider(),
 ]);
 
 const { connectors } = getDefaultWallets({
-  appName: 'Synthetix',
+  appName: "Synthetix",
   chains,
 });
 
@@ -37,14 +38,14 @@ function Synthetix({ Component, pageProps }: AppProps) {
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider
           theme={darkTheme({
-            accentColor: 'rgb(49, 130, 206)',
-            accentColorForeground: 'white',
-            borderRadius: 'small',
-            fontStack: 'system',
+            accentColor: "rgb(49, 130, 206)",
+            accentColorForeground: "white",
+            borderRadius: "small",
+            fontStack: "system",
           })}
           chains={chains}
         >
-          <ChakraProvider>
+          <ChakraProvider theme={theme}>
             <Box
               as="main"
               background="black"

@@ -1,6 +1,6 @@
 import { CONTRACT_MULTICALL, CONTRACT_SYNTHETIX_PROXY } from '../constants';
 import { useContract } from './useContract';
-import ethers, { CallOverrides, Contract, utils } from 'ethers';
+import ethers, { CallOverrides, Contract, constants } from 'ethers';
 import { useEffect, useMemo, useState } from 'react';
 import { useContractWrite, useWaitForTransaction } from 'wagmi';
 
@@ -58,7 +58,7 @@ export const useMulticall = (
       // direct call
       [callContract, callFunc, callArgs] = calls[step][0];
     } else if (calls[step].length > 1) {
-      if (calls[step].find(c => c[0].address !== snxProxy.address)) {
+      if (calls[step].find(c => c[0].address !== snxProxy?.address)) {
         // Multicall3
         callContract = multicall.contract;
         callFunc = 'aggregate3Value';
@@ -72,8 +72,8 @@ export const useMulticall = (
             return {
               target: c[0].address,
               callData,
-              value: c[0][3]?.value || 0,
               allowFailure: false,
+              value: 0,
             };
           }),
         ];

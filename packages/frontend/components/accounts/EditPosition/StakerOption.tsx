@@ -34,12 +34,13 @@ export default function StakerOption({
           {name}
         </Heading>
         <Text fontSize="xs" display="block" color="gray.400">
-          Fund #231&nbsp;
+          Fund #{value}
           <NextLink href={'/funds/example'} passHref>
             <Link
               color="blue.400"
               display="inline-block"
               transform="translateY(-1.5px)"
+              target="_blank"
             >
               <ExternalLinkIcon />
             </Link>

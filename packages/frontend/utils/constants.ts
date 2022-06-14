@@ -34,7 +34,10 @@ export const localCollateralTypes: Array<CollateralType> = [
 
 export const fundsData: Record<string, { name: string }> = {
   1: {
-    name: 'Spartan Council Fund',
+    name: 'Spartan Council',
+  },
+  0: {
+    name: 'Zero fund',
   },
 };
 

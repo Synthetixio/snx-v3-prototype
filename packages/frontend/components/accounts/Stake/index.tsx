@@ -1,12 +1,16 @@
 import { chainIdState, collateralTypesState } from '../../../state';
-import { CollateralType, getChainById } from '../../../utils/constants';
+import {
+  CollateralType,
+  fundsData,
+  getChainById,
+} from '../../../utils/constants';
 import { useContract } from '../../../utils/hooks/useContract';
 import {
   useDeploymentRead,
   useSynthetixRead,
 } from '../../../utils/hooks/useDeploymentRead';
 import { useMulticall, MulticallCall } from '../../../utils/hooks/useMulticall';
-import EditPosition from '../EditPosition/index';
+import EditPosition from '../EditPosition';
 import Balance from './Balance';
 import CollateralTypeSelector from './CollateralTypeSelector';
 import {
@@ -51,7 +55,7 @@ import {
 type FormType = {
   collateralType: CollateralType;
   amount: BigNumber;
-  fundId: BigNumber;
+  fundId: string;
 };
 
 export default function Stake({ createAccount }: { createAccount: boolean }) {
@@ -84,6 +88,10 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
   const selectedCollateralType = useWatch({
     control,
     name: 'collateralType',
+  });
+  const selectedFundId = useWatch({
+    control,
+    name: 'fundId',
   });
   const amount = useWatch({
     control,
@@ -138,7 +146,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
 
   // const calls: MulticallCall[][] = [
   //   [
-  //     [accountToken!.contract, 'mint', [accountAddress, newAccountId]],
+  //     [snxProxy!.contract, 'createAccount', [accountAddress, newAccountId]],
   //     [
   //       snxProxy!.contract,
   //       'stake',
@@ -223,7 +231,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
         toast.closeAll();
         console.log('SUCCESS!!!');
 
-        router.push(`/accounts/${newAccountId}`);
+        // router.push(`/accounts/${newAccountId}`);
       },
       onStepSuccess: () => {
         console.log('STEP SUCCESS', newAccountId);
@@ -386,7 +394,12 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
               </Text>
             ) : (
               <Text fontSize="xs" textAlign="right">
-                Fund: None{' '}
+                Fund:{' '}
+                {selectedFundId
+                  ? fundsData[selectedFundId]
+                    ? fundsData[selectedFundId].name
+                    : 'Unknown Fund'
+                  : 'None'}{' '}
                 <Link color="blue.400">
                   <EditIcon
                     onClick={onOpenFund}
@@ -404,7 +417,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
             <ModalHeader>Select Fund</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <EditPosition />
+              <EditPosition onClose={onCloseFund} />
               {/*
               <Heading size="sm" mb="3">Leverage</Heading>
               <Grid templateColumns='repeat(12, 1fr)' gap={6} alignItems="center" mb="6">
@@ -419,9 +432,6 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
                 </GridItem>
               </Grid>
             */}
-              <Button w="100%" colorScheme="blue">
-                Update
-              </Button>
             </ModalBody>
           </ModalContent>
         </Modal>
