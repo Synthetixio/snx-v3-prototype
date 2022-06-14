@@ -229,7 +229,12 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       onSuccess: () => {
         // TODO: route to accounts page
         toast.closeAll();
-        console.log('SUCCESS!!!');
+        console.log('SUCCESS!!!', router);
+
+        router.push({
+          pathname: `/accounts/${newAccountId}`,
+          query: router.query,
+        });
 
         // router.push(`/accounts/${newAccountId}`);
       },
