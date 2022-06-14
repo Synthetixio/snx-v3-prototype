@@ -56,7 +56,6 @@ export default function StakingPositions({ accountId }: { accountId: Number }) {
         uint256 initialDebt;
       */
       // C-ratio === green text?
-      console.log('DATA', data);
       let enrichedStakingPositionsData = data.map(d =>
         (({ id, fundId, collateralAmount }) => ({
           id,
@@ -68,10 +67,6 @@ export default function StakingPositions({ accountId }: { accountId: Number }) {
       setStakingPositions(enrichedStakingPositionsData as StakingPosition[]);
     },
   });
-
-  console.log('OTHERDATA', data);
-
-  console.log(stakingPositions);
 
   return stakingPositions?.length ? (
     <Box>

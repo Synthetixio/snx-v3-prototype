@@ -144,35 +144,9 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
 
   const { data: fundId } = useSynthetixRead('getPreferredFund', {});
 
-  // const calls: MulticallCall[][] = [
-  //   [
-  //     [snxProxy!.contract, 'createAccount', [accountAddress, newAccountId]],
-  //     [
-  //       snxProxy!.contract,
-  //       'stake',
-  //       [
-  //         newAccountId,
-  //         selectedCollateralType.address,
-  //         amount || BigNumber.from(0),
-  //       ],
-  //     ],
-  //     [
-  //       snxProxy!.contract,
-  //       'delegateCollateral',
-  //       [
-  //         fundId,
-  //         newAccountId,
-  //         selectedCollateralType.address,
-  //         amount || BigNumber.from(0),
-  //         ethers.constants.One,
-  //       ],
-  //     ],
-  //   ],
-  // ];
-
   const calls: MulticallCall[][] = [
-    [[accountToken!.contract, 'mint', [accountAddress, newAccountId]]],
     [
+      [snxProxy!.contract, 'createAccount', [newAccountId]],
       [
         snxProxy!.contract,
         'stake',
@@ -182,13 +156,11 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
           amount || BigNumber.from(0),
         ],
       ],
-    ],
-    [
       [
         snxProxy!.contract,
         'delegateCollateral',
         [
-          fundId,
+          fundId || 0,
           newAccountId,
           selectedCollateralType.address,
           amount || BigNumber.from(0),
@@ -229,17 +201,11 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       onSuccess: () => {
         // TODO: route to accounts page
         toast.closeAll();
-        console.log('SUCCESS!!!', router);
 
         router.push({
           pathname: `/accounts/${newAccountId}`,
           query: router.query,
         });
-
-        // router.push(`/accounts/${newAccountId}`);
-      },
-      onStepSuccess: () => {
-        console.log('STEP SUCCESS', newAccountId);
       },
       onError: e => {
         toast({

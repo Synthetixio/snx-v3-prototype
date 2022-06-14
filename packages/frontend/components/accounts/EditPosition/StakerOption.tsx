@@ -34,7 +34,7 @@ export default function StakerOption({
           {name}
         </Heading>
         <Text fontSize="xs" display="block" color="gray.400">
-          Fund #{value}
+          Fund #{value}{' '}
           <NextLink href={'/funds/example'} passHref>
             <Link
               color="blue.400"

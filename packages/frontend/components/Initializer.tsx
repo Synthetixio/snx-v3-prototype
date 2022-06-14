@@ -22,7 +22,6 @@ export const Initializer: FC<Props> = ({ children }) => {
       console.log('ERR', err);
     },
     onSuccess(data) {
-      console.log(data);
       if (localChainId === LOCALHOST_CHAIN_ID) {
         setCollateralTypes(localCollateralTypes);
       } else {

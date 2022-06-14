@@ -37,7 +37,7 @@ export const fundsData: Record<string, { name: string }> = {
     name: 'Spartan Council',
   },
   0: {
-    name: 'Zero fund',
+    name: 'None',
   },
 };
 

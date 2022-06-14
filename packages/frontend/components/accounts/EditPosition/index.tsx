@@ -83,7 +83,7 @@ export default function EditPosition({ onClose }: PropsType) {
             <TabPanel>
               <RadioGroup
                 onChange={v => {
-                  setValue('fundId', v);
+                  setSelectedFund(v);
                 }}
                 value={selectedFund || fundValue}
               >

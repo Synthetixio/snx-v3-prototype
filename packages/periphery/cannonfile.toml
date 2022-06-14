@@ -8,7 +8,7 @@ defaultValue = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
 defaultValue = "0.4.0"
 
 [setting.synthetix_version]
-defaultValue = "1.0.2"
+defaultValue = "1.0.3"
 
 [setting.chainlink_version]
 defaultValue = "0.9-mock"
