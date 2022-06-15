@@ -9,6 +9,7 @@ export type CollateralType = {
   targetCRatio?: BigNumber;
   minimumCRatio?: BigNumber;
   price?: BigNumber;
+  priceDecimals?: number;
 };
 
 // TODO: Retrieve from on chain data
@@ -45,7 +46,7 @@ export const fundsData: Record<string, { name: string }> = {
   },
 };
 
-export const supportedChains = [chain.mainnet, chain.kovan, chain.hardhat];
+export const supportedChains = [chain.rinkeby, chain.hardhat];
 export const getChainById = (chainId: number) =>
   supportedChains.find(chain => chain.id === chainId);
 
