@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build-with-deployments": "rm deployments && cp -r ../periphery/deployments ./deployments && next build",
+    "link-deployments": "ln -s ../periphery/deployments",
     "start": "next start",
     "lint": "next lint",
     "tsc": "tsc"

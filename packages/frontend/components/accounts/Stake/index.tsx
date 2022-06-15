@@ -243,20 +243,20 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
 
       if (!sufficientAllowance && multiTxn.step === 0) {
         toast({
-          title: `(${multiTxn.step + 1} / ${
-            calls.length
-          }) Approve collateral for transfer`,
+          // title: `[${multiTxn.step + 1}/${
+          //   calls.length
+          // }] Approve collateral for transfer`,
+          title: 'Approve collateral for transfer',
           description:
-            'The next transaction will finish staking your collateral',
+            'The next transaction will create your account and stake this collateral.',
           status: 'info',
           isClosable: true,
           duration: 9000,
         });
       } else {
         toast({
-          title: `(${multiTxn.step + 1} / ${calls.length}) Create your account`,
-          description:
-            "You'll be redirected once your transaction is processed.",
+          title: 'Create your account',
+          description: "You'll be redirected once your account is created.",
           status: 'info',
           isClosable: true,
           duration: 9000,

@@ -1,0 +1,238 @@
+{
+  "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "AlreadyInitialized",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ImplementationNotSet",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotInitialized",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SynthAlreadyCreated",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "Unauthorized",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "beacon",
+          "type": "address"
+        }
+      ],
+      "name": "BeaconCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "synth",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "synthAddress",
+          "type": "address"
+        }
+      ],
+      "name": "SynthCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "implementationAddress",
+          "type": "address"
+        }
+      ],
+      "name": "SynthImplementationCreated",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "synth",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "string",
+          "name": "synthName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "synthSymbol",
+          "type": "string"
+        },
+        {
+          "internalType": "uint8",
+          "name": "synthDecimals",
+          "type": "uint8"
+        }
+      ],
+      "name": "createSynth",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "createSynthImplementation",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "synth",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getSynth",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getSynthBeacon",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getSynthImplementation",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getSynthsModuleSatellites",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "name",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "contractName",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "address",
+              "name": "deployedAddress",
+              "type": "address"
+            }
+          ],
+          "internalType": "struct ISatelliteFactory.Satellite[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "initializeSynthsModule",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "isSynthsModuleInitialized",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "authorized",
+          "type": "address"
+        }
+      ],
+      "name": "setNewSynthAuthorizedSystem",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newSynthsImplementation",
+          "type": "address"
+        }
+      ],
+      "name": "upgradeSynthImplementation",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "deployTxnHash": "0xbc01f45fab06261c23fc09fa6e409b2e62315090a2717700a0e946aee033bcc4"
+}

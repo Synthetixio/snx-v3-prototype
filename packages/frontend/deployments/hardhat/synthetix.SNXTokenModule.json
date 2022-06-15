@@ -1,0 +1,129 @@
+{
+  "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "AlreadyInitialized",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotInitialized",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "Unauthorized",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "snxAddress",
+          "type": "address"
+        }
+      ],
+      "name": "SNXTokenCreated",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "getSNXTokenAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getSNXTokenModuleSatellites",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "name",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "contractName",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "address",
+              "name": "deployedAddress",
+              "type": "address"
+            }
+          ],
+          "internalType": "struct ISatelliteFactory.Satellite[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "initializeSNXTokenModule",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "isSNXTokenModuleInitialized",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "authorized",
+          "type": "address"
+        }
+      ],
+      "name": "setNewSNXAuthorizedSystem",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newSNXTokenImplementation",
+          "type": "address"
+        }
+      ],
+      "name": "upgradeSNXImplementation",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "deployTxnHash": "0x8145552a56bd6fdd543641df74da130ecf9da08fefd1d9b54a68b9bf1b01e6ad"
+}
