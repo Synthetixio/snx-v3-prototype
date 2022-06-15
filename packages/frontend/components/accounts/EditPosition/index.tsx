@@ -34,7 +34,7 @@ type PropsType = {
 export default function EditPosition({ onClose }: PropsType) {
   const snxProxy = useContract('synthetix.Proxy');
 
-  const { isLoading, data } = useContractReads<[BigNumber, Array<BigNumber>]>([
+  const { data } = useContractReads<[BigNumber, Array<BigNumber>]>([
     {
       contract: snxProxy!.contract,
       funcName: 'getPreferredFund',

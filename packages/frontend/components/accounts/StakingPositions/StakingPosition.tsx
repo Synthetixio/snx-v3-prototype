@@ -1,5 +1,11 @@
 import EditPosition from '../EditPosition';
-import { EditIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
+import { StakingPositionType } from './types';
+import {
+  EditIcon,
+  InfoIcon,
+  QuestionOutlineIcon,
+  WarningIcon,
+} from '@chakra-ui/icons';
 import {
   Box,
   Heading,
@@ -21,9 +27,14 @@ import {
   Badge,
   Tooltip,
 } from '@chakra-ui/react';
+import { utils, BigNumber } from 'ethers';
 import NextLink from 'next/link';
 
-export default function StakingPosition({ position }) {
+export default function StakingPosition({
+  position,
+}: {
+  position: StakingPositionType;
+}) {
   // If the connected wallet doesn’t own this account token, remove/disable the interactivity
 
   const {
@@ -37,16 +48,30 @@ export default function StakingPosition({ position }) {
     onClose: onCloseDebt,
   } = useDisclosure();
 
+  const { collateralAmount, collateralType } = position;
+
+  const formatValue = (value: BigNumber, decimals: number, precision: number) =>
+    parseInt(utils.formatUnits(value, decimals)).toFixed(precision);
+
+  const collateralValue = collateralAmount
+    .mul(collateralType!.price!)
+    .div(BigNumber.from(10).pow(18))
+    .div(BigNumber.from(10).pow(18));
+
+  const debt = 0;
+
   return (
     <Tr>
       <Td py="4">
-        $5,264.34
-        <Text fontSize="xs" opacity="0.66" mt="1'">
-          1,000 SNX
-        </Text>
+        <>
+          ${collateralValue.toString()}
+          <Text fontSize="xs" opacity="0.66" mt="1'">
+            {formatValue(collateralAmount, 18, 0)} SNX
+          </Text>
+        </>
       </Td>
       <Td py="4">
-        $3,200
+        ${debt}
         <Text fontSize="xs" mt="1'">
           <Link
             _hover={{ textDecoration: 'none' }}
@@ -122,14 +147,14 @@ export default function StakingPosition({ position }) {
                               type="number"
                               border="none"
                               placeholder="0.0"
-                              value={null}
+                              // value={null}
                               onChange={e => {
                                 null;
                               }}
                             />
                             <Button
-                              isLoading={null}
-                              isDisabled={null}
+                              // isLoading={null}
+                              // isDisabled={null}
                               colorScheme="blue"
                               ml="4"
                               px="8"
@@ -192,14 +217,14 @@ export default function StakingPosition({ position }) {
                               type="number"
                               border="none"
                               placeholder="0.0"
-                              value={null}
+                              // value={null}
                               onChange={e => {
                                 null;
                               }}
                             />
                             <Button
-                              isLoading={null}
-                              isDisabled={null}
+                              // isLoading={null}
+                              // isDisabled={null}
                               colorScheme="blue"
                               ml="4"
                               px="8"
@@ -246,10 +271,26 @@ export default function StakingPosition({ position }) {
         </Text>
       </Td>
       <Td py="4">
-        400%
-        {/* <Text fontWeight="bold" color="red">232% <WarningIcon transform="translateY(-1px)" /></Text> */}
+        {debt <= 0 ? (
+          <Text fontWeight="bold" color="green">
+            No debt <InfoIcon transform="translateY(-1px)" />
+          </Text>
+        ) : (
+          <>0%</>
+        )}
+        {/* collateralValue / debt * 100 */}
+        {/* <Text fontWeight="bold" color="red">
+          232% <WarningIcon transform="translateY(-1px)" />
+        </Text> */}
+
         <Text fontSize="xs" opacity="0.66" mt="1'">
-          {/*target here as well?*/}300% Min.
+          {/*target here as well?*/}
+          {formatValue(
+            collateralType!.minimumCRatio!.mul(BigNumber.from(100)),
+            18,
+            0
+          )}
+          % Min.
         </Text>
       </Td>
 
@@ -284,7 +325,7 @@ export default function StakingPosition({ position }) {
             <ModalHeader>Select Fund</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <EditPosition />
+              {/* <EditPosition /> */}
               {/*
               <Heading size="sm" mb="3">Leverage</Heading>
               <Grid templateColumns='repeat(12, 1fr)' gap={6} alignItems="center" mb="6">
