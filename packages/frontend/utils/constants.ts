@@ -1,3 +1,4 @@
+import { BigNumber } from 'ethers';
 import { chain, chainId as chainMapping } from 'wagmi';
 
 export type CollateralType = {
@@ -5,6 +6,9 @@ export type CollateralType = {
   symbol: string;
   logoURI: string;
   decimals: number;
+  targetCRatio?: BigNumber;
+  minimumCRatio?: BigNumber;
+  price?: BigNumber;
 };
 
 // TODO: Retrieve from on chain data

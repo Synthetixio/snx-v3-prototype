@@ -1,4 +1,5 @@
 import EditPosition from '../EditPosition';
+import { StakingPositionType } from './types';
 import { EditIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import {
   Box,
@@ -21,9 +22,14 @@ import {
   Badge,
   Tooltip,
 } from '@chakra-ui/react';
+import { utils, BigNumber } from 'ethers';
 import NextLink from 'next/link';
 
-export default function StakingPosition({ position }) {
+export default function StakingPosition({
+  position,
+}: {
+  position: StakingPositionType;
+}) {
   // If the connected wallet doesn’t own this account token, remove/disable the interactivity
 
   const {
@@ -37,13 +43,32 @@ export default function StakingPosition({ position }) {
     onClose: onCloseDebt,
   } = useDisclosure();
 
+  const { collateralAmount, collateralType } = position;
+
+  const formatValue = (value: BigNumber, decimals: number) =>
+    parseInt(utils.formatUnits(value, collateralType.decimals)).toFixed(
+      decimals
+    );
+
+  const collateralValue = collateralAmount.mul(collateralType!.price!);
+  console.log(
+    collateralAmount,
+    utils.formatUnits(collateralAmount, collateralType.decimals),
+    collateralType!.price!,
+    utils.formatUnits(collateralType!.price!, collateralType.decimals),
+    collateralValue.toString(),
+    utils.formatUnits(collateralValue, collateralType.decimals)
+  );
+
   return (
     <Tr>
       <Td py="4">
-        $5,264.34
-        <Text fontSize="xs" opacity="0.66" mt="1'">
-          1,000 SNX
-        </Text>
+        <>
+          ${formatValue(collateralValue, 2)}
+          <Text fontSize="xs" opacity="0.66" mt="1'">
+            {formatValue(collateralAmount, 0)} SNX
+          </Text>
+        </>
       </Td>
       <Td py="4">
         $3,200
@@ -249,7 +274,8 @@ export default function StakingPosition({ position }) {
         400%
         {/* <Text fontWeight="bold" color="red">232% <WarningIcon transform="translateY(-1px)" /></Text> */}
         <Text fontSize="xs" opacity="0.66" mt="1'">
-          {/*target here as well?*/}300% Min.
+          {/*target here as well?*/}
+          {formatValue(collateralType!.minimumCRatio!, 0)}% Min.
         </Text>
       </Td>
 

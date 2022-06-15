@@ -16,27 +16,45 @@ type AggregateResult = {
   returnData: string;
 }[];
 
+type ConfigType<T> = {
+  enabled?: boolean;
+  onSuccess: (data: T) => void;
+};
+
 export const useContractReads = <Data extends any[] = Result[]>(
-  calls: Array<ReadMulticallType>
+  calls: Array<ReadMulticallType>,
+  config: Partial<ConfigType<Data>> = {}
 ) => {
+  const { enabled = true, onSuccess = () => {} } = config;
   const multicall = useContract(CONTRACT_MULTICALL);
   const [multicallResponse, setMulticallResponse] = useState<Data>();
 
-  const mappedCalls = calls.map(({ contract, funcName, args }) => {
-    const params = Array.isArray(args) ? args : args ? [args] : [];
-    const callData = contract.interface.encodeFunctionData(funcName, params);
-    if (!contract[funcName])
-      console.warn(
-        `"${funcName}" is not in the interface for contract "${contract.address}"`
-      );
-    return {
-      target: contract.address,
-      allowFailure: false,
-      callData,
-    };
-  });
+  const mappedCalls = useMemo(
+    () =>
+      calls.map(({ contract, funcName, args }) => {
+        const params = Array.isArray(args) ? args : args ? [args] : [];
+        const callData = contract.interface.encodeFunctionData(
+          funcName,
+          params
+        );
+        if (!contract[funcName])
+          console.warn(
+            `"${funcName}" is not in the interface for contract "${contract.address}"`
+          );
+        return {
+          target: contract.address,
+          allowFailure: false,
+          callData,
+        };
+      }),
+    [calls]
+  );
 
   useEffect(() => {
+    if (multicallResponse || !enabled) {
+      return;
+    }
+
     const callFunc = async () => {
       const resp = (await multicall?.contract.callStatic['aggregate3'](
         mappedCalls
@@ -48,17 +66,24 @@ export const useContractReads = <Data extends any[] = Result[]>(
           funcName,
           d.returnData
         );
-        return result[0];
+        return Array.isArray(result) && result.length === 1
+          ? result[0]
+          : result;
       }) as Data;
 
+      onSuccess && onSuccess(results);
       setMulticallResponse(results);
     };
 
-    if (multicallResponse) {
-      return;
-    }
     callFunc();
-  }, [calls, mappedCalls, multicall, multicallResponse]);
+  }, [
+    calls,
+    enabled,
+    mappedCalls,
+    multicall?.contract.callStatic,
+    multicallResponse,
+    onSuccess,
+  ]);
 
   return {
     isLoading: !multicallResponse,
