@@ -2,12 +2,12 @@ import CreateAccount from '../../components/accounts/CreateAccount';
 import { Container, Box, Text, Link } from '@chakra-ui/react';
 import Head from 'next/head';
 import Subnav from '../../components/accounts/Subnav/index';
-import { useDeploymentWrite } from '../../utils/hooks/useDeploymentWrite';
+//import { useDeploymentWrite } from '../../utils/hooks/useDeploymentWrite';
 
 export default function Create() {
 
     const createAccount = () => {
-        const deployment = useDeploymentWrite('synthetix.AccountToken', 'mint');
+        //const deployment = useDeploymentWrite('synthetix.AccountToken', 'mint');
         // toast appropriately
     };
 
