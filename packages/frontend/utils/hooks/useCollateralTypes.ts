@@ -1,18 +1,18 @@
-import { collateralTypesState } from '../../state';
+import { collateralTypesState } from "../../state";
 import {
   CollateralType,
   CONTRACT_SYNTHETIX_PROXY,
   localCollateralTypes,
   LOCALHOST_CHAIN_ID,
-} from '../constants';
-import { getContract, useContract } from './useContract';
-import { useContractReads } from './useContractReads';
-import { useSynthetixRead } from './useDeploymentRead';
-import { tokens } from '@uniswap/default-token-list';
-import { BigNumber } from 'ethers';
-import { useMemo, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { useProvider } from 'wagmi';
+} from "../constants";
+import { getContract, useContract } from "./useContract";
+import { useContractReads } from "./useContractReads";
+import { useSynthetixRead } from "./useDeploymentRead";
+import { tokens } from "@uniswap/default-token-list";
+import { BigNumber } from "ethers";
+import { useMemo, useState } from "react";
+import { useRecoilState } from "recoil";
+import { useProvider } from "wagmi";
 
 type CollateralMetadataType = Array<[string, BigNumber, BigNumber, boolean]>;
 
@@ -30,14 +30,14 @@ export const useCollateralTypes = () => {
 
   const { data: collateralTypeMetadata } =
     useContractReads<CollateralMetadataType>(
-      supportedCollateralTypes.map(ct => ({
+      supportedCollateralTypes.map((ct) => ({
         contract: snxContract!.contract,
-        funcName: 'getCollateralType',
+        funcName: "getCollateralType",
         args: [ct.address],
       })),
       {
         enabled: !!supportedCollateralTypes.length,
-        onSuccess: data => {
+        onSuccess: (data) => {
           setSupportedCollateralTypes(
             supportedCollateralTypes.map((ct, i) => ({
               ...ct,
@@ -63,7 +63,7 @@ export const useCollateralTypes = () => {
       );
       return {
         contract: aggregatorContract!.contract,
-        funcName: 'latestRoundData',
+        funcName: "latestRoundData",
       };
     });
 
@@ -77,7 +77,7 @@ export const useCollateralTypes = () => {
       );
       return {
         contract: aggregatorContract!.contract,
-        funcName: 'decimals',
+        funcName: "decimals",
       };
     });
 
@@ -86,7 +86,7 @@ export const useCollateralTypes = () => {
 
   useContractReads<PriceDataType>(priceCalls, {
     enabled: !!priceCalls.length,
-    onSuccess: data => {
+    onSuccess: (data) => {
       setIsLoading(false);
       setSupportedCollateralTypes(
         supportedCollateralTypes.map((ct, i) => {
@@ -102,12 +102,12 @@ export const useCollateralTypes = () => {
     },
   });
 
-  useSynthetixRead('getCollateralTypes', {
+  useSynthetixRead("getCollateralTypes", {
     args: [true],
     onError(err) {
       // TODO: throw up a toast
       // report to sentry or some other tool
-      console.log('ERR', err);
+      console.log("ERR", err);
     },
     onSuccess(data) {
       if (snxContract?.chainId === LOCALHOST_CHAIN_ID) {
@@ -115,12 +115,12 @@ export const useCollateralTypes = () => {
       } else {
         // Convert addresses to the data from the token list
         const tokensForLocalChain = tokens.filter(
-          token => token.chainId === snxContract?.chainId
+          (token) => token.chainId === snxContract?.chainId
         );
         const enrichedCollateralTypes = data
-          .map(collateralType =>
+          .map((collateralType) =>
             tokensForLocalChain.find(
-              token => token.address === collateralType.address
+              (token) => token.address === collateralType.address
             )
           )
           .filter(function (element) {
