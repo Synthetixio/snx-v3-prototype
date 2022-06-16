@@ -10,11 +10,15 @@ import { useContractReads } from './useContractReads';
 import { useSynthetixRead } from './useDeploymentRead';
 import { tokens } from '@uniswap/default-token-list';
 import { BigNumber } from 'ethers';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { useProvider } from 'wagmi';
 
 type CollateralMetadataType = Array<[string, BigNumber, BigNumber, boolean]>;
+
+type PriceDataType = Array<
+  [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] | number
+>;
 
 export const useCollateralTypes = () => {
   const [supportedCollateralTypes, setSupportedCollateralTypes] =
@@ -45,8 +49,11 @@ export const useCollateralTypes = () => {
       }
     );
 
-  useContractReads(
-    (collateralTypeMetadata || []).map((ct, i) => {
+  const priceCalls = useMemo(() => {
+    if (!collateralTypeMetadata) {
+      return [];
+    }
+    const latestRoundData = collateralTypeMetadata.map((ct, i) => {
       const aggregatorContract = getContract(
         `aggregator_${supportedCollateralTypes[
           i
@@ -57,22 +64,43 @@ export const useCollateralTypes = () => {
       return {
         contract: aggregatorContract!.contract,
         funcName: 'latestRoundData',
-        args: [],
       };
-    }),
-    {
-      enabled: !!collateralTypeMetadata && !!collateralTypeMetadata.length,
-      onSuccess: data => {
-        setIsLoading(false);
-        setSupportedCollateralTypes(
-          supportedCollateralTypes.map((ct, i) => ({
+    });
+
+    const priceDecimals = collateralTypeMetadata.map((ct, i) => {
+      const aggregatorContract = getContract(
+        `aggregator_${supportedCollateralTypes[
+          i
+        ].symbol.toLowerCase()}.aggregator`,
+        provider,
+        snxContract!.chainId
+      );
+      return {
+        contract: aggregatorContract!.contract,
+        funcName: 'decimals',
+      };
+    });
+
+    return [...latestRoundData, ...priceDecimals];
+  }, [collateralTypeMetadata, provider, snxContract, supportedCollateralTypes]);
+
+  useContractReads<PriceDataType>(priceCalls, {
+    enabled: !!priceCalls.length,
+    onSuccess: data => {
+      setIsLoading(false);
+      setSupportedCollateralTypes(
+        supportedCollateralTypes.map((ct, i) => {
+          const priceDecimals = data[i + supportedCollateralTypes.length];
+          const priceData = data[i];
+          return {
             ...ct,
-            price: data[i][1],
-          }))
-        );
-      },
-    }
-  );
+            price: Array.isArray(priceData) ? priceData[1] : BigNumber.from(0),
+            priceDecimals: !Array.isArray(priceDecimals) ? priceDecimals : 0,
+          };
+        })
+      );
+    },
+  });
 
   useSynthetixRead('getCollateralTypes', {
     args: [true],

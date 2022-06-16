@@ -48,15 +48,16 @@ export default function StakingPosition({
     onClose: onCloseDebt,
   } = useDisclosure();
 
-  const { collateralAmount, collateralType } = position;
+  const { collateralAmount: collateralAmountBN, collateralType } = position;
 
-  const formatValue = (value: BigNumber, decimals: number, precision: number) =>
-    parseInt(utils.formatUnits(value, decimals)).toFixed(precision);
+  const formatValue = (value: BigNumber, decimals: number) =>
+    parseInt(utils.formatUnits(value, decimals));
 
-  const collateralValue = collateralAmount
-    .mul(collateralType!.price!)
-    .div(BigNumber.from(10).pow(18))
-    .div(BigNumber.from(10).pow(18));
+  const { decimals, price: priceBN, priceDecimals } = collateralType;
+
+  const collateralAmount = formatValue(collateralAmountBN, decimals);
+  const price = formatValue(priceBN!, priceDecimals!);
+  const collateralValue = collateralAmount * price;
 
   const debt = 0;
 
@@ -64,9 +65,9 @@ export default function StakingPosition({
     <Tr>
       <Td py="4">
         <>
-          ${collateralValue.toString()}
+          ${collateralValue.toFixed(2)}
           <Text fontSize="xs" opacity="0.66" mt="1'">
-            {formatValue(collateralAmount, 18, 0)} SNX
+            {collateralAmount.toFixed(0)} SNX
           </Text>
         </>
       </Td>
@@ -287,9 +288,8 @@ export default function StakingPosition({
           {/*target here as well?*/}
           {formatValue(
             collateralType!.minimumCRatio!.mul(BigNumber.from(100)),
-            18,
-            0
-          )}
+            collateralType.decimals
+          ).toFixed(0)}
           % Min.
         </Text>
       </Td>

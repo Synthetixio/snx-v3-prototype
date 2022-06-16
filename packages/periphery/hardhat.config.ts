@@ -56,6 +56,7 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
   return {
     chainId: chainIds[chain],
     url: process.env.PROVIDER_URL || jsonRpcUrl,
+    accounts: [process.env.PRIVATE_KEY || ""],
   };
 }
 
