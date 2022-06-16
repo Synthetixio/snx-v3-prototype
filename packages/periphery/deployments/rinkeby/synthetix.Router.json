@@ -1,0 +1,25 @@
+{
+  "address": "0x7FAb32DBA4928BC695142491D9E8CD29d8cDC866",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "sel",
+          "type": "bytes4"
+        }
+      ],
+      "name": "UnknownSelector",
+      "type": "error"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "fallback"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    }
+  ],
+  "deployTxnHash": "0x4d96c5226c3b37a2d6a2654610b5ee37bd51195659b8b98f3770ff6797b682d0"
+}

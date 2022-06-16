@@ -8,7 +8,7 @@ defaultValue = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
 defaultValue = "0.4.0"
 
 [setting.synthetix_version]
-defaultValue = "1.0.3"
+defaultValue = "1.0.0"
 
 [setting.chainlink_version]
 defaultValue = "0.9-mock"
@@ -31,6 +31,7 @@ options.symbol = "LUSD"
 source = "erc20:<%= settings.erc20_version %>"
 options.name = "Synthetix Token"
 options.symbol = "SNX"
+
 
 [import.aggregator_snx]
 source = "chainlink:<%= settings.chainlink_version %>"
@@ -60,7 +61,7 @@ artifact = "WETH9"
 step = 1
 
 [invoke.register_lusd_collateral]
-on = ["synthetix.Proxy"]
+target = ["synthetix.Proxy"]
 fromCall.func = "owner"
 func = "adjustCollateralType"
 args = [
@@ -73,7 +74,7 @@ args = [
 step = 2
 
 [invoke.register_snx_collateral]
-on = ["synthetix.Proxy"]
+target = ["synthetix.Proxy"]
 fromCall.func = "owner"
 func = "adjustCollateralType"
 args = [
@@ -86,7 +87,7 @@ args = [
 step = 2
 
 [invoke.register_weth_collateral]
-on = ["synthetix.Proxy"]
+target = ["synthetix.Proxy"]
 fromCall.func = "owner"
 func = "adjustCollateralType"
 args = [
@@ -99,7 +100,7 @@ args = [
 step = 2
 
 [invoke.mint_snx]
-on = ["snx.token"]
+target = ["snx.token"]
 func = "mint"
 args = [
     "<%= settings.owner %>",
@@ -108,7 +109,7 @@ args = [
 step = 3
 
 [invoke.createPreferredFund]
-on = ["synthetix.Proxy"]
+target = ["synthetix.Proxy"]
 func = "createFund"
 args = [
     1,
@@ -117,7 +118,7 @@ args = [
 step = 3
 
 [invoke.setPreferredFund]
-on = ["synthetix.Proxy"]
+target = ["synthetix.Proxy"]
 func = "setPreferredFund"
 from = "<%= settings.owner %>"
 args = [

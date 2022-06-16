@@ -40,7 +40,7 @@ typings/
 .next
 
 # generated deployments folder
-packages/periphery/deployments
+packages/periphery/deployments/hardhat
 
 packages/frontend/tsconfig.tsbuildinfo
 
