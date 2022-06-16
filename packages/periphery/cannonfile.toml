@@ -14,13 +14,13 @@ defaultValue = "1.0.3"
 defaultValue = "0.9-mock"
 
 [setting.lusd_price]
-defaultValue = "1000000000000000000"
+defaultValue = "1000000"
 
 [setting.snx_price]
-defaultValue = "10000000000000000000"
+defaultValue = "10000000"
 
 [setting.weth_price]
-defaultValue = "1000000000000000000000"
+defaultValue = "1000000000"
 
 [import.lusd]
 source = "erc20:<%= settings.erc20_version %>"
