@@ -8,7 +8,7 @@ import {
 import { getContract, useContract } from "./useContract";
 import { useContractReads } from "./useContractReads";
 import { useSynthetixRead } from "./useDeploymentRead";
-import { tokens } from "@uniswap/default-token-list";
+import tokenList from "@uniswap/default-token-list";
 import { BigNumber } from "ethers";
 import { useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -114,7 +114,7 @@ export const useCollateralTypes = () => {
         setSupportedCollateralTypes(localCollateralTypes);
       } else {
         // Convert addresses to the data from the token list
-        const tokensForLocalChain = tokens.filter(
+        const tokensForLocalChain = tokenList.tokens.filter(
           (token) => token.chainId === snxContract?.chainId
         );
         const enrichedCollateralTypes = data
