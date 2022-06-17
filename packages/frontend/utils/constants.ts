@@ -15,6 +15,27 @@ export type CollateralType = {
 // TODO: Retrieve from on chain data
 export const localCollateralTypes = (chainId: number) => {
   const chainName = getChainNameById(chainId);
+  /*
+  Consider injecting token list data here instead of useCollateralTypes.ts
+
+  if (snxContract?.chainId !== LOCALHOST_CHAIN_ID) {
+    // Convert addresses to the data from the token list
+    const tokensForLocalChain = tokenList.tokens.filter(
+      (token) => token.chainId === snxContract?.chainId
+    );
+    console.log(tokensForLocalChain);
+    const enrichedCollateralTypes = data
+      .map((collateralType) =>
+        tokensForLocalChain.find(
+          (token) => token.address === collateralType.address
+        )
+      )
+      .filter(function (element) {
+        return element !== undefined;
+      }) as Array<CollateralType>;
+    setSupportedCollateralTypes(enrichedCollateralTypes);
+  }
+  */
   return [
     {
       address: require(`../deployments/${chainName}/snx.token.json`).address,

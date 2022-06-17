@@ -29,6 +29,7 @@ export const useCollateralTypes = () => {
   const snxContract = useContract(CONTRACT_SYNTHETIX_PROXY);
 
   // Get this list of collateral types from a network request, use deployments data for now
+  // TODO: Rename this function on chain to getCollateralTypesId, getCollateralTypes can return an array of structs and we can skip the calls in the useContractReads call below
   useSynthetixRead("getCollateralTypes", {
     args: [true],
     onError(err) {
@@ -40,25 +41,6 @@ export const useCollateralTypes = () => {
       if (snxContract) {
         setSupportedCollateralTypes(localCollateralTypes(snxContract.chainId));
       }
-      /*
-      if (snxContract?.chainId !== LOCALHOST_CHAIN_ID) {
-        // Convert addresses to the data from the token list
-        const tokensForLocalChain = tokenList.tokens.filter(
-          (token) => token.chainId === snxContract?.chainId
-        );
-        console.log(tokensForLocalChain);
-        const enrichedCollateralTypes = data
-          .map((collateralType) =>
-            tokensForLocalChain.find(
-              (token) => token.address === collateralType.address
-            )
-          )
-          .filter(function (element) {
-            return element !== undefined;
-          }) as Array<CollateralType>;
-        setSupportedCollateralTypes(enrichedCollateralTypes);
-      }
-      */
     },
   });
 
@@ -89,6 +71,7 @@ export const useCollateralTypes = () => {
     if (!collateralTypeMetadata) {
       return [];
     }
+
     const latestRoundData = collateralTypeMetadata.map((ct, i) => {
       const symbol = supportedCollateralTypes[i].symbol.toLowerCase();
       const aggregatorContract = getContract(
