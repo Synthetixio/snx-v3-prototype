@@ -364,7 +364,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
                 </Tooltip>
               </Text>
             ) : (
-              <Text fontSize="xs" textAlign="right">
+              <Text fontSize="xs" textAlign="right" ml="auto">
                 Fund:{" "}
                 {selectedFundId
                   ? fundsData[selectedFundId]
