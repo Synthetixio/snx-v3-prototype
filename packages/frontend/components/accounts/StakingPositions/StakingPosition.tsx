@@ -1,11 +1,11 @@
-import EditPosition from '../EditPosition';
-import { StakingPositionType } from './types';
+import EditPosition from "../EditPosition";
+import { StakingPositionType } from "./types";
 import {
   EditIcon,
   InfoIcon,
   QuestionOutlineIcon,
   WarningIcon,
-} from '@chakra-ui/icons';
+} from "@chakra-ui/icons";
 import {
   Box,
   Heading,
@@ -26,9 +26,9 @@ import {
   Input,
   Badge,
   Tooltip,
-} from '@chakra-ui/react';
-import { utils, BigNumber } from 'ethers';
-import NextLink from 'next/link';
+} from "@chakra-ui/react";
+import { utils, BigNumber } from "ethers";
+import NextLink from "next/link";
 
 export default function StakingPosition({
   position,
@@ -75,7 +75,7 @@ export default function StakingPosition({
         ${debt}
         <Text fontSize="xs" mt="1'">
           <Link
-            _hover={{ textDecoration: 'none' }}
+            _hover={{ textDecoration: "none" }}
             onClick={onOpenDebt}
             display="inline"
             color="blue.500"
@@ -90,12 +90,12 @@ export default function StakingPosition({
               <ModalBody>
                 <Box mb="8">
                   <Heading fontSize="lg" mb="1">
-                    You have $3,200 of debt associated with this collateral.
+                    You have $0 of debt associated with this collateral.
                   </Heading>
                   <Text>
-                    You have $9,600 of collateral associated with this debt,
-                    giving you a C-Ratio of 300%. The value of your collateral
-                    fluctates with market conditions.{' '}
+                    You have $0 of collateral associated with this debt, giving
+                    you an unlimted C-Ratio. The value of your collateral
+                    fluctates with market conditions.{" "}
                     <em>
                       If your C-Ratio drops below 200% you may be liquidated and
                       lose your collateral.
@@ -105,13 +105,13 @@ export default function StakingPosition({
 
                 <Box mb="8">
                   <Heading fontSize="lg" mb="1">
-                    $1,200 of this debt has been accrued from the{' '}
+                    $0 of this debt has been accrued from the{" "}
                     <Text
                       borderBottom="1px dotted rgba(255,255,255,0.8)"
                       display="inline"
                     >
                       Spartan Council
-                    </Text>{' '}
+                    </Text>{" "}
                     fund.
                   </Heading>
                   <Text>
@@ -122,8 +122,8 @@ export default function StakingPosition({
 
                 <Box mb="4">
                   <Heading fontSize="lg" mb="4">
-                    $2,000 of this debt has been accrued from minting and
-                    burning sUSD.
+                    $0 of this debt has been accrued from minting and burning
+                    sUSD.
                   </Heading>
                   <SimpleGrid columns={2} spacing={4}>
                     <Box>
@@ -149,7 +149,7 @@ export default function StakingPosition({
                               border="none"
                               placeholder="0.0"
                               // value={null}
-                              onChange={e => {
+                              onChange={(e) => {
                                 null;
                               }}
                             />
@@ -219,7 +219,7 @@ export default function StakingPosition({
                               border="none"
                               placeholder="0.0"
                               // value={null}
-                              onChange={e => {
+                              onChange={(e) => {
                                 null;
                               }}
                             />
@@ -253,10 +253,10 @@ export default function StakingPosition({
                         </Flex>
                       </Box>
                       <Text fontSize="sm">
-                        You can purchase sUSD from most major exchanges like{' '}
+                        You can purchase sUSD from most major exchanges like{" "}
                         <Link
                           display="inline"
-                          _hover={{ textDecoration: 'none' }}
+                          _hover={{ textDecoration: "none" }}
                           borderBottom="1px dotted rgba(255,255,255,0.5)"
                         >
                           one we like
@@ -295,9 +295,9 @@ export default function StakingPosition({
       </Td>
 
       <Td>
-        <NextLink href={'/funds/example'} passHref>
+        <NextLink href={"/funds/example"} passHref>
           <Link
-            _hover={{ textDecoration: 'none' }}
+            _hover={{ textDecoration: "none" }}
             display="inline"
             borderBottom="1px dotted rgba(255,255,255,0.5)"
           >
@@ -307,7 +307,7 @@ export default function StakingPosition({
         <Link color="blue.400" ml="1">
           <EditIcon
             onClick={onOpenFund}
-            style={{ transform: 'translateY(-2px)' }}
+            style={{ transform: "translateY(-2px)" }}
           />
         </Link>
         {/*

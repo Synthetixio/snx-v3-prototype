@@ -1,24 +1,24 @@
-import { chainIdState, collateralTypesState } from '../../../state';
+import { chainIdState, collateralTypesState } from "../../../state";
 import {
   CollateralType,
   fundsData,
   getChainById,
-} from '../../../utils/constants';
-import { useContract } from '../../../utils/hooks/useContract';
+} from "../../../utils/constants";
+import { useContract } from "../../../utils/hooks/useContract";
 import {
   useDeploymentRead,
   useSynthetixRead,
-} from '../../../utils/hooks/useDeploymentRead';
-import { useMulticall, MulticallCall } from '../../../utils/hooks/useMulticall';
-import EditPosition from '../EditPosition';
-import Balance from './Balance';
-import CollateralTypeSelector from './CollateralTypeSelector';
+} from "../../../utils/hooks/useDeploymentRead";
+import { useMulticall, MulticallCall } from "../../../utils/hooks/useMulticall";
+import EditPosition from "../EditPosition";
+import Balance from "./Balance";
+import CollateralTypeSelector from "./CollateralTypeSelector";
 import {
   LockIcon,
   InfoOutlineIcon,
   EditIcon,
   ExternalLinkIcon,
-} from '@chakra-ui/icons';
+} from "@chakra-ui/icons";
 import {
   Box,
   Text,
@@ -37,20 +37,20 @@ import {
   useToast,
   Link,
   ToastId,
-} from '@chakra-ui/react';
-import { ethers, CallOverrides } from 'ethers';
-import { BigNumber } from 'ethers';
-import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useForm, FormProvider, useWatch } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
+} from "@chakra-ui/react";
+import { ethers, CallOverrides } from "ethers";
+import { BigNumber } from "ethers";
+import { useRouter } from "next/router";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useForm, FormProvider, useWatch } from "react-hook-form";
+import { useRecoilState } from "recoil";
 import {
   useAccount,
   useContractRead,
   erc20ABI,
   useBalance,
   useNetwork,
-} from 'wagmi';
+} from "wagmi";
 
 type FormType = {
   collateralType: CollateralType;
@@ -65,16 +65,16 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
   // on loading dropdown and token amount maybe use https://chakra-ui.com/docs/components/feedback/skeleton
   const toast = useToast();
   const methods = useForm<FormType>({
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
       collateralType: collateralTypes[0],
     },
   });
   const { handleSubmit, register, formState, setValue, control } = methods;
 
-  const collateralContract = useContract('snx.token');
-  const snxProxy = useContract('synthetix.Proxy');
-  const accountToken = useContract('synthetix.Account.init_account_Proxy.0');
+  const collateralContract = useContract("snx.token");
+  const snxProxy = useContract("synthetix.Proxy");
+  const accountToken = useContract("synthetix.Account.init_account_Proxy.0");
   const {
     isOpen: isOpenFund,
     onOpen: onOpenFund,
@@ -87,15 +87,15 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
   const chain = getChainById(localChainId);
   const selectedCollateralType = useWatch({
     control,
-    name: 'collateralType',
+    name: "collateralType",
   });
   const selectedFundId = useWatch({
     control,
-    name: 'fundId',
+    name: "fundId",
   });
   const amount = useWatch({
     control,
-    name: 'amount',
+    name: "amount",
   });
 
   const isNativeCurrency =
@@ -114,7 +114,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       addressOrName: selectedCollateralType?.address,
       contractInterface: erc20ABI,
     },
-    'allowance',
+    "allowance",
     {
       args: [accountAddress, snxProxy?.address],
       enabled: !isNativeCurrency && hasWalletConnected,
@@ -142,14 +142,14 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
   //   },
   // });
 
-  const { data: fundId } = useSynthetixRead('getPreferredFund', {});
+  const { data: fundId } = useSynthetixRead("getPreferredFund", {});
 
   const calls: MulticallCall[][] = [
     [
-      [snxProxy!.contract, 'createAccount', [newAccountId]],
+      [snxProxy!.contract, "createAccount", [newAccountId]],
       [
         snxProxy!.contract,
-        'stake',
+        "stake",
         [
           newAccountId,
           selectedCollateralType.address,
@@ -158,7 +158,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       ],
       [
         snxProxy!.contract,
-        'delegateCollateral',
+        "delegateCollateral",
         [
           fundId || 0,
           newAccountId,
@@ -188,7 +188,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     calls.unshift([
       [
         collateralContract!.contract,
-        'approve',
+        "approve",
         [snxProxy?.address, amount || BigNumber.from(0)],
       ],
     ]);
@@ -207,11 +207,11 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
           query: router.query,
         });
       },
-      onError: e => {
+      onError: (e) => {
         toast({
-          title: 'Could not complete account creation',
-          description: 'Please try again.',
-          status: 'error',
+          title: "Could not complete account creation",
+          description: "Please try again.",
+          status: "error",
           duration: 9000,
           isClosable: true,
         });
@@ -220,7 +220,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
   );
 
   useEffect(() => {
-    if (multiTxn.status === 'pending') {
+    if (multiTxn.status === "pending") {
       // const buildToastDescription = (text: string) => {
       //   // TODO: fix this; txHash not showing up :(
       //   const txHash = multiTxn.currentTxn.data?.hash;
@@ -246,18 +246,18 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
           // title: `[${multiTxn.step + 1}/${
           //   calls.length
           // }] Approve collateral for transfer`,
-          title: 'Approve collateral for transfer',
+          title: "Approve collateral for transfer",
           description:
-            'The next transaction will create your account and stake this collateral.',
-          status: 'info',
+            "The next transaction will create your account and stake this collateral.",
+          status: "info",
           isClosable: true,
           duration: 9000,
         });
       } else {
         toast({
-          title: 'Create your account',
+          title: "Create your account",
           description: "You'll be redirected once your account is created.",
-          status: 'info',
+          status: "info",
           isClosable: true,
           duration: 9000,
         });
@@ -276,7 +276,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       <FormProvider {...methods}>
         <Box bg="gray.900" mb="8" p="6" pb="4" borderRadius="12px">
           <form
-            onSubmit={handleSubmit(data => {
+            onSubmit={handleSubmit((data) => {
               multiTxn.exec();
             })}
           >
@@ -289,16 +289,16 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
                 placeholder="0.0"
                 mr="4"
                 id="amount"
-                {...register('amount', {
+                {...register("amount", {
                   validate: {
-                    sufficientFunds: v => {
+                    sufficientFunds: (v) => {
                       return balanceData && balanceData.value.gt(v);
                     },
-                    nonZero: v => v.gt(0),
+                    nonZero: (v) => v.gt(0),
                   },
-                  setValueAs: v =>
+                  setValueAs: (v) =>
                     ethers.utils.parseUnits(
-                      v || '0',
+                      v || "0",
                       selectedCollateralType.decimals
                     ),
                 })}
@@ -324,7 +324,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
               </Tooltip>
             */}
               <Button
-                isLoading={multiTxn.status === 'pending'}
+                isLoading={multiTxn.status === "pending"}
                 isDisabled={!formState.isValid}
                 size="lg"
                 colorScheme="blue"
@@ -333,29 +333,29 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
                 type="submit"
               >
                 {/* @ts-ignore */}
-                {formState.errors.amount?.type === 'sufficientFunds'
-                  ? 'Insufficient Funds'
-                  : 'Stake'}
+                {formState.errors.amount?.type === "sufficientFunds"
+                  ? "Insufficient Funds"
+                  : "Stake"}
               </Button>
             </Flex>
           </form>
 
           <Flex alignItems="center">
             {hasWalletConnected && (
-              <Box mr="auto">
+              <Box>
                 <Balance
                   balance={balanceData?.value || ethers.BigNumber.from(0)}
                   collateralType={selectedCollateralType}
                   onUseMax={(maxAmount: ethers.BigNumber) => {
-                    setValue('amount', maxAmount);
+                    setValue("amount", maxAmount);
                   }}
                 />
               </Box>
             )}
 
             {createAccount ? (
-              <Text fontSize="xs" textAlign="right">
-                Receive an snxAccount token{' '}
+              <Text fontSize="xs" textAlign="right" ml="auto">
+                Receive an snxAccount token{" "}
                 <Tooltip
                   textAlign="center"
                   label="You will be minted an NFT that represents your account. You can easily transfer it between wallets."
@@ -365,16 +365,16 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
               </Text>
             ) : (
               <Text fontSize="xs" textAlign="right">
-                Fund:{' '}
+                Fund:{" "}
                 {selectedFundId
                   ? fundsData[selectedFundId]
                     ? fundsData[selectedFundId].name
-                    : 'Unknown Fund'
-                  : 'None'}{' '}
+                    : "Unknown Fund"
+                  : "None"}{" "}
                 <Link color="blue.400">
                   <EditIcon
                     onClick={onOpenFund}
-                    style={{ transform: 'translateY(-2px)' }}
+                    style={{ transform: "translateY(-2px)" }}
                   />
                 </Link>
               </Text>

@@ -73,7 +73,8 @@ export const useCollateralTypes = () => {
     }
 
     const latestRoundData = collateralTypeMetadata.map((ct, i) => {
-      const symbol = supportedCollateralTypes[i].symbol.toLowerCase();
+      let symbol = supportedCollateralTypes[i].symbol.toLowerCase();
+      if (symbol == "eth") symbol = "weth";
       const aggregatorContract = getContract(
         `aggregator_${symbol}.aggregator`,
         provider,
@@ -86,10 +87,10 @@ export const useCollateralTypes = () => {
     });
 
     const priceDecimals = collateralTypeMetadata.map((ct, i) => {
+      let symbol = supportedCollateralTypes[i].symbol.toLowerCase();
+      if (symbol == "eth") symbol = "weth";
       const aggregatorContract = getContract(
-        `aggregator_${supportedCollateralTypes[
-          i
-        ].symbol.toLowerCase()}.aggregator`,
+        `aggregator_${symbol}.aggregator`,
         provider,
         snxContract!.chainId
       );
