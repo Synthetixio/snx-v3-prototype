@@ -28,6 +28,41 @@ export const useCollateralTypes = () => {
 
   const snxContract = useContract(CONTRACT_SYNTHETIX_PROXY);
 
+  // Get this list of collateral types from a network request, use deployments data for now
+  useSynthetixRead("getCollateralTypes", {
+    args: [true],
+    onError(err) {
+      // TODO: throw up a toast
+      // report to sentry or some other tool
+      console.log("ERR", err);
+    },
+    onSuccess(data) {
+      if (snxContract) {
+        setSupportedCollateralTypes(localCollateralTypes(snxContract.chainId));
+      }
+      /*
+      if (snxContract?.chainId !== LOCALHOST_CHAIN_ID) {
+        // Convert addresses to the data from the token list
+        const tokensForLocalChain = tokenList.tokens.filter(
+          (token) => token.chainId === snxContract?.chainId
+        );
+        console.log(tokensForLocalChain);
+        const enrichedCollateralTypes = data
+          .map((collateralType) =>
+            tokensForLocalChain.find(
+              (token) => token.address === collateralType.address
+            )
+          )
+          .filter(function (element) {
+            return element !== undefined;
+          }) as Array<CollateralType>;
+        setSupportedCollateralTypes(enrichedCollateralTypes);
+      }
+      */
+    },
+  });
+
+  // This takes the list of supported collateral types from recoil and enriches them with the on-chain about them from the `getCollateralType` function.
   const { data: collateralTypeMetadata } =
     useContractReads<CollateralMetadataType>(
       supportedCollateralTypes.map((ct) => ({
@@ -49,15 +84,15 @@ export const useCollateralTypes = () => {
       }
     );
 
+  // This fetches price and price decimal data for the collateral types when the above hook recieves a response
   const priceCalls = useMemo(() => {
     if (!collateralTypeMetadata) {
       return [];
     }
     const latestRoundData = collateralTypeMetadata.map((ct, i) => {
+      const symbol = supportedCollateralTypes[i].symbol.toLowerCase();
       const aggregatorContract = getContract(
-        `aggregator_${supportedCollateralTypes[
-          i
-        ].symbol.toLowerCase()}.aggregator`,
+        `aggregator_${symbol}.aggregator`,
         provider,
         snxContract!.chainId
       );
@@ -84,6 +119,7 @@ export const useCollateralTypes = () => {
     return [...latestRoundData, ...priceDecimals];
   }, [collateralTypeMetadata, provider, snxContract, supportedCollateralTypes]);
 
+  // After the price data is fetched, set the data in recoil and turn off the loading state.
   useContractReads<PriceDataType>(priceCalls, {
     enabled: !!priceCalls.length,
     onSuccess: (data) => {
@@ -99,35 +135,6 @@ export const useCollateralTypes = () => {
           };
         })
       );
-    },
-  });
-
-  useSynthetixRead("getCollateralTypes", {
-    args: [true],
-    onError(err) {
-      // TODO: throw up a toast
-      // report to sentry or some other tool
-      console.log("ERR", err);
-    },
-    onSuccess(data) {
-      if (snxContract?.chainId === LOCALHOST_CHAIN_ID) {
-        setSupportedCollateralTypes(localCollateralTypes);
-      } else {
-        // Convert addresses to the data from the token list
-        const tokensForLocalChain = tokenList.tokens.filter(
-          (token) => token.chainId === snxContract?.chainId
-        );
-        const enrichedCollateralTypes = data
-          .map((collateralType) =>
-            tokensForLocalChain.find(
-              (token) => token.address === collateralType.address
-            )
-          )
-          .filter(function (element) {
-            return element !== undefined;
-          }) as Array<CollateralType>;
-        setSupportedCollateralTypes(enrichedCollateralTypes);
-      }
     },
   });
 
