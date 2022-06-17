@@ -21,7 +21,7 @@ export function NetworkController() {
   const { chains: networkChains } = useNetwork();
   const [localChainId, setLocalChainId] = useRecoilState(chainIdState);
 
-  const chains = networkChains.length ? networkChains : supportedChains;
+  const chains = /* networkChains.length ? networkChains : */ supportedChains;
   const localChain = chains.find((chain) => chain.id === localChainId);
 
   return (
