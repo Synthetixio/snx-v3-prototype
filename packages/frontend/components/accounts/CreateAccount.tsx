@@ -1,12 +1,12 @@
-import Stake from './Stake';
-import { Heading, Text, Link, UnorderedList, ListItem } from '@chakra-ui/react';
+import Stake from "./Stake";
+import { Heading, Text, Link, UnorderedList, ListItem } from "@chakra-ui/react";
 
 export default function CreateAccount() {
   return (
     <>
       <Text fontSize="lg" mb="4">
         Stake with Synthetix to enable the creation of synthetic assets
-        on-chain. You earn yield but must also maintain your C-Ratio.{' '}
+        on-chain. You earn yield but must also maintain your C-Ratio.{" "}
         <Link
           href="https://snx-v3-docs.netlify.app/"
           fontWeight="semibold"
@@ -16,13 +16,20 @@ export default function CreateAccount() {
         </Link>
       </Text>
       <Stake createAccount />
-      <Heading size="sm" mb="2">
-        Here’s how it works
+      <Heading
+        size="xs"
+        mb="3"
+        color="gray.300"
+        fontWeight="300"
+        textTransform="uppercase"
+        letterSpacing="1.5px"
+      >
+        How it works
       </Heading>
       <UnorderedList>
-        <ListItem mb="1">
-          By default, your staking position will be managed by the{' '}
-          <Link>Spartan Council</Link>, a DAO elected by SNX token holders.{' '}
+        <ListItem mb="2">
+          By default, your staking position will be managed by the{" "}
+          <Link>Spartan Council</Link>, a DAO elected by SNX token holders.{" "}
           <Link
             fontWeight="semibold"
             color="blue.400"
@@ -32,12 +39,12 @@ export default function CreateAccount() {
             Go vote
           </Link>
         </ListItem>
-        <ListItem mb="1">
-          Currently, your projected rewards are{' '}
+        <ListItem mb="2">
+          Currently, your projected rewards are{" "}
           <strong>X% APY in sUSD plus Y% APY in SNX</strong> and you’ll need to
           maintain a C-Ratio of at least Z%.
         </ListItem>
-        <ListItem mb="1">
+        <ListItem mb="2">
           Once you stake, we’ll walk you through C-Ratio maintenance.
         </ListItem>
       </UnorderedList>
