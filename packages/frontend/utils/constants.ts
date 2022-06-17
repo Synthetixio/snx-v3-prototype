@@ -70,7 +70,7 @@ export const fundsData: Record<string, { name: string }> = {
   },
 };
 
-export const supportedChains = [chain.rinkeby, chain.hardhat];
+export const supportedChains = [chain.rinkeby]; //, chain.hardhat];
 export const getChainById = (chainId: number) =>
   supportedChains.find((chain) => chain.id === chainId);
 
