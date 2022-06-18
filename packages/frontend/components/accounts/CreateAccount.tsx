@@ -29,7 +29,7 @@ export default function CreateAccount() {
       <UnorderedList>
         <ListItem mb="2">
           By default, your staking position will be managed by the{" "}
-          <Link>Spartan Council</Link>, a DAO elected by SNX token holders.{" "}
+          <Link>Spartan Council</Link>, a DAO elected by stakers of SNX.{" "}
           <Link
             fontWeight="semibold"
             color="blue.400"

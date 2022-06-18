@@ -20,7 +20,7 @@ defaultValue = "1000000"
 defaultValue = "10000000"
 
 [setting.weth_price]
-defaultValue = "1000000000"
+defaultValue = "100000000"
 
 [import.lusd]
 source = "erc20:<%= settings.erc20_version %>"
@@ -31,7 +31,6 @@ options.symbol = "LUSD"
 source = "erc20:<%= settings.erc20_version %>"
 options.name = "Synthetix Token"
 options.symbol = "SNX"
-
 
 [import.aggregator_snx]
 source = "chainlink:<%= settings.chainlink_version %>"
