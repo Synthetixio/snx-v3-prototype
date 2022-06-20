@@ -1,12 +1,12 @@
-import { chainIdState } from "../state";
-import { getChainNameById, supportedChains } from "../utils/constants";
-import { Spinner } from "@chakra-ui/react";
-import { ChainName } from "@wagmi/core/dist/declarations/src/constants/chains";
-import { ethers } from "ethers";
-import { useRouter } from "next/router";
-import { useEffect, useCallback, useRef, FC } from "react";
-import { useRecoilState } from "recoil";
-import { useNetwork, chainId as chainMapping } from "wagmi";
+import { chainIdState } from '../state';
+import { getChainNameById, supportedChains } from '../utils/constants';
+import { Spinner } from '@chakra-ui/react';
+import { ChainName } from '@wagmi/core/dist/declarations/src/constants/chains';
+import { ethers } from 'ethers';
+import { useRouter } from 'next/router';
+import { useEffect, useCallback, useRef, FC } from 'react';
+import { useRecoilState } from 'recoil';
+import { useNetwork, chainId as chainMapping } from 'wagmi';
 
 type Props = {
   children?: React.ReactElement | React.ReactElement[];
@@ -29,7 +29,7 @@ export const NetworkChain: FC<Props> = ({ children }) => {
   const onInitialMount = useRef(true);
 
   const { switchNetwork, activeChain } = useNetwork({
-    onSuccess: (data) => {
+    onSuccess: data => {
       setLocalChainId(data.id);
     },
   });
@@ -38,10 +38,10 @@ export const NetworkChain: FC<Props> = ({ children }) => {
     if (window.ethereum) {
       const web3Provider = new ethers.providers.Web3Provider(
         window.ethereum as ethers.providers.ExternalProvider,
-        "any"
+        'any'
       );
 
-      web3Provider.on("network", (newNetwork, oldNetwork) => {
+      web3Provider.on('network', (newNetwork, oldNetwork) => {
         if (oldNetwork) {
           routeToChain(router.basePath, newNetwork.chainId);
           setLocalChainId(newNetwork.chainId);
