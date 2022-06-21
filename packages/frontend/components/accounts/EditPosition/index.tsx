@@ -1,10 +1,10 @@
-import { fundsData } from '../../../utils/constants';
-import { useContract } from '../../../utils/hooks/useContract';
-import { useContractReads } from '../../../utils/hooks/useContractReads';
-import { useSynthetixRead } from '../../../utils/hooks/useDeploymentRead';
-import { useMulticall } from '../../../utils/hooks/useMulticall';
-import StakerOption from './StakerOption';
-import SynthOption from './SynthOption';
+import { fundsData } from "../../../utils/constants";
+import { useContract } from "../../../utils/hooks/useContract";
+import { useContractReads } from "../../../utils/hooks/useContractReads";
+import { useSynthetixRead } from "../../../utils/hooks/useDeploymentRead";
+import { useMulticall } from "../../../utils/hooks/useMulticall";
+import StakerOption from "./StakerOption";
+import SynthOption from "./SynthOption";
 import {
   Box,
   Heading,
@@ -20,10 +20,10 @@ import {
   Radio,
   RadioGroup,
   Spacer,
-} from '@chakra-ui/react';
-import { BigNumber } from 'ethers';
-import { useState } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+} from "@chakra-ui/react";
+import { BigNumber } from "ethers";
+import { useState } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 
 const NO_FUND_TAB_INDEX = 1;
 
@@ -32,16 +32,16 @@ type PropsType = {
 };
 
 export default function EditPosition({ onClose }: PropsType) {
-  const snxProxy = useContract('synthetix.Proxy');
+  const snxProxy = useContract("synthetix.Proxy");
 
   const { data } = useContractReads<[BigNumber, Array<BigNumber>]>([
     {
       contract: snxProxy!.contract,
-      funcName: 'getPreferredFund',
+      funcName: "getPreferredFund",
     },
     {
       contract: snxProxy!.contract,
-      funcName: 'getApprovedFunds',
+      funcName: "getApprovedFunds",
     },
   ]);
 
@@ -56,7 +56,7 @@ export default function EditPosition({ onClose }: PropsType) {
 
   const { setValue } = useFormContext();
   const fundValue = useWatch({
-    name: 'fundId',
+    name: "fundId",
   });
 
   const [selectedFund, setSelectedFund] = useState<string>();
@@ -69,11 +69,11 @@ export default function EditPosition({ onClose }: PropsType) {
             // user switch to no fund tab
             // if more tabs are added, this needs to change
             if (index === NO_FUND_TAB_INDEX) {
-              setSelectedFund('0');
+              setSelectedFund("0");
             }
           }}
           isFitted
-          defaultIndex={fundValue === '0' ? NO_FUND_TAB_INDEX : 0}
+          defaultIndex={fundValue === "0" ? NO_FUND_TAB_INDEX : 0}
         >
           <TabList>
             <Tab>Join Fund</Tab>
@@ -210,7 +210,7 @@ export default function EditPosition({ onClose }: PropsType) {
         w="100%"
         colorScheme="blue"
         onClick={() => {
-          selectedFund && setValue('fundId', selectedFund);
+          selectedFund && setValue("fundId", selectedFund);
           onClose();
         }}
       >

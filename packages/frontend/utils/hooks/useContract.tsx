@@ -1,8 +1,8 @@
-import { chainIdState } from '../../state';
-import { getChainById } from '../constants';
-import { ethers } from 'ethers';
-import { useRecoilState } from 'recoil';
-import { useProvider } from 'wagmi';
+import { chainIdState } from "../../state";
+import { getChainById } from "../constants";
+import { ethers } from "ethers";
+import { useRecoilState } from "recoil";
+import { useProvider } from "wagmi";
 
 export const getContract = (
   name: string,
@@ -12,8 +12,8 @@ export const getContract = (
   const chain = getChainById(localChainId);
   if (!chain) return null;
   const chainName =
-    chain.name.toLowerCase() == 'localhost'
-      ? 'hardhat'
+    chain.name.toLowerCase() == "localhost"
+      ? "hardhat"
       : chain.name.toLowerCase();
   let contractInfo;
   try {
