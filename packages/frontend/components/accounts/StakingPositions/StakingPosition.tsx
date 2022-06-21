@@ -1,3 +1,6 @@
+import { CONTRACT_SYNTHETIX_PROXY } from "../../../utils/constants";
+import { useContract } from "../../../utils/hooks/useContract";
+import { useMulticall } from "../../../utils/hooks/useMulticall";
 import EditPosition from "../EditPosition";
 import { StakingPositionType } from "./types";
 import {
@@ -27,13 +30,15 @@ import {
   Badge,
   Tooltip,
 } from "@chakra-ui/react";
-import { utils, BigNumber } from "ethers";
+import { utils, BigNumber, ethers } from "ethers";
 import NextLink from "next/link";
 
 export default function StakingPosition({
   position,
+  accountId,
 }: {
   position: StakingPositionType;
+  accountId: number;
 }) {
   // If the connected wallet doesn’t own this account token, remove/disable the interactivity
 
@@ -48,7 +53,11 @@ export default function StakingPosition({
     onClose: onCloseDebt,
   } = useDisclosure();
 
-  const { collateralAmount: collateralAmountBN, collateralType } = position;
+  const {
+    collateralAmount: collateralAmountBN,
+    collateralType,
+    fundId,
+  } = position;
 
   const formatValue = (value: BigNumber, decimals: number) =>
     parseInt(utils.formatUnits(value, decimals));
@@ -60,6 +69,31 @@ export default function StakingPosition({
   const collateralValue = collateralAmount * price;
 
   const debt = 0;
+
+  const snxProxy = useContract(CONTRACT_SYNTHETIX_PROXY);
+  const unstake = () => {
+    // add an 'unstake loading' state?
+    useMulticall([
+      [
+        [
+          snxProxy!.contract,
+          "delegateCollateral",
+          [
+            fundId,
+            accountId,
+            collateralType,
+            BigNumber.from(0),
+            ethers.constants.One,
+          ],
+        ],
+        [
+          snxProxy!.contract,
+          "unstake",
+          [accountId, collateralType, collateralAmountBN],
+        ],
+      ],
+    ]);
+  };
 
   return (
     <Tr>
@@ -348,7 +382,7 @@ export default function StakingPosition({
         </Modal>
       </Td>
       <Td isNumeric>
-        <Button size="xs" colorScheme="red">
+        <Button size="xs" colorScheme="red" onClick={unstake}>
           Unstake
         </Button>
       </Td>
