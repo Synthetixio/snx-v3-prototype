@@ -13,6 +13,7 @@ import { useMulticall, MulticallCall } from "../../../utils/hooks/useMulticall";
 import EditPosition from "../EditPosition";
 import Balance from "./Balance";
 import CollateralTypeSelector from "./CollateralTypeSelector";
+import HowItWorks from "./HowItWorks";
 import {
   LockIcon,
   InfoOutlineIcon,
@@ -407,6 +408,9 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
           </ModalContent>
         </Modal>
       </FormProvider>
+      {createAccount && (
+        <HowItWorks selectedCollateralType={selectedCollateralType} />
+      )}
       {/*
       <Modal size="2xl" isOpen={isOpenLock} onClose={onCloseLock}>
         <ModalOverlay />
