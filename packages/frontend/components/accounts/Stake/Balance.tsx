@@ -1,6 +1,6 @@
-import { CollateralType } from '../../../utils/constants';
-import { Text, Badge, Link } from '@chakra-ui/react';
-import { ethers } from 'ethers';
+import { CollateralType } from "../../../utils/constants";
+import { Text, Badge, Link } from "@chakra-ui/react";
+import { ethers } from "ethers";
 
 export default function Balance({
   balance,
@@ -15,10 +15,10 @@ export default function Balance({
 
   return (
     <Text fontSize="xs">
-      Balance:{' '}
+      Balance:{" "}
       {parseFloat(
         ethers.utils.formatUnits(balance, collateralType.decimals)
-      ).toLocaleString()}{' '}
+      ).toLocaleString()}{" "}
       {collateralType.symbol}
       {balance.eq(0) ? (
         <Link>

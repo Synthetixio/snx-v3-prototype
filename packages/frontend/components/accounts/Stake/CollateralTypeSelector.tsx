@@ -1,6 +1,6 @@
-import { collateralTypesState } from '../../../state/index';
-import { CollateralType } from '../../../utils/constants';
-import { ChevronDownIcon } from '@chakra-ui/icons';
+import { collateralTypesState } from "../../../state/index";
+import { CollateralType } from "../../../utils/constants";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
   Text,
@@ -9,9 +9,9 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-} from '@chakra-ui/react';
-import Image from 'next/image';
-import { useFormContext, useWatch } from 'react-hook-form';
+} from "@chakra-ui/react";
+import Image from "next/image";
+import { useFormContext, useWatch } from "react-hook-form";
 
 type Props = {
   collateralTypes: CollateralType[];
@@ -22,7 +22,7 @@ export default function CollateralTypeSelector({ collateralTypes }: Props) {
 
   const { setValue, register } = useFormContext();
   const selectedCollateralType = useWatch({
-    name: 'collateralType',
+    name: "collateralType",
   });
 
   return (
@@ -57,7 +57,7 @@ export default function CollateralTypeSelector({ collateralTypes }: Props) {
       <MenuList
         p={1}
         minW="0"
-        w={'125px'}
+        w={"125px"}
         bg="black"
         border="1px solid rgba(255,255,255,0.33)"
       >
@@ -69,12 +69,12 @@ export default function CollateralTypeSelector({ collateralTypes }: Props) {
             py={2}
             borderRadius="sm"
             flexDirection="column"
-            _hover={{ bg: 'gray.800' }}
-            _focus={{ bg: 'gray.800' }}
-            _active={{ bg: 'gray.800' }}
-            {...register('collateralType')}
+            _hover={{ bg: "gray.800" }}
+            _focus={{ bg: "gray.800" }}
+            _active={{ bg: "gray.800" }}
+            {...register("collateralType")}
             onClick={() => {
-              setValue('collateralType', collateralType);
+              setValue("collateralType", collateralType);
             }}
           >
             <Flex flexDirection="row">

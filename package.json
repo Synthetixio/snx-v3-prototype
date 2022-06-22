@@ -11,10 +11,14 @@
     "tsc": "npm run fe tsc",
     "build": "npm run fe build",
     "cannon-build": "npm run hardhat cannon-build",
-    "local-chain": "npm run hardhat local-chain"
+    "local-chain": "npm run hardhat local-chain",
+    "format": "prettier --write 'packages/**/*.tsx'"
   },
   "engines": {
     "npm": ">=8.0.0",
     "node": ">=16.0.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.7.1"
   }
 }

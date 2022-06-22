@@ -1,6 +1,6 @@
-import { ExternalLinkIcon } from '@chakra-ui/icons';
-import { Heading, Box, Text, Flex, Radio, Link } from '@chakra-ui/react';
-import NextLink from 'next/link';
+import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { Heading, Box, Text, Flex, Radio, Link } from "@chakra-ui/react";
+import NextLink from "next/link";
 
 type PropsType = {
   name: string;
@@ -34,8 +34,8 @@ export default function StakerOption({
           {name}
         </Heading>
         <Text fontSize="xs" display="block" color="gray.400">
-          Fund #{value}{' '}
-          <NextLink href={'/funds/example'} passHref>
+          Fund #{value}{" "}
+          <NextLink href={"/funds/example"} passHref>
             <Link
               color="blue.400"
               display="inline-block"

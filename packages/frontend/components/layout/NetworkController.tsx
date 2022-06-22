@@ -22,7 +22,7 @@ export function NetworkController() {
   const [localChainId, setLocalChainId] = useRecoilState(chainIdState);
 
   const chains = /* networkChains.length ? networkChains : */ supportedChains;
-  const localChain = chains.find((chain) => chain.id === localChainId);
+  const localChain = chains.find(chain => chain.id === localChainId);
 
   return (
     <ConnectButton.Custom>
@@ -118,7 +118,7 @@ export function NetworkController() {
                   border="1px solid rgba(255,255,255,0.33)"
                 >
                   {chains &&
-                    chains.map((chainOption) => (
+                    chains.map(chainOption => (
                       <MenuItem
                         borderRadius="sm"
                         key={chainOption.id}

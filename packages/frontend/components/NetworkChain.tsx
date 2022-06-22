@@ -29,7 +29,7 @@ export const NetworkChain: FC<Props> = ({ children }) => {
   const onInitialMount = useRef(true);
 
   const { switchNetwork, activeChain } = useNetwork({
-    onSuccess: (data) => {
+    onSuccess: data => {
       setLocalChainId(data.id);
     },
   });
