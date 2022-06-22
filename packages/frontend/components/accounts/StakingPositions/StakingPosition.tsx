@@ -149,7 +149,7 @@ export default function StakingPosition({
                               border="none"
                               placeholder="0.0"
                               // value={null}
-                              onChange={(e) => {
+                              onChange={e => {
                                 null;
                               }}
                             />
@@ -219,7 +219,7 @@ export default function StakingPosition({
                               border="none"
                               placeholder="0.0"
                               // value={null}
-                              onChange={(e) => {
+                              onChange={e => {
                                 null;
                               }}
                             />

@@ -1,6 +1,6 @@
-import { useCollateralTypes } from '../utils/hooks/useCollateralTypes';
-import { Spinner } from '@chakra-ui/react';
-import { FC } from 'react';
+import { useCollateralTypes } from "../utils/hooks/useCollateralTypes";
+import { Spinner } from "@chakra-ui/react";
+import { FC } from "react";
 
 type Props = {
   children?: React.ReactNode;

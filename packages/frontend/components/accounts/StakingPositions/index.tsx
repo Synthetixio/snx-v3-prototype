@@ -1,12 +1,12 @@
-import { collateralTypesState } from '../../../state';
-import { fundsData } from '../../../utils/constants';
-import { useSynthetixRead } from '../../../utils/hooks';
-import StakingPosition from './StakingPosition';
-import { StakingPositionType } from './types';
-import { Box, Heading, Table, Thead, Tr, Th, Tbody } from '@chakra-ui/react';
-import { BigNumber } from 'ethers';
-import { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { collateralTypesState } from "../../../state";
+import { fundsData } from "../../../utils/constants";
+import { useSynthetixRead } from "../../../utils/hooks";
+import StakingPosition from "./StakingPosition";
+import { StakingPositionType } from "./types";
+import { Box, Heading, Table, Thead, Tr, Th, Tbody } from "@chakra-ui/react";
+import { BigNumber } from "ethers";
+import { useState } from "react";
+import { useRecoilState } from "recoil";
 
 export default function StakingPositions({ accountId }: { accountId: Number }) {
   const [stakingPositions, setStakingPositions] = useState<
@@ -14,9 +14,9 @@ export default function StakingPositions({ accountId }: { accountId: Number }) {
   >([]);
 
   const [supportedCollateralTypes] = useRecoilState(collateralTypesState);
-  console.log('supportedCollateralTypes: ', supportedCollateralTypes);
+  console.log("supportedCollateralTypes: ", supportedCollateralTypes);
 
-  useSynthetixRead('getAccountLiquidityItems', {
+  useSynthetixRead("getAccountLiquidityItems", {
     args: [accountId],
     /*
       address collateralType;
@@ -45,7 +45,7 @@ export default function StakingPositions({ accountId }: { accountId: Number }) {
             fundId,
             fundName: fundsData[fundId.toString()].name,
             collateralAmount,
-            collateralSymbol: collateralType?.symbol || '',
+            collateralSymbol: collateralType?.symbol || "",
             collateralType: collateralType || supportedCollateralTypes[0],
             collateralValue:
               collateralType?.price?.mul(collateralAmount) || BigNumber.from(0),

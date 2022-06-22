@@ -208,7 +208,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
           query: router.query,
         });
       },
-      onError: (e) => {
+      onError: e => {
         toast({
           title: "Could not complete account creation",
           description: "Please try again.",
@@ -277,7 +277,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       <FormProvider {...methods}>
         <Box bg="gray.900" mb="8" p="6" pb="4" borderRadius="12px">
           <form
-            onSubmit={handleSubmit((data) => {
+            onSubmit={handleSubmit(data => {
               multiTxn.exec();
             })}
           >
@@ -292,12 +292,12 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
                 id="amount"
                 {...register("amount", {
                   validate: {
-                    sufficientFunds: (v) => {
+                    sufficientFunds: v => {
                       return balanceData && balanceData.value.gt(v);
                     },
-                    nonZero: (v) => v.gt(0),
+                    nonZero: v => v.gt(0),
                   },
-                  setValueAs: (v) =>
+                  setValueAs: v =>
                     ethers.utils.parseUnits(
                       v || "0",
                       selectedCollateralType.decimals
