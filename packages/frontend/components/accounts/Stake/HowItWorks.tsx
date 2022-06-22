@@ -42,7 +42,9 @@ export default function HowItWorks({
               <strong>X% APY in sUSD plus Y% APY in SNX</strong> and you’ll need
               to maintain a C-Ratio of at least
               {formatValue(
-                selectedCollateralType!.minimumCRatio!.mul(BigNumber.from(100)),
+                BigNumber.from(selectedCollateralType!.minimumCRatio!).mul(
+                  BigNumber.from(100)
+                ),
                 selectedCollateralType.decimals
               ).toFixed(0)}
               %.
