@@ -40,7 +40,7 @@ export default function HowItWorks({
             <>
               Currently, your projected rewards are{" "}
               <strong>X% APY in sUSD plus Y% APY in SNX</strong> and you’ll need
-              to maintain a C-Ratio of at least
+              to maintain a C-Ratio of at least{" "}
               {formatValue(
                 BigNumber.from(selectedCollateralType!.minimumCRatio!).mul(
                   BigNumber.from(100)
