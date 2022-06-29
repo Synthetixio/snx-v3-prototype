@@ -6,11 +6,7 @@ import "../styles/index.css";
 import theme from "../styles/theme";
 import { supportedChains } from "../utils/constants";
 import { ChakraProvider, Flex, Box } from "@chakra-ui/react";
-import {
-  getDefaultWallets,
-  RainbowKitProvider,
-  darkTheme,
-} from "@rainbow-me/rainbowkit";
+import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { AppProps } from "next/app";
 import { RecoilRoot } from "recoil";
@@ -21,14 +17,8 @@ const { chains, provider } = configureChains(supportedChains, [
   publicProvider(),
 ]);
 
-const { connectors } = getDefaultWallets({
-  appName: "Synthetix",
-  chains,
-});
-
 const wagmiClient = createClient({
   autoConnect: true,
-  connectors,
   provider,
 });
 
@@ -36,7 +26,7 @@ function Synthetix({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
       <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider
+        {/* <RainbowKitProvider
           theme={darkTheme({
             accentColor: "rgb(49, 130, 206)",
             accentColorForeground: "white",
@@ -44,28 +34,28 @@ function Synthetix({ Component, pageProps }: AppProps) {
             fontStack: "system",
           })}
           chains={chains}
-        >
-          <ChakraProvider theme={theme}>
-            <Box
-              as="main"
-              background="black"
-              minHeight="100vh"
-              color="rgba(255,255,255,0.85)"
-              display="flex"
-              flexDirection="column"
-            >
-              <Flex flex="1" flexDirection="column">
-                <NetworkChain>
-                  <Initializer>
-                    <Header />
-                    <Component {...pageProps} />
-                  </Initializer>
-                </NetworkChain>
-              </Flex>
-              <Footer />
-            </Box>
-          </ChakraProvider>
-        </RainbowKitProvider>
+        > */}
+        <ChakraProvider theme={theme}>
+          <Box
+            as="main"
+            background="black"
+            minHeight="100vh"
+            color="rgba(255,255,255,0.85)"
+            display="flex"
+            flexDirection="column"
+          >
+            <Flex flex="1" flexDirection="column">
+              <NetworkChain>
+                <Initializer>
+                  <Header />
+                  <Component {...pageProps} />
+                </Initializer>
+              </NetworkChain>
+            </Flex>
+            <Footer />
+          </Box>
+        </ChakraProvider>
+        {/* </RainbowKitProvider> */}
       </WagmiConfig>
     </RecoilRoot>
   );

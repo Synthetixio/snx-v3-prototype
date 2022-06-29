@@ -5,10 +5,7 @@ import {
   getChainById,
 } from "../../../utils/constants";
 import { useContract } from "../../../utils/hooks/useContract";
-import {
-  useDeploymentRead,
-  useSynthetixRead,
-} from "../../../utils/hooks/useDeploymentRead";
+import { useSynthetixRead } from "../../../utils/hooks/useDeploymentRead";
 import { useMulticall, MulticallCall } from "../../../utils/hooks/useMulticall";
 import EditPosition from "../EditPosition";
 import Balance from "./Balance";
@@ -60,7 +57,7 @@ type FormType = {
 };
 
 export default function Stake({ createAccount }: { createAccount: boolean }) {
-  const { activeChain } = useNetwork();
+  const { chain: activeChain } = useNetwork();
   const hasWalletConnected = Boolean(activeChain);
   const [collateralTypes] = useRecoilState(collateralTypesState);
   // on loading dropdown and token amount maybe use https://chakra-ui.com/docs/components/feedback/skeleton
@@ -132,16 +129,6 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     return Math.floor(Math.random() * 10000000000);
   }; // ten digit numberf
   const [newAccountId, setNewAccountId] = useState(generateAccountId());
-  // useDeploymentRead('accountToken', 'ownerOf', {
-  //   args: newAccountId,
-  //   onSuccess() {
-  //     // newAccountId isn't available
-  //     setNewAccountId(generateAccountId());
-  //   },
-  //   onError(error) {
-  //     // newAccountId is available, so we should proceed.
-  //   },
-  // });
 
   const { data: fundId } = useSynthetixRead("getPreferredFund", {});
 
