@@ -25,7 +25,7 @@
     "@chakra-ui/react": "^2.1.2",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@rainbow-me/rainbowkit": "^0.2.1",
+    "@rainbow-me/rainbowkit": "^0.4.1",
     "@uniswap/default-token-list": "^3.2.0",
     "framer-motion": "^6.3.6",
     "react": "18.1.0",
@@ -33,6 +33,6 @@
     "react-dom": "18.1.0",
     "react-hook-form": "^7.31.3",
     "recoil": "^0.7.3-alpha.2",
-    "wagmi": "^0.5.0"
+    "wagmi": "^0.5.5"
   }
 }
