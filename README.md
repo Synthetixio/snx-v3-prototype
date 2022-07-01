@@ -1,29 +1,20 @@
-## SNX V3 Monorepo
+## Synthetix V3 Prototype
 
-To get started, first run at the root level:
+To get started, first install dependencies at the root level:
 
 ```
 npm install
 ```
 
-#### Frontend
+Then, to use the peripheral package for testing and development, build the [Cannonfile](https://usecannon.com/) and run the local node:
 
-`Next.js` front-end app powering v3
+```
+npm run cannon-build
+npm run local-chain
+```
 
-Run the below to get started a local instance started:
+Finally, start the front-end application:
 
 ```
 npm run dev
 ```
-
-#### Periphery
-
-Hardhat setup for peripheral contracts that the frontend interacts with for multicall and other useful purposes.
-
-```
-npm run hardhat <compile,typechain,test>
-```
-
-#### Subgraph
-
-TODO
