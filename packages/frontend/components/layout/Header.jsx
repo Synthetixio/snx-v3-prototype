@@ -1,5 +1,6 @@
 import kwenta from "../../public/kwenta.svg";
 import logo from "../../public/logo.png";
+import logomark from "../../public/logomark.svg";
 import lyra from "../../public/lyra.svg";
 import thales from "../../public/thales.svg";
 import { NetworkController } from "./NetworkController";
@@ -31,10 +32,17 @@ export default function Header() {
   return (
     <Container mb="8" maxW="container.lg" py="4">
       <Flex alignItems="center">
-        <Box>
+        <Box display={["none", "none", "inline-block"]}>
           <NextLink href={"/"} passHref>
             <Link _focus={{ boxShadow: "none" }}>
               <Image src={logo} alt="Synthetix" width={200} height={14.5} />
+            </Link>
+          </NextLink>
+        </Box>
+        <Box display={["inline-block", "inline-block", "none"]} pt={1.5}>
+          <NextLink href={"/"} passHref>
+            <Link _focus={{ boxShadow: "none" }}>
+              <Image src={logomark} alt="Synthetix" height={24} />
             </Link>
           </NextLink>
         </Box>
@@ -131,6 +139,7 @@ export default function Header() {
           _hover={{ bg: "gray.700" }}
           onClick={toggleMobileMenu}
           ml="4"
+          size="sm"
         />
       </Flex>
     </Container>
