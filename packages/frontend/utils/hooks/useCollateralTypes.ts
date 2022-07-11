@@ -54,7 +54,7 @@ export const useCollateralTypes = () => {
     contracts: getCollateralTypeCalls,
     enabled: !!supportedCollateralTypes.length,
     onSuccess: data => {
-      console.log("DATA", data, supportedCollateralTypes);
+      console.log("DATA", data, getCollateralTypeCalls);
       setSupportedCollateralTypes(
         supportedCollateralTypes.map((ct, i) => ({
           ...ct,
@@ -105,24 +105,25 @@ export const useCollateralTypes = () => {
   }, [collateralTypeMetadata, provider, snxContract, supportedCollateralTypes]);
 
   // After the price data is fetched, set the data in recoil and turn off the loading state.
-  // useContractReads({
-  //   contracts: priceCalls,
-  //   enabled: !!priceCalls.length,
-  //   onSuccess: data => {
-  //     setIsLoading(false);
-  //     // setSupportedCollateralTypes(
-  //     //   supportedCollateralTypes.map((ct, i) => {
-  //     //     const priceDecimals = data[i + supportedCollateralTypes.length];
-  //     //     const priceData = data[i];
-  //     //     return {
-  //     //       ...ct,
-  //     //       price: Array.isArray(priceData) ? priceData[1] : BigNumber.from(0),
-  //     //       priceDecimals: !Array.isArray(priceDecimals) ? priceDecimals : 0,
-  //     //     };
-  //     //   })
-  //     // );
-  //   },
-  // });
+  useContractReads({
+    contracts: priceCalls,
+    enabled: !!priceCalls.length,
+    onSuccess: data => {
+      setIsLoading(false);
+      console.log("price data", data);
+      // setSupportedCollateralTypes(
+      //   supportedCollateralTypes.map((ct, i) => {
+      //     const priceDecimals = data[i + supportedCollateralTypes.length];
+      //     const priceData = data[i];
+      //     return {
+      //       ...ct,
+      //       price: Array.isArray(priceData) ? priceData[1] : BigNumber.from(0),
+      //       priceDecimals: !Array.isArray(priceDecimals) ? priceDecimals : 0,
+      //     };
+      //   })
+      // );
+    },
+  });
 
   return {
     isLoading,

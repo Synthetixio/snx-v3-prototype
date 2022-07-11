@@ -99,25 +99,20 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
   const isNativeCurrency =
     selectedCollateralType.symbol === chain?.nativeCurrency?.symbol;
 
-  const { data: accountData } = useAccount();
-  const accountAddress = accountData?.address;
+  const { address: accountAddress } = useAccount();
   const { data: balanceData } = useBalance({
     addressOrName: accountAddress,
     token: isNativeCurrency ? undefined : selectedCollateralType.address,
     enabled: hasWalletConnected,
   });
 
-  const { data: allowance } = useContractRead(
-    {
-      addressOrName: selectedCollateralType?.address,
-      contractInterface: erc20ABI,
-    },
-    "allowance",
-    {
-      args: [accountAddress, snxProxy?.address],
-      enabled: !isNativeCurrency && hasWalletConnected,
-    }
-  );
+  const { data: allowance } = useContractRead({
+    addressOrName: selectedCollateralType?.address,
+    contractInterface: erc20ABI,
+    functionName: "allowance",
+    args: [accountAddress, snxProxy?.address],
+    enabled: !isNativeCurrency && hasWalletConnected,
+  });
 
   const sufficientAllowance = useMemo(() => {
     if (allowance) {
@@ -130,7 +125,9 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
   }; // ten digit numberf
   const [newAccountId, setNewAccountId] = useState(generateAccountId());
 
-  const { data: fundId } = useSynthetixRead("getPreferredFund", {});
+  const { data: fundId } = useSynthetixRead({
+    functionName: "getPreferredFund",
+  });
 
   const calls: MulticallCall[][] = [
     [
@@ -182,30 +179,26 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     ]);
   }
 
-  const multiTxn = useMulticall(
-    calls,
-    { overrides },
-    {
-      onSuccess: () => {
-        // TODO: route to accounts page
-        toast.closeAll();
+  const multiTxn = useMulticall(calls, overrides, {
+    onSuccess: () => {
+      // TODO: route to accounts page
+      toast.closeAll();
 
-        router.push({
-          pathname: `/accounts/${newAccountId}`,
-          query: router.query,
-        });
-      },
-      onError: e => {
-        toast({
-          title: "Could not complete account creation",
-          description: "Please try again.",
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      },
-    }
-  );
+      router.push({
+        pathname: `/accounts/${newAccountId}`,
+        query: router.query,
+      });
+    },
+    onError: e => {
+      toast({
+        title: "Could not complete account creation",
+        description: "Please try again.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+  });
 
   useEffect(() => {
     if (multiTxn.status === "pending") {

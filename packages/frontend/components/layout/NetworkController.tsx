@@ -13,27 +13,28 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
-import { useConnect, useNetwork } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 
 export function NetworkController() {
-  const { activeConnector } = useConnect();
+  const { connector } = useAccount();
   const router = useRouter();
   const { chains: networkChains } = useNetwork();
-  const [localChainId, setLocalChainId] = useRecoilState(chainIdState);
+  const [localChainId] = useRecoilState(chainIdState);
 
-  const chains = /* networkChains.length ? networkChains : */ supportedChains;
+  const chains = networkChains.length ? networkChains : supportedChains;
   const localChain = chains.find(chain => chain.id === localChainId);
 
   return (
     <ConnectButton.Custom>
-      {({
-        account,
-        chain,
-        openAccountModal,
-        openChainModal,
-        openConnectModal,
-        mounted,
-      }) => {
+      {data => {
+        const {
+          account,
+          chain,
+          openAccountModal,
+          openChainModal,
+          openConnectModal,
+          mounted,
+        } = data;
         return (
           <Flex
             {...(!mounted && {
@@ -45,7 +46,7 @@ export function NetworkController() {
               },
             })}
           >
-            {activeConnector ? (
+            {connector ? (
               <Button
                 bg="gray.800"
                 _hover={{ bg: "gray.700" }}

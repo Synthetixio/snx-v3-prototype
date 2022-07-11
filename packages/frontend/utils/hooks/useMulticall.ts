@@ -1,8 +1,8 @@
-import { CONTRACT_MULTICALL, CONTRACT_SYNTHETIX_PROXY } from '../constants';
-import { useContract } from './useContract';
-import ethers, { CallOverrides, Contract, constants } from 'ethers';
-import { useEffect, useMemo, useState } from 'react';
-import { useContractWrite, useWaitForTransaction } from 'wagmi';
+import { CONTRACT_MULTICALL, CONTRACT_SYNTHETIX_PROXY } from "../constants";
+import { useContract } from "./useContract";
+import ethers, { CallOverrides, Contract, constants } from "ethers";
+import { useEffect, useMemo, useState } from "react";
+import { useContractWrite, useWaitForTransaction } from "wagmi";
 
 // contact, funcion name, arguments
 export type MulticallCall = [Contract, string, any[], CallOverrides?];
@@ -15,7 +15,7 @@ type MulticallConfigType = {
   onError: (e: Error) => void;
 };
 
-type MulticallStatusType = 'idle' | 'pending' | 'success' | 'error';
+type MulticallStatusType = "idle" | "pending" | "success" | "error";
 
 /**
  * Executes the given list of transactions on a multicall contract as required.
@@ -33,12 +33,12 @@ type MulticallStatusType = 'idle' | 'pending' | 'success' | 'error';
  */
 export const useMulticall = (
   calls: MulticallCall[][],
-  overrides: ContractWriteParams[2] = {},
+  overrides: ContractWriteParams[0]["overrides"] = {},
   config?: Partial<MulticallConfigType>
 ) => {
   const [step, setStep] = useState(0);
   const [lastExecutedStep, setLastExecutedStep] = useState(0);
-  const [status, setStatus] = useState<MulticallStatusType>('idle');
+  const [status, setStatus] = useState<MulticallStatusType>("idle");
 
   const [receipts, setReceipts] = useState<
     ethers.providers.TransactionReceipt[]
@@ -61,7 +61,7 @@ export const useMulticall = (
       if (calls[step].find(c => c[0].address !== snxProxy?.address)) {
         // Multicall3
         callContract = multicall.contract;
-        callFunc = 'aggregate3Value';
+        callFunc = "aggregate3Value";
 
         callArgs = [
           calls[step].map(c => {
@@ -80,7 +80,7 @@ export const useMulticall = (
       } else {
         // Synthetix Multicall
         callContract = snxProxy.contract;
-        callFunc = 'multicall';
+        callFunc = "multicall";
         callArgs = [
           calls[step].map(c => {
             const callData = c[0].interface.encodeFunctionData(
@@ -94,21 +94,17 @@ export const useMulticall = (
     }
   }
 
-  const currentTxn = useContractWrite(
-    {
-      addressOrName: callContract!.address,
-      contractInterface: callContract!.interface,
+  const currentTxn = useContractWrite({
+    addressOrName: callContract!.address,
+    contractInterface: callContract!.interface,
+    functionName: callFunc!,
+    args: callArgs,
+    overrides,
+    onError: e => {
+      setStatus("error");
+      config?.onError && config.onError(e);
     },
-    callFunc!,
-    {
-      args: callArgs,
-      onError: e => {
-        setStatus('error');
-        config?.onError && config.onError(e);
-      },
-      ...overrides,
-    }
-  );
+  });
 
   useWaitForTransaction({
     hash: currentTxn.data?.hash,
@@ -120,22 +116,22 @@ export const useMulticall = (
       if (newStep !== calls.length) {
         setStep(newStep);
       } else {
-        setStatus('success');
+        setStatus("success");
         config?.onSuccess && config.onSuccess();
       }
     },
   });
 
   function reset() {
-    setStatus('idle');
+    setStatus("idle");
     setStep(0);
     setLastExecutedStep(0);
     setReceipts([]);
   }
 
   async function exec() {
-    if (status === 'idle') {
-      setStatus('pending');
+    if (status === "idle") {
+      setStatus("pending");
       await currentTxn.writeAsync();
     }
   }

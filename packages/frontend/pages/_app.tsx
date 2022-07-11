@@ -6,7 +6,11 @@ import "../styles/index.css";
 import theme from "../styles/theme";
 import { supportedChains } from "../utils/constants";
 import { ChakraProvider, Flex, Box } from "@chakra-ui/react";
-import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
+import {
+  RainbowKitProvider,
+  darkTheme,
+  getDefaultWallets,
+} from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { AppProps } from "next/app";
 import { RecoilRoot } from "recoil";
@@ -17,9 +21,15 @@ const { chains, provider } = configureChains(supportedChains, [
   publicProvider(),
 ]);
 
+const { connectors } = getDefaultWallets({
+  appName: "Synthetix",
+  chains,
+});
+
 const wagmiClient = createClient({
   autoConnect: true,
   provider,
+  connectors,
 });
 
 function Synthetix({ Component, pageProps }: AppProps) {
