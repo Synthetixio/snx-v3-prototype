@@ -109,7 +109,6 @@ export const useCollateralTypes = () => {
     enabled: !!priceCalls.length,
     onSuccess: data => {
       setIsLoading(false);
-      console.log("DATA", data);
       setSupportedCollateralTypes(
         supportedCollateralTypes.map((ct, i) => {
           // wagmi types broken
