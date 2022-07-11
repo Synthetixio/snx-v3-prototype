@@ -54,7 +54,6 @@ export const useCollateralTypes = () => {
     contracts: getCollateralTypeCalls,
     enabled: !!supportedCollateralTypes.length,
     onSuccess: data => {
-      console.log("DATA", data, getCollateralTypeCalls);
       setSupportedCollateralTypes(
         supportedCollateralTypes.map((ct, i) => ({
           ...ct,
@@ -110,18 +109,24 @@ export const useCollateralTypes = () => {
     enabled: !!priceCalls.length,
     onSuccess: data => {
       setIsLoading(false);
-      console.log("price data", data);
-      // setSupportedCollateralTypes(
-      //   supportedCollateralTypes.map((ct, i) => {
-      //     const priceDecimals = data[i + supportedCollateralTypes.length];
-      //     const priceData = data[i];
-      //     return {
-      //       ...ct,
-      //       price: Array.isArray(priceData) ? priceData[1] : BigNumber.from(0),
-      //       priceDecimals: !Array.isArray(priceDecimals) ? priceDecimals : 0,
-      //     };
-      //   })
-      // );
+      console.log("DATA", data);
+      setSupportedCollateralTypes(
+        supportedCollateralTypes.map((ct, i) => {
+          // wagmi types broken
+          // @ts-ignore
+          const priceDecimals = data[
+            i + supportedCollateralTypes.length
+          ] as number;
+          // wagmi types broken
+          // @ts-ignore
+          const priceData = data[i] as number;
+          return {
+            ...ct,
+            price: Array.isArray(priceData) ? priceData[1] : BigNumber.from(0),
+            priceDecimals: !Array.isArray(priceDecimals) ? priceDecimals : 0,
+          };
+        })
+      );
     },
   });
 
