@@ -52,7 +52,7 @@ import {
 
 type FormType = {
   collateralType: CollateralType;
-  amount: BigNumber;
+  amount: string;
   fundId: string;
 };
 
@@ -114,16 +114,18 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     enabled: !isNativeCurrency && hasWalletConnected,
   });
 
+  const amountBN = Boolean(amount)
+    ? ethers.utils.parseUnits(amount, selectedCollateralType.decimals)
+    : BigNumber.from(0);
+
   const sufficientAllowance = useMemo(() => {
-    if (allowance) {
-      return allowance?.gte(amount || 0);
-    }
-  }, [allowance, amount]);
+    return allowance && allowance?.gte(amountBN);
+  }, [allowance, amountBN]);
 
   const generateAccountId = () => {
     return Math.floor(Math.random() * 10000000000);
   }; // ten digit numberf
-  const [newAccountId, setNewAccountId] = useState(generateAccountId());
+  const newAccountId = useMemo(() => generateAccountId(), []);
 
   const { data: fundId } = useSynthetixRead({
     functionName: "getPreferredFund",
@@ -135,11 +137,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       [
         snxProxy!.contract,
         "stake",
-        [
-          newAccountId,
-          selectedCollateralType.address,
-          amount || BigNumber.from(0),
-        ],
+        [newAccountId, selectedCollateralType.address, amountBN],
       ],
       [
         snxProxy!.contract,
@@ -148,7 +146,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
           fundId || 0,
           newAccountId,
           selectedCollateralType.address,
-          amount || BigNumber.from(0),
+          amountBN,
           ethers.constants.One,
         ],
       ],
@@ -171,11 +169,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
   if (!sufficientAllowance) {
     // TODO: could use permit here as well, in which case its an unshift
     calls.unshift([
-      [
-        collateralContract!.contract,
-        "approve",
-        [snxProxy?.address, amount || BigNumber.from(0)],
-      ],
+      [collateralContract!.contract, "approve", [snxProxy?.address, amountBN]],
     ]);
   }
 
@@ -273,15 +267,16 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
                 {...register("amount", {
                   validate: {
                     sufficientFunds: v => {
-                      return balanceData && balanceData.value.gt(v);
+                      const amountBN = Boolean(v)
+                        ? ethers.utils.parseUnits(
+                            v,
+                            selectedCollateralType.decimals
+                          )
+                        : BigNumber.from(0);
+                      return balanceData && balanceData.value.gte(amountBN);
                     },
-                    nonZero: v => v.gt(0),
+                    nonZero: v => Boolean(v) && v !== "0",
                   },
-                  setValueAs: v =>
-                    ethers.utils.parseUnits(
-                      v || "0",
-                      selectedCollateralType.decimals
-                    ),
                 })}
               />
               <CollateralTypeSelector collateralTypes={collateralTypes} />
@@ -319,48 +314,44 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
                   : "Stake"}
               </Button>
             </Flex>
-          </form>
 
-          <Flex alignItems="center">
-            {hasWalletConnected && (
-              <Box>
-                <Balance
-                  balance={balanceData?.value || ethers.BigNumber.from(0)}
-                  collateralType={selectedCollateralType}
-                  onUseMax={(maxAmount: ethers.BigNumber) => {
-                    setValue("amount", maxAmount);
-                  }}
-                />
-              </Box>
-            )}
-
-            {createAccount ? (
-              <Text fontSize="xs" textAlign="right" ml="auto">
-                Receive an snxAccount token{" "}
-                <Tooltip
-                  textAlign="center"
-                  label="You will be minted an NFT that represents your account. You can easily transfer it between wallets."
-                >
-                  <InfoOutlineIcon transform="translateY(-1.5px)" />
-                </Tooltip>
-              </Text>
-            ) : (
-              <Text fontSize="xs" textAlign="right" ml="auto">
-                Fund:{" "}
-                {selectedFundId
-                  ? fundsData[selectedFundId]
-                    ? fundsData[selectedFundId].name
-                    : "Unknown Fund"
-                  : "None"}{" "}
-                <Link color="blue.400">
-                  <EditIcon
-                    onClick={onOpenFund}
-                    style={{ transform: "translateY(-2px)" }}
+            <Flex alignItems="center">
+              {hasWalletConnected && (
+                <Box>
+                  <Balance
+                    balance={balanceData?.value || ethers.BigNumber.from(0)}
                   />
-                </Link>
-              </Text>
-            )}
-          </Flex>
+                </Box>
+              )}
+
+              {createAccount ? (
+                <Text fontSize="xs" textAlign="right" ml="auto">
+                  Receive an snxAccount token{" "}
+                  <Tooltip
+                    textAlign="center"
+                    label="You will be minted an NFT that represents your account. You can easily transfer it between wallets."
+                  >
+                    <InfoOutlineIcon transform="translateY(-1.5px)" />
+                  </Tooltip>
+                </Text>
+              ) : (
+                <Text fontSize="xs" textAlign="right" ml="auto">
+                  Fund:{" "}
+                  {selectedFundId
+                    ? fundsData[selectedFundId]
+                      ? fundsData[selectedFundId].name
+                      : "Unknown Fund"
+                    : "None"}{" "}
+                  <Link color="blue.400">
+                    <EditIcon
+                      onClick={onOpenFund}
+                      style={{ transform: "translateY(-2px)" }}
+                    />
+                  </Link>
+                </Text>
+              )}
+            </Flex>
+          </form>
         </Box>
 
         <Modal size="2xl" isOpen={isOpenFund} onClose={onCloseFund}>

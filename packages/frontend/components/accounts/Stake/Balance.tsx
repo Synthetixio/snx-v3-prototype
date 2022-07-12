@@ -1,23 +1,20 @@
-import { CollateralType } from "../../../utils/constants";
-import { Text, Badge, Link } from "@chakra-ui/react";
-import { ethers } from "ethers";
+import { Badge, Link, Text } from "@chakra-ui/react";
+import { BigNumber, utils } from "ethers";
+import { useFormContext, useWatch } from "react-hook-form";
 
-export default function Balance({
-  balance,
-  collateralType,
-  onUseMax,
-}: {
-  balance: ethers.BigNumber;
-  collateralType: CollateralType;
-  onUseMax: (max: ethers.BigNumber) => void;
-}) {
+export default function Balance({ balance }: { balance: BigNumber }) {
   // Needs a special case for ETH/wETH?
+  const collateralType = useWatch({
+    name: "collateralType",
+  });
+
+  const { setValue } = useFormContext();
 
   return (
     <Text fontSize="xs">
       Balance:{" "}
       {parseFloat(
-        ethers.utils.formatUnits(balance, collateralType.decimals)
+        utils.formatUnits(balance, collateralType.decimals)
       ).toLocaleString()}{" "}
       {collateralType.symbol}
       {balance.eq(0) ? (
@@ -39,8 +36,14 @@ export default function Balance({
           variant="outline"
           colorScheme="blue"
           transform="translateY(-2px)"
-          onClick={() => {
-            onUseMax(balance);
+          onClick={e => {
+            e.preventDefault();
+            const balanceValue = utils.formatUnits(
+              balance,
+              collateralType.decimals
+            );
+
+            setValue("amount", balanceValue);
           }}
         >
           Use Max

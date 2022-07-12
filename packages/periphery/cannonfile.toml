@@ -2,7 +2,7 @@ name = "synthetix-periphery"
 description = "Synthetix system supplemental contracts"
 
 [setting.owner]
-defaultValue = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+defaultValue = "0x9b12d2A80fad64A5499e70bf74447C352c99fD46"
 
 [setting.erc20_version]
 defaultValue = "0.4.0"

@@ -21,7 +21,7 @@ export default function Subnav() {
 
   return (
     <Flex mb="6" alignItems="center">
-      <Text fontWeight="semibold" fontSize="md">
+      <div fontWeight="semibold" fontSize="md">
         {id ? `Account #${id}` : `Create Account`}
         <Menu>
           <MenuButton ml="1" transform="translateY(-1px)">
@@ -68,7 +68,7 @@ export default function Subnav() {
             </MenuItem>
           </MenuList>
         </Menu>
-      </Text>
+      </div>
 
       {false && router.route.split("/").length == 3 && (
         <NextLink href={`/accounts/${id}/settings`} passHref>

@@ -8,8 +8,9 @@ import {
 import { getContract, useContract } from "./useContract";
 import { useSynthetixRead } from "./useDeploymentRead";
 import tokenList from "@uniswap/default-token-list";
+import { utils } from "ethers";
 import { BigNumber } from "ethers";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 import { useContractReads, useProvider } from "wagmi";
 
@@ -45,24 +46,25 @@ export const useCollateralTypes = () => {
   const getCollateralTypeCalls = supportedCollateralTypes.map(ct => ({
     addressOrName: snxContract!.address,
     contractInterface: snxContract!.abi,
-    functionName: "getCollateralTypes",
-    args: [true],
+    functionName: "getCollateralType",
+    args: [ct.address],
   }));
 
   // This takes the list of supported collateral types from recoil and enriches them with the on-chain about them from the `getCollateralType` function.
-  const { data: collateralTypeMetadata } = useContractReads({
-    contracts: getCollateralTypeCalls,
-    enabled: !!supportedCollateralTypes.length,
-    onSuccess: data => {
-      setSupportedCollateralTypes(
-        supportedCollateralTypes.map((ct, i) => ({
-          ...ct,
-          targetCRatio: data[i][1],
-          minimumCRatio: data[i][2],
-        }))
-      );
-    },
-  });
+  const { data: collateralTypeMetadata, refetch: fetchCollateralData } =
+    useContractReads({
+      contracts: getCollateralTypeCalls,
+      enabled: false,
+      onSuccess: data => {
+        setSupportedCollateralTypes(
+          supportedCollateralTypes.map((ct, i) => ({
+            ...ct,
+            targetCRatio: data[i][1],
+            minimumCRatio: data[i][2],
+          }))
+        );
+      },
+    });
 
   // This fetches price and price decimal data for the collateral types when the above hook recieves a response
   const priceCalls = useMemo(() => {
@@ -104,11 +106,10 @@ export const useCollateralTypes = () => {
   }, [collateralTypeMetadata, provider, snxContract, supportedCollateralTypes]);
 
   // After the price data is fetched, set the data in recoil and turn off the loading state.
-  useContractReads({
+  const { refetch: fetchPriceData } = useContractReads({
     contracts: priceCalls,
-    enabled: !!priceCalls.length,
+    enabled: false,
     onSuccess: data => {
-      setIsLoading(false);
       setSupportedCollateralTypes(
         supportedCollateralTypes.map((ct, i) => {
           // wagmi types broken
@@ -117,17 +118,29 @@ export const useCollateralTypes = () => {
           const priceData = data[i];
           return {
             ...ct,
-            price: Array.isArray(priceData) ? priceData[1] : BigNumber.from(0),
+            price: Array.isArray(priceData)
+              ? priceData[1] || utils.formatUnits(1, priceDecimals)
+              : BigNumber.from(0),
             priceDecimals: Array.isArray(priceDecimals)
               ? 0
               : // wagmi types broken
                 // @ts-ignore
-                (priceDecimals as number),
+                (priceDecimals as number) || 0,
           };
         })
       );
     },
   });
+
+  useEffect(() => {
+    if (Boolean(supportedCollateralTypes.length)) {
+      fetchCollateralData()
+        .then(() => fetchPriceData())
+        .then(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [fetchCollateralData, fetchPriceData, supportedCollateralTypes.length]);
 
   return {
     isLoading,
