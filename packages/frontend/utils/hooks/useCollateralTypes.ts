@@ -113,16 +113,16 @@ export const useCollateralTypes = () => {
         supportedCollateralTypes.map((ct, i) => {
           // wagmi types broken
           // @ts-ignore
-          const priceDecimals = data[
-            i + supportedCollateralTypes.length
-          ] as number;
-          // wagmi types broken
-          // @ts-ignore
-          const priceData = data[i] as number;
+          const priceDecimals = data[i + supportedCollateralTypes.length];
+          const priceData = data[i];
           return {
             ...ct,
             price: Array.isArray(priceData) ? priceData[1] : BigNumber.from(0),
-            priceDecimals: !Array.isArray(priceDecimals) ? priceDecimals : 0,
+            priceDecimals: Array.isArray(priceDecimals)
+              ? 0
+              : // wagmi types broken
+                // @ts-ignore
+                (priceDecimals as number),
           };
         })
       );
