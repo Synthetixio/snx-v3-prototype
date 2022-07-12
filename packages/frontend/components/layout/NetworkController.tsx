@@ -54,6 +54,7 @@ export function NetworkController() {
                 style={{ display: "flex", alignItems: "center" }}
                 type="button"
                 mr="4"
+                size={["sm", "sm", "sm", "md"]}
               >
                 {chain?.hasIcon && (
                   <span
@@ -88,6 +89,7 @@ export function NetworkController() {
                   _active={{ bg: "gray.700" }}
                   mr="4"
                   style={{ display: "flex", alignItems: "center" }}
+                  size={["sm", "sm", "sm", "md"]}
                 >
                   {chain?.hasIcon && (
                     <div
@@ -167,6 +169,7 @@ export function NetworkController() {
                     colorScheme="blue"
                     onClick={openConnectModal}
                     type="button"
+                    size={["sm", "sm", "sm", "md"]}
                   >
                     Connect Wallet
                   </Button>
