@@ -14,9 +14,9 @@ export default function StakingPositions({ accountId }: { accountId: Number }) {
   >([]);
 
   const [supportedCollateralTypes] = useRecoilState(collateralTypesState);
-  console.log("supportedCollateralTypes: ", supportedCollateralTypes);
 
-  useSynthetixRead("getAccountLiquidityItems", {
+  useSynthetixRead({
+    functionName: "getAccountLiquidityItems",
     args: [accountId],
     /*
       address collateralType;
@@ -83,7 +83,9 @@ export default function StakingPositions({ accountId }: { accountId: Number }) {
         </Thead>
         <Tbody>
           {stakingPositions.map(position => {
-            return <StakingPosition key={position.id} position={position} />;
+            return (
+              <StakingPosition key={position.fundId} position={position} />
+            );
           })}
           {/*
             <Tr>

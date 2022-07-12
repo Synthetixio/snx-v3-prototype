@@ -1,10 +1,6 @@
 import { fundsData } from "../../../utils/constants";
 import { useContract } from "../../../utils/hooks/useContract";
-import { useContractReads } from "../../../utils/hooks/useContractReads";
-import { useSynthetixRead } from "../../../utils/hooks/useDeploymentRead";
-import { useMulticall } from "../../../utils/hooks/useMulticall";
 import StakerOption from "./StakerOption";
-import SynthOption from "./SynthOption";
 import {
   Box,
   Heading,
@@ -24,6 +20,7 @@ import {
 import { BigNumber } from "ethers";
 import { useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import { useContractReads } from "wagmi";
 
 const NO_FUND_TAB_INDEX = 1;
 
@@ -34,16 +31,23 @@ type PropsType = {
 export default function EditPosition({ onClose }: PropsType) {
   const snxProxy = useContract("synthetix.Proxy");
 
-  const { data } = useContractReads<[BigNumber, Array<BigNumber>]>([
-    {
-      contract: snxProxy!.contract,
-      funcName: "getPreferredFund",
-    },
-    {
-      contract: snxProxy!.contract,
-      funcName: "getApprovedFunds",
-    },
-  ]);
+  const snxContractData = {
+    addressOrName: snxProxy?.address,
+    contractInterface: snxProxy?.abi,
+  };
+
+  const { data } = useContractReads({
+    contracts: [
+      {
+        ...snxContractData,
+        functionName: "getPreferredFund",
+      },
+      {
+        ...snxContractData,
+        functionName: "getApprovedFunds",
+      },
+    ],
+  });
 
   const funds = data
     ? [

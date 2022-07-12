@@ -1,3 +1,7 @@
+import Address from "../../shared/Address";
+import Item from "./Item";
+import PermissionsEditor from "./PermissionsEditor";
+import { EditIcon } from "@chakra-ui/icons";
 import {
   Box,
   Heading,
@@ -17,12 +21,8 @@ import {
   Td,
   Tag,
 } from "@chakra-ui/react";
-import { EditIcon } from "@chakra-ui/icons";
-import Address from "../../shared/Address";
-import Item from "./Item";
 import { useRouter } from "next/router";
 import { useAccount, useContractRead } from "wagmi";
-import PermissionsEditor from "./PermissionsEditor";
 
 export default function Permissions() {
   const {
@@ -37,8 +37,7 @@ export default function Permissions() {
   } = useDisclosure();
 
   // Only show edit icon if current account is owner or modify permissions
-  const { data: accountData } = useAccount();
-  const accountAddress = accountData?.address;
+  const { address: accountAddress } = useAccount();
 
   const router = useRouter();
   const { id } = router.query;
@@ -104,7 +103,7 @@ export default function Permissions() {
               {accountAddress == owner && null /* only show above if owner*/}
             </Td>
           </Tr>
-          {addresses.map((address) => (
+          {addresses.map(address => (
             <Item key={address} address={address} />
           ))}
         </Tbody>

@@ -70,13 +70,23 @@ export const fundsData: Record<string, { name: string }> = {
   },
 };
 
-export const supportedChains = [chain.rinkeby]; //, chain.hardhat];
+export const supportedChains = [
+  chain.rinkeby,
+  {
+    ...chain.hardhat,
+    multicall: {
+      address: "0x2017758D5341a319410f8DdD0a034d0170EE0444",
+      blockCreated: 10228837,
+    },
+  },
+];
+
 export const getChainById = (chainId: number) =>
-  supportedChains.find((chain) => chain.id === chainId);
+  supportedChains.find(chain => chain.id === chainId);
 
 export const getChainNameById = (chainId: number) => {
   const chain = Object.entries(chainMapping).find(
-    (entry) => entry[1] === chainId
+    entry => entry[1] === chainId
   );
 
   return chain ? chain[0] : "";

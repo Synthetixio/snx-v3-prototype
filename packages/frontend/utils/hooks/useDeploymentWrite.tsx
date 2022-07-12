@@ -6,7 +6,7 @@ type ContractWriteParams = Parameters<typeof useContractWrite>;
 // A convenience hook for writing to the main Synthetix proxy contract.
 export const useSynthetixWrite = (
   funcName: string,
-  args: ContractWriteParams[2]
+  args: ContractWriteParams[0]["args"]
 ) => {
   return useDeploymentWrite("synthetix.Proxy", funcName, args);
 };
@@ -14,18 +14,14 @@ export const useSynthetixWrite = (
 // Similar to https://wagmi.sh/docs/hooks/useContractWrite, but its aware of the currently selected network and the user specifies the contract name rather than address.
 export const useDeploymentWrite = (
   contractName: string,
-  funcName: string,
-  args?: ContractWriteParams[2]
+  functionName: string,
+  args?: ContractWriteParams[0]["args"]
 ) => {
   const contract = useContract(contractName);
-  return useContractWrite(
-    {
-      addressOrName: contract?.address,
-      contractInterface: contract?.abi || "",
-    },
-    funcName,
-    {
-      ...args,
-    }
-  );
+  return useContractWrite({
+    addressOrName: contract?.address,
+    contractInterface: contract?.abi || "",
+    functionName,
+    args,
+  });
 };

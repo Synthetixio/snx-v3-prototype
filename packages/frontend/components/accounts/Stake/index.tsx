@@ -5,10 +5,7 @@ import {
   getChainById,
 } from "../../../utils/constants";
 import { useContract } from "../../../utils/hooks/useContract";
-import {
-  useDeploymentRead,
-  useSynthetixRead,
-} from "../../../utils/hooks/useDeploymentRead";
+import { useSynthetixRead } from "../../../utils/hooks/useDeploymentRead";
 import { useMulticall, MulticallCall } from "../../../utils/hooks/useMulticall";
 import EditPosition from "../EditPosition";
 import Balance from "./Balance";
@@ -55,12 +52,12 @@ import {
 
 type FormType = {
   collateralType: CollateralType;
-  amount: BigNumber;
+  amount: string;
   fundId: string;
 };
 
 export default function Stake({ createAccount }: { createAccount: boolean }) {
-  const { activeChain } = useNetwork();
+  const { chain: activeChain } = useNetwork();
   const hasWalletConnected = Boolean(activeChain);
   const [collateralTypes] = useRecoilState(collateralTypesState);
   // on loading dropdown and token amount maybe use https://chakra-ui.com/docs/components/feedback/skeleton
@@ -102,48 +99,37 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
   const isNativeCurrency =
     selectedCollateralType.symbol === chain?.nativeCurrency?.symbol;
 
-  const { data: accountData } = useAccount();
-  const accountAddress = accountData?.address;
+  const { address: accountAddress } = useAccount();
   const { data: balanceData } = useBalance({
     addressOrName: accountAddress,
     token: isNativeCurrency ? undefined : selectedCollateralType.address,
     enabled: hasWalletConnected,
   });
 
-  const { data: allowance } = useContractRead(
-    {
-      addressOrName: selectedCollateralType?.address,
-      contractInterface: erc20ABI,
-    },
-    "allowance",
-    {
-      args: [accountAddress, snxProxy?.address],
-      enabled: !isNativeCurrency && hasWalletConnected,
-    }
-  );
+  const { data: allowance } = useContractRead({
+    addressOrName: selectedCollateralType?.address,
+    contractInterface: erc20ABI,
+    functionName: "allowance",
+    args: [accountAddress, snxProxy?.address],
+    enabled: !isNativeCurrency && hasWalletConnected,
+  });
+
+  const amountBN = Boolean(amount)
+    ? ethers.utils.parseUnits(amount, selectedCollateralType.decimals)
+    : BigNumber.from(0);
 
   const sufficientAllowance = useMemo(() => {
-    if (allowance) {
-      return allowance?.gte(amount || 0);
-    }
-  }, [allowance, amount]);
+    return allowance && allowance?.gte(amountBN);
+  }, [allowance, amountBN]);
 
   const generateAccountId = () => {
     return Math.floor(Math.random() * 10000000000);
   }; // ten digit numberf
-  const [newAccountId, setNewAccountId] = useState(generateAccountId());
-  // useDeploymentRead('accountToken', 'ownerOf', {
-  //   args: newAccountId,
-  //   onSuccess() {
-  //     // newAccountId isn't available
-  //     setNewAccountId(generateAccountId());
-  //   },
-  //   onError(error) {
-  //     // newAccountId is available, so we should proceed.
-  //   },
-  // });
+  const newAccountId = useMemo(() => generateAccountId(), []);
 
-  const { data: fundId } = useSynthetixRead("getPreferredFund", {});
+  const { data: fundId } = useSynthetixRead({
+    functionName: "getPreferredFund",
+  });
 
   const calls: MulticallCall[][] = [
     [
@@ -151,11 +137,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       [
         snxProxy!.contract,
         "stake",
-        [
-          newAccountId,
-          selectedCollateralType.address,
-          amount || BigNumber.from(0),
-        ],
+        [newAccountId, selectedCollateralType.address, amountBN],
       ],
       [
         snxProxy!.contract,
@@ -164,7 +146,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
           fundId || 0,
           newAccountId,
           selectedCollateralType.address,
-          amount || BigNumber.from(0),
+          amountBN,
           ethers.constants.One,
         ],
       ],
@@ -187,38 +169,30 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
   if (!sufficientAllowance) {
     // TODO: could use permit here as well, in which case its an unshift
     calls.unshift([
-      [
-        collateralContract!.contract,
-        "approve",
-        [snxProxy?.address, amount || BigNumber.from(0)],
-      ],
+      [collateralContract!.contract, "approve", [snxProxy?.address, amountBN]],
     ]);
   }
 
-  const multiTxn = useMulticall(
-    calls,
-    { overrides },
-    {
-      onSuccess: () => {
-        // TODO: route to accounts page
-        toast.closeAll();
+  const multiTxn = useMulticall(calls, overrides, {
+    onSuccess: () => {
+      // TODO: route to accounts page
+      toast.closeAll();
 
-        router.push({
-          pathname: `/accounts/${newAccountId}`,
-          query: router.query,
-        });
-      },
-      onError: e => {
-        toast({
-          title: "Could not complete account creation",
-          description: "Please try again.",
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      },
-    }
-  );
+      router.push({
+        pathname: `/accounts/${newAccountId}`,
+        query: router.query,
+      });
+    },
+    onError: e => {
+      toast({
+        title: "Could not complete account creation",
+        description: "Please try again.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+  });
 
   useEffect(() => {
     if (multiTxn.status === "pending") {
@@ -293,15 +267,16 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
                 {...register("amount", {
                   validate: {
                     sufficientFunds: v => {
-                      return balanceData && balanceData.value.gt(v);
+                      const amountBN = Boolean(v)
+                        ? ethers.utils.parseUnits(
+                            v,
+                            selectedCollateralType.decimals
+                          )
+                        : BigNumber.from(0);
+                      return balanceData && balanceData.value.gte(amountBN);
                     },
-                    nonZero: v => v.gt(0),
+                    nonZero: v => Boolean(v) && v !== "0",
                   },
-                  setValueAs: v =>
-                    ethers.utils.parseUnits(
-                      v || "0",
-                      selectedCollateralType.decimals
-                    ),
                 })}
               />
               <CollateralTypeSelector collateralTypes={collateralTypes} />
@@ -339,48 +314,44 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
                   : "Stake"}
               </Button>
             </Flex>
-          </form>
 
-          <Flex alignItems="center">
-            {hasWalletConnected && (
-              <Box>
-                <Balance
-                  balance={balanceData?.value || ethers.BigNumber.from(0)}
-                  collateralType={selectedCollateralType}
-                  onUseMax={(maxAmount: ethers.BigNumber) => {
-                    setValue("amount", maxAmount);
-                  }}
-                />
-              </Box>
-            )}
-
-            {createAccount ? (
-              <Text fontSize="xs" textAlign="right" ml="auto">
-                Receive an snxAccount token{" "}
-                <Tooltip
-                  textAlign="center"
-                  label="You will be minted an NFT that represents your account. You can easily transfer it between wallets."
-                >
-                  <InfoOutlineIcon transform="translateY(-1.5px)" />
-                </Tooltip>
-              </Text>
-            ) : (
-              <Text fontSize="xs" textAlign="right" ml="auto">
-                Fund:{" "}
-                {selectedFundId
-                  ? fundsData[selectedFundId]
-                    ? fundsData[selectedFundId].name
-                    : "Unknown Fund"
-                  : "None"}{" "}
-                <Link color="blue.400">
-                  <EditIcon
-                    onClick={onOpenFund}
-                    style={{ transform: "translateY(-2px)" }}
+            <Flex alignItems="center">
+              {hasWalletConnected && (
+                <Box>
+                  <Balance
+                    balance={balanceData?.value || ethers.BigNumber.from(0)}
                   />
-                </Link>
-              </Text>
-            )}
-          </Flex>
+                </Box>
+              )}
+
+              {createAccount ? (
+                <Text fontSize="xs" textAlign="right" ml="auto">
+                  Receive an snxAccount token{" "}
+                  <Tooltip
+                    textAlign="center"
+                    label="You will be minted an NFT that represents your account. You can easily transfer it between wallets."
+                  >
+                    <InfoOutlineIcon transform="translateY(-1.5px)" />
+                  </Tooltip>
+                </Text>
+              ) : (
+                <Text fontSize="xs" textAlign="right" ml="auto">
+                  Fund:{" "}
+                  {selectedFundId
+                    ? fundsData[selectedFundId]
+                      ? fundsData[selectedFundId].name
+                      : "Unknown Fund"
+                    : "None"}{" "}
+                  <Link color="blue.400">
+                    <EditIcon
+                      onClick={onOpenFund}
+                      style={{ transform: "translateY(-2px)" }}
+                    />
+                  </Link>
+                </Text>
+              )}
+            </Flex>
+          </form>
         </Box>
 
         <Modal size="2xl" isOpen={isOpenFund} onClose={onCloseFund}>

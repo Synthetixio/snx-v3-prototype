@@ -7,9 +7,9 @@ import theme from "../styles/theme";
 import { supportedChains } from "../utils/constants";
 import { ChakraProvider, Flex, Box } from "@chakra-ui/react";
 import {
-  getDefaultWallets,
   RainbowKitProvider,
   darkTheme,
+  getDefaultWallets,
 } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { AppProps } from "next/app";
@@ -28,8 +28,8 @@ const { connectors } = getDefaultWallets({
 
 const wagmiClient = createClient({
   autoConnect: true,
-  connectors,
   provider,
+  connectors,
 });
 
 function Synthetix({ Component, pageProps }: AppProps) {

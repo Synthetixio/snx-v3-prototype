@@ -4,9 +4,9 @@ import { Spinner } from "@chakra-ui/react";
 import { ChainName } from "@wagmi/core/dist/declarations/src/constants/chains";
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
-import { useEffect, useCallback, useRef, FC } from "react";
+import { useEffect, useRef, FC } from "react";
 import { useRecoilState } from "recoil";
-import { useNetwork, chainId as chainMapping } from "wagmi";
+import { useNetwork, chainId as chainMapping, useSwitchNetwork } from "wagmi";
 
 type Props = {
   children?: React.ReactElement | React.ReactElement[];
@@ -28,7 +28,9 @@ export const NetworkChain: FC<Props> = ({ children }) => {
   const router = useRouter();
   const onInitialMount = useRef(true);
 
-  const { switchNetwork, activeChain } = useNetwork({
+  const { chain: activeChain } = useNetwork();
+
+  const { switchNetwork } = useSwitchNetwork({
     onSuccess: data => {
       setLocalChainId(data.id);
     },

@@ -2,7 +2,7 @@ name = "synthetix-periphery"
 description = "Synthetix system supplemental contracts"
 
 [setting.owner]
-defaultValue = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+defaultValue = "0x9b12d2A80fad64A5499e70bf74447C352c99fD46"
 
 [setting.erc20_version]
 defaultValue = "0.4.0"
@@ -13,13 +13,13 @@ defaultValue = "1.0.0"
 [setting.chainlink_version]
 defaultValue = "0.9-mock"
 
-[setting.lusd_price]
+[setting.lusd_rate]
 defaultValue = "1000000"
 
-[setting.snx_price]
+[setting.snx_rate]
 defaultValue = "10000000"
 
-[setting.weth_price]
+[setting.weth_rate]
 defaultValue = "100000000"
 
 [import.lusd]

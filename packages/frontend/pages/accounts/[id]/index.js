@@ -1,9 +1,9 @@
-import Stake from '../../../components/accounts/Stake/index';
-import StakingPositions from '../../../components/accounts/StakingPositions/index';
-import Subnav from '../../../components/accounts/Subnav/index';
-import { Container, Box, Heading } from '@chakra-ui/react';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
+import Stake from "../../../components/accounts/Stake/index";
+import StakingPositions from "../../../components/accounts/StakingPositions/index";
+import Subnav from "../../../components/accounts/Subnav/index";
+import { Container, Box, Heading } from "@chakra-ui/react";
+import Head from "next/head";
+import { useRouter } from "next/router";
 
 export default function Account() {
   const router = useRouter();
@@ -12,7 +12,7 @@ export default function Account() {
   return (
     <Box>
       <Head>
-        <title>Account #{id}</title>
+        <div>Account #{id}</div>
         <meta name="description" content="Account" />
       </Head>
       <Container maxW="container.sm">
