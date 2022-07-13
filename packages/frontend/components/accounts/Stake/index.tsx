@@ -200,7 +200,10 @@ export default function Stake({
   const multiTxn = useMulticall(calls, overrides, {
     onSuccess: () => {
       toast.closeAll();
-      reset();
+      reset({
+        collateralType: selectedCollateralType,
+        amount: "",
+      });
       refetchAllowance().then(() => {
         if (!Boolean(accountId)) {
           router.push({
