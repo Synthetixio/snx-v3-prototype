@@ -110,6 +110,7 @@ export const useCollateralTypes = () => {
     contracts: priceCalls,
     enabled: false,
     onSuccess: data => {
+      setIsLoading(false);
       setSupportedCollateralTypes(
         supportedCollateralTypes.map((ct, i) => {
           // wagmi types broken
@@ -134,11 +135,7 @@ export const useCollateralTypes = () => {
 
   useEffect(() => {
     if (Boolean(supportedCollateralTypes.length)) {
-      fetchCollateralData()
-        .then(() => fetchPriceData())
-        .then(() => {
-          setIsLoading(false);
-        });
+      fetchCollateralData().then(() => fetchPriceData());
     }
   }, [fetchCollateralData, fetchPriceData, supportedCollateralTypes.length]);
 

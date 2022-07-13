@@ -6,47 +6,41 @@ import {
 } from "../../../utils/constants";
 import { useContract } from "../../../utils/hooks/useContract";
 import { useSynthetixRead } from "../../../utils/hooks/useDeploymentRead";
-import { useMulticall, MulticallCall } from "../../../utils/hooks/useMulticall";
+import { MulticallCall, useMulticall } from "../../../utils/hooks/useMulticall";
 import EditPosition from "../EditPosition";
+import { StakingPositionType } from "../StakingPositions/types";
 import Balance from "./Balance";
 import CollateralTypeSelector from "./CollateralTypeSelector";
 import HowItWorks from "./HowItWorks";
-import {
-  LockIcon,
-  InfoOutlineIcon,
-  EditIcon,
-  ExternalLinkIcon,
-} from "@chakra-ui/icons";
+import { EditIcon, InfoOutlineIcon, LockIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Text,
-  Tooltip,
-  Flex,
-  Input,
   Button,
+  Flex,
   IconButton,
+  Input,
+  Link,
   Modal,
-  ModalOverlay,
+  ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalCloseButton,
-  ModalBody,
+  ModalOverlay,
+  Text,
+  Tooltip,
   useDisclosure,
   useToast,
-  Link,
-  ToastId,
 } from "@chakra-ui/react";
-import { ethers, CallOverrides } from "ethers";
-import { BigNumber } from "ethers";
+import { BigNumber, CallOverrides, ethers } from "ethers";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useForm, FormProvider, useWatch } from "react-hook-form";
+import { useEffect, useMemo } from "react";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useRecoilState } from "recoil";
 import {
-  useAccount,
-  useContractRead,
   erc20ABI,
+  useAccount,
   useBalance,
+  useContractRead,
   useNetwork,
 } from "wagmi";
 
@@ -56,7 +50,13 @@ type FormType = {
   fundId: string;
 };
 
-export default function Stake({ createAccount }: { createAccount: boolean }) {
+export default function Stake({
+  accountId,
+  stakingPositions,
+}: {
+  accountId?: string;
+  stakingPositions: StakingPositionType[];
+}) {
   const { chain: activeChain } = useNetwork();
   const hasWalletConnected = Boolean(activeChain);
   const [collateralTypes] = useRecoilState(collateralTypesState);
@@ -68,7 +68,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
       collateralType: collateralTypes[0],
     },
   });
-  const { handleSubmit, register, formState, setValue, control } = methods;
+  const { handleSubmit, register, formState, reset, control } = methods;
 
   const collateralContract = useContract("snx.token");
   const snxProxy = useContract("synthetix.Proxy");
@@ -106,7 +106,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     enabled: hasWalletConnected,
   });
 
-  const { data: allowance } = useContractRead({
+  const { data: allowance, refetch: refetchAllowance } = useContractRead({
     addressOrName: selectedCollateralType?.address,
     contractInterface: erc20ABI,
     functionName: "allowance",
@@ -119,7 +119,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     : BigNumber.from(0);
 
   const sufficientAllowance = useMemo(() => {
-    return allowance && allowance?.gte(amountBN);
+    return allowance && allowance.gt(0) && allowance.gte(amountBN);
   }, [allowance, amountBN]);
 
   const generateAccountId = () => {
@@ -131,27 +131,51 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
     functionName: "getPreferredFund",
   });
 
-  const calls: MulticallCall[][] = [
-    [
-      [snxProxy!.contract, "createAccount", [newAccountId]],
+  const calls: MulticallCall[][] = useMemo(() => {
+    const id = accountId ?? newAccountId;
+    const preferredFundStakingPosition = stakingPositions.find(
+      position => fundId && position.fundId.eq(fundId)
+    );
+    const amountToDelegate = Boolean(accountId)
+      ? preferredFundStakingPosition?.collateralAmount.add(amountBN)
+      : amountBN;
+
+    const createAccountCall: MulticallCall = [
+      snxProxy!.contract,
+      "createAccount",
+      [newAccountId],
+    ];
+    const stakingCalls: MulticallCall[] = [
       [
         snxProxy!.contract,
         "stake",
-        [newAccountId, selectedCollateralType.address, amountBN],
+        [id, selectedCollateralType.address, amountBN],
       ],
       [
         snxProxy!.contract,
         "delegateCollateral",
         [
           fundId || 0,
-          newAccountId,
+          id,
           selectedCollateralType.address,
-          amountBN,
+          amountToDelegate || 0,
           ethers.constants.One,
         ],
       ],
-    ],
-  ];
+    ];
+
+    return [
+      Boolean(accountId) ? stakingCalls : [createAccountCall, ...stakingCalls],
+    ];
+  }, [
+    accountId,
+    amountBN,
+    fundId,
+    newAccountId,
+    selectedCollateralType.address,
+    snxProxy,
+    stakingPositions,
+  ]);
 
   const overrides: CallOverrides = {};
 
@@ -175,12 +199,24 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
 
   const multiTxn = useMulticall(calls, overrides, {
     onSuccess: () => {
-      // TODO: route to accounts page
       toast.closeAll();
-
-      router.push({
-        pathname: `/accounts/${newAccountId}`,
-        query: router.query,
+      reset();
+      refetchAllowance().then(() => {
+        if (!Boolean(accountId)) {
+          router.push({
+            pathname: `/accounts/${newAccountId}`,
+            query: router.query,
+          });
+        } else {
+          // TODO: get language from noah
+          toast({
+            title: "Success",
+            description: "Your staked collateral amounts have been updated.",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
       });
     },
     onError: e => {
@@ -324,7 +360,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
                 </Box>
               )}
 
-              {createAccount ? (
+              {Boolean(accountId) ? (
                 <Text fontSize="xs" textAlign="right" ml="auto">
                   Receive an snxAccount token{" "}
                   <Tooltip
@@ -379,7 +415,7 @@ export default function Stake({ createAccount }: { createAccount: boolean }) {
           </ModalContent>
         </Modal>
       </FormProvider>
-      {createAccount && (
+      {Boolean(accountId) && (
         <HowItWorks selectedCollateralType={selectedCollateralType} />
       )}
       {/*

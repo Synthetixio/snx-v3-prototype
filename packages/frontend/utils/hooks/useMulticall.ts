@@ -117,6 +117,7 @@ export const useMulticall = (
         setStep(newStep);
       } else {
         setStatus("success");
+        reset();
         config?.onSuccess && config.onSuccess();
       }
     },
