@@ -32,10 +32,8 @@ export default function StakingPositions({
           </Tr>
         </Thead>
         <Tbody>
-          {data.map(position => {
-            return (
-              <StakingPosition key={position.fundId} position={position} />
-            );
+          {data.map((position, i) => {
+            return <StakingPosition key={i} position={position} />;
           })}
           {/*
             <Tr>
