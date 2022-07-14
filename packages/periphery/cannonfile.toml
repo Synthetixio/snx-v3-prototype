@@ -5,13 +5,16 @@ description = "Synthetix system supplemental contracts"
 defaultValue = "0x9b12d2A80fad64A5499e70bf74447C352c99fD46"
 
 [setting.erc20_version]
-defaultValue = "0.4.0"
+defaultValue = "1.0.0"
 
 [setting.synthetix_version]
 defaultValue = "1.0.0"
 
 [setting.chainlink_version]
-defaultValue = "0.9-mock"
+defaultValue = "0.1.0"
+
+[setting.rate_decimals]
+defaultValue = "6"
 
 [setting.lusd_rate]
 defaultValue = "1000000"
@@ -35,16 +38,19 @@ options.symbol = "SNX"
 [import.aggregator_snx]
 source = "chainlink:<%= settings.chainlink_version %>"
 options.salt = "snx"
+options.decimals = "<%= settings.rate_decimals %>"
 options.rate = "<%= settings.snx_rate %>"
 
 [import.aggregator_lusd]
 source = "chainlink:<%= settings.chainlink_version %>"
 options.salt = "lusd"
+options.decimals = "<%= settings.rate_decimals %>"
 options.rate = "<%= settings.lusd_rate %>"
 
 [import.aggregator_weth]
 source = "chainlink:<%= settings.chainlink_version %>"
 options.salt = "weth"
+options.decimals = "<%= settings.rate_decimals %>"
 options.rate = "<%= settings.weth_rate %>"
 
 [import.synthetix]
@@ -53,11 +59,9 @@ options.owner = "<%= settings.owner %>"
 
 [contract.Multicall]
 artifact = "Multicall3"
-step = 1
 
 [contract.WETH]
 artifact = "WETH9"
-step = 1
 
 [invoke.register_lusd_collateral]
 target = ["synthetix.Proxy"]
@@ -70,7 +74,7 @@ args = [
     "1100000000000000000",
     true,
 ]
-step = 2
+depends = ["import.synthetix", "import.lusd", "import.aggregator_lusd"]
 
 [invoke.register_snx_collateral]
 target = ["synthetix.Proxy"]
@@ -83,7 +87,7 @@ args = [
     "2000000000000000000",
     true,
 ]
-step = 2
+depends = ["import.synthetix", "import.snx", "import.aggregator_snx"]
 
 [invoke.register_weth_collateral]
 target = ["synthetix.Proxy"]
@@ -96,31 +100,31 @@ args = [
     "1500000000000000000",
     true,
 ]
-step = 2
+depends = ["import.synthetix", "contract.WETH", "import.aggregator_weth"]
 
-[invoke.mint_snx]
-target = ["snx.token"]
-func = "mint"
-args = [
-    "<%= settings.owner %>",
-    "200000000000000000000"
-]
-step = 3
-
-[invoke.createPreferredFund]
-target = ["synthetix.Proxy"]
-func = "createFund"
-args = [
-    1,
-    "<%= settings.owner %>",
-]
-step = 3
-
-[invoke.setPreferredFund]
-target = ["synthetix.Proxy"]
-func = "setPreferredFund"
-from = "<%= settings.owner %>"
-args = [
-    1,
-]
-step = 4
+# [invoke.mint_snx]
+# target = ["snx.token"]
+# func = "mint"
+# args = [
+#     "<%= settings.owner %>",
+#     "200000000000000000000"
+# ]
+# depends=["import.snx"]
+# 
+# [invoke.createPreferredFund]
+# target = ["synthetix.Proxy"]
+# func = "createFund"
+# args = [
+#     1,
+#     "<%= settings.owner %>",
+# ]
+# depends=["import.synthetix"]
+# 
+# [invoke.setPreferredFund]
+# target = ["synthetix.Proxy"]
+# func = "setPreferredFund"
+# from = "<%= settings.owner %>"
+# args = [
+#     1,
+# ]
+# depends=["invoke.createPreferredFund"]

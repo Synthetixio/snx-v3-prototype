@@ -120,7 +120,8 @@ const config: HardhatUserConfig = {
     target: "ethers-v5",
   },
   cannon: {
-    publisherPrivateKey: process.env.PRIVATE_KEY,
+    registryEndpoint: "https://rinkeby.infura.io/v3/" + infuraApiKey,
+    registryAddress: "0x79E25D87432920FC5C187e14676FA6a8A8a00418",
     ipfsConnection: {
       protocol: "https",
       host: "ipfs.infura.io",
