@@ -6,7 +6,7 @@ import {
 } from "../../../components/accounts/StakingPositions/types";
 import Subnav from "../../../components/accounts/Subnav/index";
 import { collateralTypesState } from "../../../state";
-import { fundsData } from "../../../utils/constants";
+import { CollateralType, fundsData } from "../../../utils/constants";
 import { useSynthetixProxyEvent, useSynthetixRead } from "../../../utils/hooks";
 import { Container, Box, Heading } from "@chakra-ui/react";
 import { BigNumber } from "ethers";
@@ -14,6 +14,11 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
+
+const getCollateralType = (
+  address: string,
+  supportedCollateralTypes: CollateralType[]
+) => supportedCollateralTypes.find(ct => ct.address === address);
 
 export default function Account() {
   const router = useRouter();
@@ -28,18 +33,15 @@ export default function Account() {
     functionName: "getAccountLiquidityItems",
     select: (data): StakingPositionType[] => {
       return data.map((item: StakingPositionOnChainType) => {
-        const collateralType = supportedCollateralTypes.find(
-          ct => ct.address === item.collateralType
+        const collateralType = getCollateralType(
+          item.collateralType,
+          supportedCollateralTypes
         );
         return {
           fundId: item.fundId,
           fundName: fundsData[item.fundId.toString()].name,
           collateralAmount: item.collateralAmount,
-          collateralSymbol: collateralType?.symbol || "",
           collateralType: collateralType || supportedCollateralTypes[0],
-          collateralValue:
-            collateralType?.price?.mul(item.collateralAmount) ||
-            BigNumber.from(0),
         };
       });
     },
@@ -52,19 +54,42 @@ export default function Account() {
   useSynthetixProxyEvent({
     eventName: "DelegationUpdated",
     listener: event => {
-      const [_lid, fundId, userAccountId, collateralType, amount, _leverage] =
-        event;
+      const [
+        _lid,
+        fundId,
+        userAccountId,
+        collateralTypeAddress,
+        collateralAmount,
+        _leverage,
+      ] = event;
 
       if (accountId === userAccountId.toString()) {
         // TODO: change StakingPositions to be an object for easy lookup
         const positionItemIdx = stakingPositions.findIndex(position =>
           position.fundId.eq(fundId)
         );
-        stakingPositions[positionItemIdx] = {
-          ...stakingPositions[positionItemIdx],
-          collateralAmount: amount,
-        };
-        setStakingPositions([...stakingPositions]);
+        // create new copy to trigger re-render when setting positions
+        if (positionItemIdx === -1) {
+          const collateralType = getCollateralType(
+            collateralTypeAddress,
+            supportedCollateralTypes
+          );
+          setStakingPositions([
+            ...stakingPositions,
+            {
+              fundId,
+              fundName: fundsData[fundId.toString()].name,
+              collateralAmount,
+              collateralType: collateralType || supportedCollateralTypes[0],
+            },
+          ]);
+        } else {
+          stakingPositions[positionItemIdx] = {
+            ...stakingPositions[positionItemIdx],
+            collateralAmount,
+          };
+          setStakingPositions([...stakingPositions]);
+        }
       }
     },
   });

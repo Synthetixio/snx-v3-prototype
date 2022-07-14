@@ -60,12 +60,17 @@ export default function Stake({
   const { chain: activeChain } = useNetwork();
   const hasWalletConnected = Boolean(activeChain);
   const [collateralTypes] = useRecoilState(collateralTypesState);
+
+  const { data: fundId } = useSynthetixRead({
+    functionName: "getPreferredFund",
+  });
   // on loading dropdown and token amount maybe use https://chakra-ui.com/docs/components/feedback/skeleton
   const toast = useToast();
   const methods = useForm<FormType>({
     mode: "onChange",
     defaultValues: {
       collateralType: collateralTypes[0],
+      fundId: fundId?.toString() ?? "0",
     },
   });
   const { handleSubmit, register, formState, reset, control } = methods;
@@ -127,10 +132,6 @@ export default function Stake({
   }; // ten digit numberf
   const newAccountId = useMemo(() => generateAccountId(), []);
 
-  const { data: fundId } = useSynthetixRead({
-    functionName: "getPreferredFund",
-  });
-
   const calls: MulticallCall[][] = useMemo(() => {
     const id = accountId ?? newAccountId;
     const preferredFundStakingPosition = stakingPositions.find(
@@ -155,7 +156,7 @@ export default function Stake({
         snxProxy!.contract,
         "delegateCollateral",
         [
-          fundId || 0,
+          Boolean(accountId) ? selectedFundId : fundId || 0,
           id,
           selectedCollateralType.address,
           amountToDelegate || 0,
@@ -173,6 +174,7 @@ export default function Stake({
     fundId,
     newAccountId,
     selectedCollateralType.address,
+    selectedFundId,
     snxProxy,
     stakingPositions,
   ]);
@@ -202,6 +204,7 @@ export default function Stake({
       toast.closeAll();
       reset({
         collateralType: selectedCollateralType,
+        fundId: selectedFundId,
         amount: "",
       });
       refetchAllowance().then(() => {
