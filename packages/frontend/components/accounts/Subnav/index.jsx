@@ -70,7 +70,7 @@ export default function Subnav() {
         </Menu>
       </div>
 
-      {router.route.split("/").length == 3 && (
+      {false && router.route.split("/").length == 3 && (
         <NextLink href={`/accounts/${id}/settings`} passHref>
           <Link
             ml="auto"
@@ -84,18 +84,19 @@ export default function Subnav() {
           </Link>
         </NextLink>
       )}
-
-      <NextLink href={`/accounts/${id}`} passHref>
-        <Link
-          ml="auto"
-          fontSize="xs"
-          fontWeight="normal"
-          color="blue.400"
-          _hover={{ textDecoration: "none" }}
-        >
-          <ChevronLeftIcon transform="translateY(-1px)" /> Return to overview
-        </Link>
-      </NextLink>
+      {false && (
+        <NextLink href={`/accounts/${id}`} passHref>
+          <Link
+            ml="auto"
+            fontSize="xs"
+            fontWeight="normal"
+            color="blue.400"
+            _hover={{ textDecoration: "none" }}
+          >
+            <ChevronLeftIcon transform="translateY(-1px)" /> Return to overview
+          </Link>
+        </NextLink>
+      )}
     </Flex>
   );
 }

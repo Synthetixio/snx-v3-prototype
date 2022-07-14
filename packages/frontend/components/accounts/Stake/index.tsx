@@ -52,10 +52,10 @@ type FormType = {
 
 export default function Stake({
   accountId,
-  stakingPositions,
+  stakingPositions = [],
 }: {
   accountId?: string;
-  stakingPositions: StakingPositionType[];
+  stakingPositions?: StakingPositionType[];
 }) {
   const { chain: activeChain } = useNetwork();
   const hasWalletConnected = Boolean(activeChain);
@@ -365,16 +365,6 @@ export default function Stake({
 
               {Boolean(accountId) ? (
                 <Text fontSize="xs" textAlign="right" ml="auto">
-                  Receive an snxAccount token{" "}
-                  <Tooltip
-                    textAlign="center"
-                    label="You will be minted an NFT that represents your account. You can easily transfer it between wallets."
-                  >
-                    <InfoOutlineIcon transform="translateY(-1.5px)" />
-                  </Tooltip>
-                </Text>
-              ) : (
-                <Text fontSize="xs" textAlign="right" ml="auto">
                   Fund:{" "}
                   {selectedFundId
                     ? fundsData[selectedFundId]
@@ -387,6 +377,16 @@ export default function Stake({
                       style={{ transform: "translateY(-2px)" }}
                     />
                   </Link>
+                </Text>
+              ) : (
+                <Text fontSize="xs" textAlign="right" ml="auto">
+                  Receive an snxAccount token{" "}
+                  <Tooltip
+                    textAlign="center"
+                    label="You will be minted an NFT that represents your account. You can easily transfer it between wallets."
+                  >
+                    <InfoOutlineIcon transform="translateY(-1.5px)" />
+                  </Tooltip>
                 </Text>
               )}
             </Flex>

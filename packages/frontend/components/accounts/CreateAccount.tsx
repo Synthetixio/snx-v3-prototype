@@ -15,7 +15,7 @@ export default function CreateAccount() {
           Learn more
         </Link>
       </Text>
-      <Stake createAccount />
+      <Stake />
     </>
   );
 }
