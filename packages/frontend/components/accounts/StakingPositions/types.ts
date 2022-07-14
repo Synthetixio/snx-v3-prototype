@@ -1,5 +1,15 @@
-import { CollateralType } from '../../../utils/constants';
-import { BigNumber } from 'ethers';
+import { CollateralType } from "../../../utils/constants";
+import { BigNumber } from "ethers";
+
+export type StakingPositionOnChainType = {
+  accountId: BigNumber;
+  collateralType: string;
+  fundId: BigNumber;
+  collateralAmount: BigNumber;
+  shares: BigNumber;
+  initialDebt: BigNumber;
+  leverage: BigNumber;
+};
 
 // This is a view of each LiquidityItem (https://github.com/Synthetixio/synthetix-v3/blob/feature-v3-mvp/packages/synthetix-main/contracts/interfaces/IFundModuleStorage.sol)
 // (We should consider consistent naming for this and the front-end.)
@@ -9,7 +19,7 @@ export type StakingPositionType = {
   id?: number;
 
   // This is the fundId on the LiquidityItem struct
-  fundId: number;
+  fundId: BigNumber;
 
   // This would be retrieved from recoil most likely. We'll probably want a similar set up to CollateralTypes for the Preferred/Approved funds.
   fundName: string;
