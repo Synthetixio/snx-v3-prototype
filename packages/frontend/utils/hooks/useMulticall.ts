@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useContractWrite, useWaitForTransaction } from "wagmi";
 
 // contact, funcion name, arguments
+// [ethers.Contract, functionName, arguments, overrides (i.e value, gasLimit, gasPrice)]
 export type MulticallCall = [Contract, string, any[], CallOverrides?];
 
 type ContractWriteParams = Parameters<typeof useContractWrite>;

@@ -35,6 +35,8 @@ export function NetworkController() {
           openConnectModal,
           mounted,
         } = data;
+
+        console.log(data);
         return (
           <Flex
             {...(!mounted && {

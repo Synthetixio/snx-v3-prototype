@@ -12,7 +12,7 @@ import { utils } from "ethers";
 import { BigNumber } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
-import { useContractReads, useProvider } from "wagmi";
+import { useContractReads, useNetwork, useProvider } from "wagmi";
 
 type CollateralMetadataType = Array<[string, BigNumber, BigNumber, boolean]>;
 
@@ -36,45 +36,32 @@ export const useCollateralTypes = () => {
     onError(err) {
       // TODO: throw up a toast
       // report to sentry or some other tool
-      console.log("ERR", err);
     },
     onSuccess(data) {
-      setSupportedCollateralTypes(localCollateralTypes(snxContract!.chainId));
+      const mappedCollateralTypes = localCollateralTypes(
+        snxContract!.chainId
+      ).map(coll => {
+        const onChainCollType = data.find(d => d.tokenAddress === coll.address);
+        return {
+          ...coll,
+          symbol: coll.symbol.toLowerCase(),
+          targetCRatio: onChainCollType?.targetCRatio,
+          minimumCRatio: onChainCollType?.minimumCRatio,
+        };
+      });
+      setSupportedCollateralTypes(mappedCollateralTypes);
     },
   });
 
-  const getCollateralTypeCalls = supportedCollateralTypes.map(ct => ({
-    addressOrName: snxContract!.address,
-    contractInterface: snxContract!.abi,
-    functionName: "getCollateralType",
-    args: [ct.address],
-  }));
-
-  // This takes the list of supported collateral types from recoil and enriches them with the on-chain about them from the `getCollateralType` function.
-  const { data: collateralTypeMetadata, refetch: fetchCollateralData } =
-    useContractReads({
-      contracts: getCollateralTypeCalls,
-      enabled: false,
-      onSuccess: data => {
-        setSupportedCollateralTypes(
-          supportedCollateralTypes.map((ct, i) => ({
-            ...ct,
-            targetCRatio: data[i][1],
-            minimumCRatio: data[i][2],
-          }))
-        );
-      },
-    });
-
   // This fetches price and price decimal data for the collateral types when the above hook recieves a response
   const priceCalls = useMemo(() => {
-    if (!collateralTypeMetadata) {
+    if (!supportedCollateralTypes) {
       return [];
     }
 
-    const latestRoundData = collateralTypeMetadata.map((ct, i) => {
-      let symbol = supportedCollateralTypes[i].symbol.toLowerCase();
-      if (symbol == "eth") symbol = "weth";
+    const latestRoundData = supportedCollateralTypes.map(ct => {
+      const symbol = ct.symbol === "eth" ? "weth" : ct.symbol;
+
       const aggregatorContract = getContract(
         `aggregator_${symbol}.aggregator`,
         provider,
@@ -84,12 +71,13 @@ export const useCollateralTypes = () => {
         addressOrName: aggregatorContract!.address,
         contractInterface: aggregatorContract!.abi,
         functionName: "latestRoundData",
+        chainId: aggregatorContract?.chainId,
       };
     });
 
-    const priceDecimals = collateralTypeMetadata.map((ct, i) => {
-      let symbol = supportedCollateralTypes[i].symbol.toLowerCase();
-      if (symbol == "eth") symbol = "weth";
+    const priceDecimals = supportedCollateralTypes.map(ct => {
+      let symbol = ct.symbol.toLowerCase();
+      if (symbol === "eth") symbol = "weth";
       const aggregatorContract = getContract(
         `aggregator_${symbol}.aggregator`,
         provider,
@@ -99,16 +87,17 @@ export const useCollateralTypes = () => {
         addressOrName: aggregatorContract!.address,
         contractInterface: aggregatorContract!.abi,
         functionName: "decimals",
+        chainId: aggregatorContract?.chainId,
       };
     });
 
     return [...latestRoundData, ...priceDecimals];
-  }, [collateralTypeMetadata, provider, snxContract, supportedCollateralTypes]);
+  }, [supportedCollateralTypes, provider, snxContract]);
 
   // After the price data is fetched, set the data in recoil and turn off the loading state.
-  const { refetch: fetchPriceData } = useContractReads({
+  useContractReads({
     contracts: priceCalls,
-    enabled: false,
+    enabled: Boolean(supportedCollateralTypes.length),
     onSuccess: data => {
       setIsLoading(false);
       setSupportedCollateralTypes(
@@ -132,12 +121,6 @@ export const useCollateralTypes = () => {
       );
     },
   });
-
-  useEffect(() => {
-    if (Boolean(supportedCollateralTypes.length)) {
-      fetchCollateralData().then(() => fetchPriceData());
-    }
-  }, [fetchCollateralData, fetchPriceData, supportedCollateralTypes.length]);
 
   return {
     isLoading,

@@ -2,7 +2,10 @@ name = "synthetix-periphery"
 description = "Synthetix system supplemental contracts"
 
 [setting.owner]
-defaultValue = "0x9b12d2A80fad64A5499e70bf74447C352c99fD46"
+defaultValue = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+
+[setting.me]
+defaultValue = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
 
 [setting.erc20_version]
 defaultValue = "1.0.0"
@@ -11,7 +14,7 @@ defaultValue = "1.0.0"
 defaultValue = "1.0.0"
 
 [setting.chainlink_version]
-defaultValue = "0.1.0"
+defaultValue = "0.7-mock"
 
 [setting.rate_decimals]
 defaultValue = "6"
@@ -54,7 +57,7 @@ options.decimals = "<%= settings.rate_decimals %>"
 options.rate = "<%= settings.weth_rate %>"
 
 [import.synthetix]
-source = "synthetix-main:<%= settings.synthetix_version %>"
+source = "synthetix-main-sunny-2:<%= settings.synthetix_version %>"
 options.owner = "<%= settings.owner %>"
 
 [contract.Multicall]
@@ -102,29 +105,29 @@ args = [
 ]
 depends = ["import.synthetix", "contract.WETH", "import.aggregator_weth"]
 
-# [invoke.mint_snx]
-# target = ["snx.token"]
-# func = "mint"
-# args = [
-#     "<%= settings.owner %>",
-#     "200000000000000000000"
-# ]
-# depends=["import.snx"]
-# 
-# [invoke.createPreferredFund]
-# target = ["synthetix.Proxy"]
-# func = "createFund"
-# args = [
-#     1,
-#     "<%= settings.owner %>",
-# ]
-# depends=["import.synthetix"]
-# 
-# [invoke.setPreferredFund]
-# target = ["synthetix.Proxy"]
-# func = "setPreferredFund"
-# from = "<%= settings.owner %>"
-# args = [
-#     1,
-# ]
-# depends=["invoke.createPreferredFund"]
+[invoke.mint_snx]
+target = ["snx.token"]
+func = "mint"
+args = [
+    "<%= settings.me %>",
+    "200000000000000000000"
+]
+depends=["import.snx", "import.synthetix"]
+
+[invoke.createPreferredFund]
+target = ["synthetix.Proxy"]
+func = "createFund"
+args = [
+    1,
+    "<%= settings.owner %>",
+]
+depends=["import.synthetix"]
+
+[invoke.setPreferredFund]
+target = ["synthetix.Proxy"]
+func = "setPreferredFund"
+from = "<%= settings.owner %>"
+args = [
+    1,
+]
+depends=["invoke.createPreferredFund"]

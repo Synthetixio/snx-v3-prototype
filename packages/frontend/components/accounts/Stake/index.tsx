@@ -1,4 +1,8 @@
-import { chainIdState, collateralTypesState } from "../../../state";
+import {
+  accountsState,
+  chainIdState,
+  collateralTypesState,
+} from "../../../state";
 import {
   CollateralType,
   fundsData,
@@ -77,7 +81,6 @@ export default function Stake({
 
   const collateralContract = useContract("snx.token");
   const snxProxy = useContract("synthetix.Proxy");
-  const accountToken = useContract("synthetix.Account.init_account_Proxy.0");
   const {
     isOpen: isOpenFund,
     onOpen: onOpenFund,
@@ -105,6 +108,7 @@ export default function Stake({
     selectedCollateralType.symbol === chain?.nativeCurrency?.symbol;
 
   const { address: accountAddress } = useAccount();
+  const [{ refetchAccounts }] = useRecoilState(accountsState);
   const { data: balanceData } = useBalance({
     addressOrName: accountAddress,
     token: isNativeCurrency ? undefined : selectedCollateralType.address,
@@ -200,30 +204,32 @@ export default function Stake({
   }
 
   const multiTxn = useMulticall(calls, overrides, {
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.closeAll();
       reset({
         collateralType: selectedCollateralType,
         fundId: selectedFundId,
         amount: "",
       });
-      refetchAllowance().then(() => {
-        if (!Boolean(accountId)) {
-          router.push({
-            pathname: `/accounts/${newAccountId}`,
-            query: router.query,
-          });
-        } else {
-          // TODO: get language from noah
-          toast({
-            title: "Success",
-            description: "Your staked collateral amounts have been updated.",
-            status: "success",
-            duration: 5000,
-            isClosable: true,
-          });
-        }
-      });
+      await Promise.all([
+        refetchAllowance(),
+        refetchAccounts!({ cancelRefetch: Boolean(accountId) }),
+      ]);
+      if (!Boolean(accountId)) {
+        router.push({
+          pathname: `/accounts/${newAccountId}`,
+          query: router.query,
+        });
+      } else {
+        // TODO: get language from noah
+        toast({
+          title: "Success",
+          description: "Your staked collateral amounts have been updated.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     },
     onError: e => {
       toast({
@@ -421,7 +427,7 @@ export default function Stake({
           </ModalContent>
         </Modal>
       </FormProvider>
-      {Boolean(accountId) && (
+      {!Boolean(accountId) && (
         <HowItWorks selectedCollateralType={selectedCollateralType} />
       )}
       {/*

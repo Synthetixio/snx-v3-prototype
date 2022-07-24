@@ -9,7 +9,6 @@ import { collateralTypesState } from "../../../state";
 import { CollateralType, fundsData } from "../../../utils/constants";
 import { useSynthetixProxyEvent, useSynthetixRead } from "../../../utils/hooks";
 import { Container, Box, Heading } from "@chakra-ui/react";
-import { BigNumber } from "ethers";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";

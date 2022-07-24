@@ -71,7 +71,6 @@ export const fundsData: Record<string, { name: string }> = {
 };
 
 export const supportedChains = [
-  chain.rinkeby,
   {
     ...chain.hardhat,
     multicall: {
@@ -79,6 +78,7 @@ export const supportedChains = [
       blockCreated: 10228837,
     },
   },
+  chain.rinkeby,
 ];
 
 export const getChainById = (chainId: number) =>
@@ -96,4 +96,5 @@ export const MAINNET_CHAIN_ID = 1;
 export const LOCALHOST_CHAIN_ID = chain.hardhat.id;
 
 export const CONTRACT_SYNTHETIX_PROXY = "synthetix.Proxy";
+export const CONTRACT_ACCOUNT = "synthetix.Account";
 export const CONTRACT_MULTICALL = "Multicall";
