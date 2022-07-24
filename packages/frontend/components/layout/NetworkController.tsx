@@ -10,6 +10,11 @@ import {
   MenuItem,
 } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import {
+  useConnectModal,
+  useAccountModal,
+  useChainModal,
+} from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
@@ -20,6 +25,8 @@ export function NetworkController() {
   const router = useRouter();
   const { chains: networkChains } = useNetwork();
   const [localChainId] = useRecoilState(chainIdState);
+
+  const { openConnectModal } = useConnectModal();
 
   const chains = networkChains.length ? networkChains : supportedChains;
   const localChain = chains.find(chain => chain.id === localChainId);
@@ -36,7 +43,6 @@ export function NetworkController() {
           mounted,
         } = data;
 
-        console.log(data);
         return (
           <Flex
             {...(!mounted && {

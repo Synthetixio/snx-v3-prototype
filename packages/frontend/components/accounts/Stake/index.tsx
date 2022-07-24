@@ -35,6 +35,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { BigNumber, CallOverrides, ethers } from "ethers";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
@@ -88,6 +89,7 @@ export default function Stake({
   } = useDisclosure();
 
   const router = useRouter();
+  const { openConnectModal } = useConnectModal();
 
   const [localChainId] = useRecoilState(chainIdState);
   const chain = getChainById(localChainId);
@@ -347,20 +349,32 @@ export default function Stake({
                 <IconButton onClick={onOpenLock} ml="3" bg="transparent" border="1px solid rgba(255,255,255,0.33)" size="lg" aria-label='Configure Lock' icon={<LockIcon />} />
               </Tooltip>
             */}
-              <Button
-                isLoading={multiTxn.status === "pending"}
-                isDisabled={!formState.isValid}
-                size="lg"
-                colorScheme="blue"
-                ml="4"
-                px="8"
-                type="submit"
-              >
-                {/* @ts-ignore */}
-                {formState.errors.amount?.type === "sufficientFunds"
-                  ? "Insufficient Funds"
-                  : "Stake"}
-              </Button>
+              {hasWalletConnected ? (
+                <Button
+                  isLoading={multiTxn.status === "pending"}
+                  isDisabled={!formState.isValid}
+                  size="lg"
+                  colorScheme="blue"
+                  ml="4"
+                  px="8"
+                  type="submit"
+                >
+                  {/* @ts-ignore */}
+                  {formState.errors.amount?.type === "sufficientFunds"
+                    ? "Insufficient Funds"
+                    : "Stake"}
+                </Button>
+              ) : (
+                <Button
+                  size="lg"
+                  colorScheme="blue"
+                  ml="4"
+                  px="8"
+                  onClick={() => openConnectModal && openConnectModal()}
+                >
+                  Connect Wallet
+                </Button>
+              )}
             </Flex>
 
             <Flex alignItems="center">
