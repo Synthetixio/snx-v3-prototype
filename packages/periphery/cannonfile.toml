@@ -4,9 +4,6 @@ description = "Synthetix system supplemental contracts"
 [setting.owner]
 defaultValue = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
 
-[setting.me]
-defaultValue = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
-
 [setting.erc20_version]
 defaultValue = "1.0.0"
 
@@ -14,7 +11,7 @@ defaultValue = "1.0.0"
 defaultValue = "1.0.0"
 
 [setting.chainlink_version]
-defaultValue = "0.7-mock"
+defaultValue = "0.1.0"
 
 [setting.rate_decimals]
 defaultValue = "6"
@@ -57,7 +54,7 @@ options.decimals = "<%= settings.rate_decimals %>"
 options.rate = "<%= settings.weth_rate %>"
 
 [import.synthetix]
-source = "synthetix-main-sunny-2:<%= settings.synthetix_version %>"
+source = "synthetix-main:<%= settings.synthetix_version %>"
 options.owner = "<%= settings.owner %>"
 
 [contract.Multicall]
@@ -109,7 +106,8 @@ depends = ["import.synthetix", "contract.WETH", "import.aggregator_weth"]
 target = ["snx.token"]
 func = "mint"
 args = [
-    "<%= settings.me %>",
+    # change to your address for some SNX
+    "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
     "200000000000000000000"
 ]
 depends=["import.snx", "import.synthetix"]

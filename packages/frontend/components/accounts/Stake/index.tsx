@@ -143,6 +143,7 @@ export default function Stake({
     const preferredFundStakingPosition = stakingPositions.find(
       position => fundId && position.fundId.eq(fundId)
     );
+
     const amountToDelegate = Boolean(accountId)
       ? preferredFundStakingPosition?.collateralAmount.add(amountBN)
       : amountBN;
@@ -162,8 +163,8 @@ export default function Stake({
         snxProxy!.contract,
         "delegateCollateral",
         [
-          Boolean(accountId) ? selectedFundId : fundId || 0,
           id,
+          Boolean(accountId) ? selectedFundId : fundId || 0,
           selectedCollateralType.address,
           amountToDelegate || 0,
           ethers.constants.One,

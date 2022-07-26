@@ -106,11 +106,10 @@ export const useCollateralTypes = () => {
           // @ts-ignore
           const priceDecimals = data[i + supportedCollateralTypes.length];
           const priceData = data[i];
+
           return {
             ...ct,
-            price: Array.isArray(priceData)
-              ? priceData[1] || utils.formatUnits(1, priceDecimals)
-              : BigNumber.from(0),
+            price: Array.isArray(priceData) ? priceData[1] : BigNumber.from(0),
             priceDecimals: Array.isArray(priceDecimals)
               ? 0
               : // wagmi types broken
