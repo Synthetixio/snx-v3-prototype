@@ -16,7 +16,7 @@ export default function Balance({ balance }: { balance: BigNumber }) {
       {parseFloat(
         utils.formatUnits(balance, collateralType.decimals)
       ).toLocaleString()}{" "}
-      {collateralType.symbol}
+      {collateralType.symbol.toUpperCase()}
       {balance.eq(0) ? (
         <Link>
           <Badge

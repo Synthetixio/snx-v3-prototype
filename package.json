@@ -19,7 +19,6 @@
     "node": ">=16.0.0"
   },
   "devDependencies": {
-    "@usecannon/cli": "^1.0.0",
     "prettier": "^2.7.1"
   }
 }

@@ -1,4 +1,4 @@
-import { useCollateralTypes } from "../utils/hooks/useCollateralTypes";
+import { useOwnerAccounts, useCollateralTypes } from "../utils/hooks";
 import { Spinner } from "@chakra-ui/react";
 import { FC } from "react";
 
@@ -8,10 +8,9 @@ type Props = {
 
 export const Initializer: FC<Props> = ({ children }) => {
   const { isLoading: isLoadingCollateralTypes } = useCollateralTypes();
+  const { isLoading: isLoadingOwnerAccounts } = useOwnerAccounts();
 
-  return isLoadingCollateralTypes ? (
-    <Spinner mx="auto" my="auto" />
-  ) : (
-    <>{children}</>
-  );
+  const isLoading = isLoadingCollateralTypes || isLoadingOwnerAccounts;
+
+  return isLoading ? <Spinner mx="auto" my="auto" /> : <>{children}</>;
 };

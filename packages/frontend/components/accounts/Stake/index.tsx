@@ -1,4 +1,8 @@
-import { chainIdState, collateralTypesState } from "../../../state";
+import {
+  accountsState,
+  chainIdState,
+  collateralTypesState,
+} from "../../../state";
 import {
   CollateralType,
   fundsData,
@@ -31,6 +35,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { BigNumber, CallOverrides, ethers } from "ethers";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
@@ -77,7 +82,6 @@ export default function Stake({
 
   const collateralContract = useContract("snx.token");
   const snxProxy = useContract("synthetix.Proxy");
-  const accountToken = useContract("synthetix.Account.init_account_Proxy.0");
   const {
     isOpen: isOpenFund,
     onOpen: onOpenFund,
@@ -85,6 +89,7 @@ export default function Stake({
   } = useDisclosure();
 
   const router = useRouter();
+  const { openConnectModal } = useConnectModal();
 
   const [localChainId] = useRecoilState(chainIdState);
   const chain = getChainById(localChainId);
@@ -105,6 +110,7 @@ export default function Stake({
     selectedCollateralType.symbol === chain?.nativeCurrency?.symbol;
 
   const { address: accountAddress } = useAccount();
+  const [{ refetchAccounts }] = useRecoilState(accountsState);
   const { data: balanceData } = useBalance({
     addressOrName: accountAddress,
     token: isNativeCurrency ? undefined : selectedCollateralType.address,
@@ -137,6 +143,7 @@ export default function Stake({
     const preferredFundStakingPosition = stakingPositions.find(
       position => fundId && position.fundId.eq(fundId)
     );
+
     const amountToDelegate = Boolean(accountId)
       ? preferredFundStakingPosition?.collateralAmount.add(amountBN)
       : amountBN;
@@ -156,8 +163,8 @@ export default function Stake({
         snxProxy!.contract,
         "delegateCollateral",
         [
-          Boolean(accountId) ? selectedFundId : fundId || 0,
           id,
+          Boolean(accountId) ? selectedFundId : fundId || 0,
           selectedCollateralType.address,
           amountToDelegate || 0,
           ethers.constants.One,
@@ -200,30 +207,32 @@ export default function Stake({
   }
 
   const multiTxn = useMulticall(calls, overrides, {
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.closeAll();
       reset({
         collateralType: selectedCollateralType,
         fundId: selectedFundId,
         amount: "",
       });
-      refetchAllowance().then(() => {
-        if (!Boolean(accountId)) {
-          router.push({
-            pathname: `/accounts/${newAccountId}`,
-            query: router.query,
-          });
-        } else {
-          // TODO: get language from noah
-          toast({
-            title: "Success",
-            description: "Your staked collateral amounts have been updated.",
-            status: "success",
-            duration: 5000,
-            isClosable: true,
-          });
-        }
-      });
+      await Promise.all([
+        refetchAllowance(),
+        refetchAccounts!({ cancelRefetch: Boolean(accountId) }),
+      ]);
+      if (!Boolean(accountId)) {
+        router.push({
+          pathname: `/accounts/${newAccountId}`,
+          query: router.query,
+        });
+      } else {
+        // TODO: get language from noah
+        toast({
+          title: "Success",
+          description: "Your staked collateral amounts have been updated.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     },
     onError: e => {
       toast({
@@ -341,20 +350,32 @@ export default function Stake({
                 <IconButton onClick={onOpenLock} ml="3" bg="transparent" border="1px solid rgba(255,255,255,0.33)" size="lg" aria-label='Configure Lock' icon={<LockIcon />} />
               </Tooltip>
             */}
-              <Button
-                isLoading={multiTxn.status === "pending"}
-                isDisabled={!formState.isValid}
-                size="lg"
-                colorScheme="blue"
-                ml="4"
-                px="8"
-                type="submit"
-              >
-                {/* @ts-ignore */}
-                {formState.errors.amount?.type === "sufficientFunds"
-                  ? "Insufficient Funds"
-                  : "Stake"}
-              </Button>
+              {hasWalletConnected ? (
+                <Button
+                  isLoading={multiTxn.status === "pending"}
+                  isDisabled={!formState.isValid}
+                  size="lg"
+                  colorScheme="blue"
+                  ml="4"
+                  px="8"
+                  type="submit"
+                >
+                  {/* @ts-ignore */}
+                  {formState.errors.amount?.type === "sufficientFunds"
+                    ? "Insufficient Funds"
+                    : "Stake"}
+                </Button>
+              ) : (
+                <Button
+                  size="lg"
+                  colorScheme="blue"
+                  ml="4"
+                  px="8"
+                  onClick={() => openConnectModal && openConnectModal()}
+                >
+                  Connect Wallet
+                </Button>
+              )}
             </Flex>
 
             <Flex alignItems="center">
@@ -421,7 +442,7 @@ export default function Stake({
           </ModalContent>
         </Modal>
       </FormProvider>
-      {Boolean(accountId) && (
+      {!Boolean(accountId) && (
         <HowItWorks selectedCollateralType={selectedCollateralType} />
       )}
       {/*

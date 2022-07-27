@@ -2,7 +2,7 @@ name = "synthetix-periphery"
 description = "Synthetix system supplemental contracts"
 
 [setting.owner]
-defaultValue = "0x9b12d2A80fad64A5499e70bf74447C352c99fD46"
+defaultValue = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
 
 [setting.erc20_version]
 defaultValue = "1.0.0"
@@ -102,29 +102,30 @@ args = [
 ]
 depends = ["import.synthetix", "contract.WETH", "import.aggregator_weth"]
 
-# [invoke.mint_snx]
-# target = ["snx.token"]
-# func = "mint"
-# args = [
-#     "<%= settings.owner %>",
-#     "200000000000000000000"
-# ]
-# depends=["import.snx"]
-# 
-# [invoke.createPreferredFund]
-# target = ["synthetix.Proxy"]
-# func = "createFund"
-# args = [
-#     1,
-#     "<%= settings.owner %>",
-# ]
-# depends=["import.synthetix"]
-# 
-# [invoke.setPreferredFund]
-# target = ["synthetix.Proxy"]
-# func = "setPreferredFund"
-# from = "<%= settings.owner %>"
-# args = [
-#     1,
-# ]
-# depends=["invoke.createPreferredFund"]
+[invoke.mint_snx]
+target = ["snx.token"]
+func = "mint"
+args = [
+    # change to your address for some SNX
+    "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "200000000000000000000"
+]
+depends=["import.snx", "import.synthetix"]
+
+[invoke.createPreferredFund]
+target = ["synthetix.Proxy"]
+func = "createFund"
+args = [
+    1,
+    "<%= settings.owner %>",
+]
+depends=["import.synthetix"]
+
+[invoke.setPreferredFund]
+target = ["synthetix.Proxy"]
+func = "setPreferredFund"
+from = "<%= settings.owner %>"
+args = [
+    1,
+]
+depends=["invoke.createPreferredFund"]

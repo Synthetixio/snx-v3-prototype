@@ -1,7 +1,9 @@
+import { accountsState } from "../../../state";
 import {
   SettingsIcon,
   ChevronLeftIcon,
   ChevronDownIcon,
+  CheckIcon,
 } from "@chakra-ui/icons";
 import {
   Text,
@@ -14,14 +16,16 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
 
 export default function Subnav() {
   const router = useRouter();
+  const [{ accounts: userAccounts }] = useRecoilState(accountsState);
   const { id } = router.query;
 
   return (
     <Flex mb="6" alignItems="center">
-      <div fontWeight="semibold" fontSize="md">
+      <div style={{ fontWeight: "semibold", fontSize: "md" }}>
         {id ? `Account #${id}` : `Create Account`}
         <Menu>
           <MenuButton ml="1" transform="translateY(-1px)">
@@ -33,30 +37,54 @@ export default function Subnav() {
             bg="black"
             border="1px solid rgba(255,255,255,0.33)"
           >
-            {/*
-              TODO: List all accounts owned by connected wallet here
+            {userAccounts.map(account => {
+              const isCurrentAccount = id === account.toString();
+              const menuItem = (
+                <MenuItem
+                  key={account}
+                  _hover={{ bg: "gray.800" }}
+                  _focus={{ bg: "gray.800" }}
+                  _active={{ bg: "gray.800" }}
+                >
+                  <Flex alignItems="center">
+                    {isCurrentAccount && <CheckIcon marginRight={1} />}
 
+                    {account}
+                  </Flex>
+                </MenuItem>
+              );
+
+              return isCurrentAccount ? (
+                menuItem
+              ) : (
+                <NextLink
+                  href={{
+                    pathname: `/accounts/${account}`,
+                    query: {
+                      chain: router.query.chain,
+                    },
+                  }}
+                  key={account}
+                  passHref
+                >
+                  {menuItem}
+                </NextLink>
+              );
+            })}
             <MenuItem
               _hover={{ bg: "gray.800" }}
               _focus={{ bg: "gray.800" }}
               _active={{ bg: "gray.800" }}
             >
-              Account #123
-            </MenuItem>
-            <MenuItem
-              _hover={{ bg: "gray.800" }}
-              _focus={{ bg: "gray.800" }}
-              _active={{ bg: "gray.800" }}
-            >
-              Account #321
-            </MenuItem>
-        */}
-            <MenuItem
-              _hover={{ bg: "gray.800" }}
-              _focus={{ bg: "gray.800" }}
-              _active={{ bg: "gray.800" }}
-            >
-              <NextLink href={"/accounts/create"} passHref>
+              <NextLink
+                href={{
+                  pathname: "/accounts/create",
+                  query: {
+                    chain: router.query.chain,
+                  },
+                }}
+                passHref
+              >
                 <Link
                   _focus={{ boxShadow: "none" }}
                   _hover={{ textDecoration: "none" }}

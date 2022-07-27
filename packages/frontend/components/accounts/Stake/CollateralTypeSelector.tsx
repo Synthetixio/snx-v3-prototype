@@ -50,7 +50,9 @@ export default function CollateralTypeSelector({ collateralTypes }: Props) {
               src={selectedCollateralType?.logoURI}
             />
           </Box>
-          <Text fontWeight="600">{selectedCollateralType?.symbol}</Text>
+          <Text fontWeight="600">
+            {selectedCollateralType?.symbol.toUpperCase()}
+          </Text>
           <ChevronDownIcon opacity="0.66" w="5" h="5" ml="4" mr="2" />
         </Flex>
       </MenuButton>
@@ -92,7 +94,9 @@ export default function CollateralTypeSelector({ collateralTypes }: Props) {
                   src={collateralType?.logoURI}
                 />
               </Box>
-              <Text fontWeight="600">{collateralType?.symbol}</Text>
+              <Text fontWeight="600">
+                {collateralType?.symbol.toUpperCase()}
+              </Text>
             </Flex>
           </MenuItem>
         ))}
