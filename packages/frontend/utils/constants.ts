@@ -71,6 +71,7 @@ export const fundsData: Record<string, { name: string }> = {
 };
 
 export const supportedChains = [
+  chain.goerli,
   {
     ...chain.hardhat,
     multicall: {
@@ -78,7 +79,6 @@ export const supportedChains = [
       blockCreated: 10228837,
     },
   },
-  chain.goerli,
 ];
 
 export const getChainById = (chainId: number) =>
