@@ -78,7 +78,7 @@ export const supportedChains = [
       blockCreated: 10228837,
     },
   },
-  chain.rinkeby,
+  chain.goerli,
 ];
 
 export const getChainById = (chainId: number) =>
