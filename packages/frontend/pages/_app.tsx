@@ -3,7 +3,6 @@ import { NetworkChain } from "../components/NetworkChain";
 import Footer from "../components/layout/Footer";
 import Header from "../components/layout/Header";
 import "../styles/index.css";
-import theme from "../styles/theme";
 import { supportedChains } from "../utils/constants";
 import { ChakraProvider, Flex, Box } from "@chakra-ui/react";
 import {
@@ -14,6 +13,7 @@ import {
 import "@rainbow-me/rainbowkit/styles.css";
 import { AppProps } from "next/app";
 import { RecoilRoot } from "recoil";
+import { theme, Fonts } from "ui";
 import { createClient, WagmiConfig, configureChains } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 
@@ -45,6 +45,7 @@ function Synthetix({ Component, pageProps }: AppProps) {
           })}
           chains={chains}
         >
+          <Fonts />
           <ChakraProvider theme={theme}>
             <Box
               as="main"

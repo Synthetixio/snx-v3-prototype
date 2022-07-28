@@ -33,6 +33,7 @@
     "react-dom": "18.1.0",
     "react-hook-form": "^7.31.3",
     "recoil": "^0.7.3-alpha.2",
-    "wagmi": "^0.5.9"
+    "wagmi": "^0.5.9",
+    "ui": "../ui"
   }
 }
