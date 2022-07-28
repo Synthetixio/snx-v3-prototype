@@ -34,6 +34,7 @@ export const useCollateralTypes = () => {
     functionName: "getCollateralTypes",
     args: true,
     onError(err) {
+      console.error("ERROR", err);
       // TODO: throw up a toast
       // report to sentry or some other tool
     },
