@@ -31,6 +31,8 @@ export function NetworkController() {
   const chains = networkChains.length ? networkChains : supportedChains;
   const localChain = chains.find(chain => chain.id === localChainId);
 
+  return null;
+
   return (
     <ConnectButton.Custom>
       {data => {

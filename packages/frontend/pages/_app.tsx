@@ -37,7 +37,7 @@ function Synthetix({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
       <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider
+        {/* <RainbowKitProvider
           theme={darkTheme({
             accentColor: "rgb(49, 130, 206)",
             accentColorForeground: "white",
@@ -45,28 +45,28 @@ function Synthetix({ Component, pageProps }: AppProps) {
             fontStack: "system",
           })}
           chains={chains}
-        >
-          <ChakraProvider theme={theme}>
-            <Box
-              as="main"
-              background="black"
-              minHeight="100vh"
-              color="rgba(255,255,255,0.85)"
-              display="flex"
-              flexDirection="column"
-            >
-              <Flex flex="1" flexDirection="column">
-                <NetworkChain>
-                  <Initializer>
-                    <Header />
-                    <Component {...pageProps} />
-                  </Initializer>
-                </NetworkChain>
-              </Flex>
-              <Footer />
-            </Box>
-          </ChakraProvider>
-        </RainbowKitProvider>
+        > */}
+        <ChakraProvider theme={theme}>
+          <Box
+            as="main"
+            background="black"
+            minHeight="100vh"
+            color="rgba(255,255,255,0.85)"
+            display="flex"
+            flexDirection="column"
+          >
+            <Flex flex="1" flexDirection="column">
+              <NetworkChain>
+                <Initializer>
+                  <Header />
+                  <Component {...pageProps} />
+                </Initializer>
+              </NetworkChain>
+            </Flex>
+            <Footer />
+          </Box>
+        </ChakraProvider>
+        {/* </RainbowKitProvider> */}
       </WagmiConfig>
     </RecoilRoot>
   );

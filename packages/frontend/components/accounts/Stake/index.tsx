@@ -89,7 +89,7 @@ export default function Stake({
   } = useDisclosure();
 
   const router = useRouter();
-  const { openConnectModal } = useConnectModal();
+  // const { openConnectModal } = useConnectModal();
 
   const [localChainId] = useRecoilState(chainIdState);
   const chain = getChainById(localChainId);
@@ -371,7 +371,7 @@ export default function Stake({
                   colorScheme="blue"
                   ml="4"
                   px="8"
-                  onClick={() => openConnectModal && openConnectModal()}
+                  // onClick={() => openConnectModal && openConnectModal()}
                 >
                   Connect Wallet
                 </Button>
