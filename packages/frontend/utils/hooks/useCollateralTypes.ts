@@ -39,6 +39,7 @@ export const useCollateralTypes = () => {
       // report to sentry or some other tool
     },
     onSuccess(data) {
+      console.log("INIT DATA 1", data);
       const mappedCollateralTypes = localCollateralTypes(
         snxContract!.chainId
       ).map(coll => {
