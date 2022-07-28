@@ -55,8 +55,8 @@ export default function Account() {
     listener: event => {
       const [
         _lid,
-        fundId,
         userAccountId,
+        fundId,
         collateralTypeAddress,
         collateralAmount,
         _leverage,
