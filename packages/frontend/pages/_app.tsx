@@ -13,7 +13,7 @@ import {
 import "@rainbow-me/rainbowkit/styles.css";
 import { AppProps } from "next/app";
 import { RecoilRoot } from "recoil";
-import { theme, Fonts } from "ui";
+import { theme, Fonts } from "ui/dist";
 import { createClient, WagmiConfig, configureChains } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 
