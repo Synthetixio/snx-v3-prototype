@@ -1,3 +1,4 @@
+import ErrorBoundary from "../components/ErrorBoundary";
 import { Initializer } from "../components/Initializer";
 import { NetworkChain } from "../components/NetworkChain";
 import Footer from "../components/layout/Footer";
@@ -33,42 +34,43 @@ const wagmiClient = createClient({
 });
 
 function Synthetix({ Component, pageProps }: AppProps) {
-  console.log("CHAINS", chains);
   return (
-    <RecoilRoot>
-      <WagmiConfig client={wagmiClient}>
-        {/* <RainbowKitProvider
-          theme={darkTheme({
-            accentColor: "rgb(49, 130, 206)",
-            accentColorForeground: "white",
-            borderRadius: "small",
-            fontStack: "system",
-          })}
-          chains={chains}
-        > */}
-        <ChakraProvider theme={theme}>
-          <Box
-            as="main"
-            background="black"
-            minHeight="100vh"
-            color="rgba(255,255,255,0.85)"
-            display="flex"
-            flexDirection="column"
+    <ErrorBoundary>
+      <RecoilRoot>
+        <WagmiConfig client={wagmiClient}>
+          <RainbowKitProvider
+            theme={darkTheme({
+              accentColor: "rgb(49, 130, 206)",
+              accentColorForeground: "white",
+              borderRadius: "small",
+              fontStack: "system",
+            })}
+            chains={chains}
           >
-            <Flex flex="1" flexDirection="column">
-              <NetworkChain>
-                <Initializer>
-                  <Header />
-                  <Component {...pageProps} />
-                </Initializer>
-              </NetworkChain>
-            </Flex>
-            <Footer />
-          </Box>
-        </ChakraProvider>
-        {/* </RainbowKitProvider> */}
-      </WagmiConfig>
-    </RecoilRoot>
+            <ChakraProvider theme={theme}>
+              <Box
+                as="main"
+                background="black"
+                minHeight="100vh"
+                color="rgba(255,255,255,0.85)"
+                display="flex"
+                flexDirection="column"
+              >
+                <Flex flex="1" flexDirection="column">
+                  <NetworkChain>
+                    <Initializer>
+                      <Header />
+                      <Component {...pageProps} />
+                    </Initializer>
+                  </NetworkChain>
+                </Flex>
+                <Footer />
+              </Box>
+            </ChakraProvider>
+          </RainbowKitProvider>
+        </WagmiConfig>
+      </RecoilRoot>
+    </ErrorBoundary>
   );
 }
 export default Synthetix;

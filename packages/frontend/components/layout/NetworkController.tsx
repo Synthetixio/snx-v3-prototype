@@ -26,12 +26,8 @@ export function NetworkController() {
   const { chains: networkChains } = useNetwork();
   const [localChainId] = useRecoilState(chainIdState);
 
-  const { openConnectModal } = useConnectModal();
-
   const chains = networkChains.length ? networkChains : supportedChains;
   const localChain = chains.find(chain => chain.id === localChainId);
-
-  return null;
 
   return (
     <ConnectButton.Custom>
