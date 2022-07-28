@@ -102,8 +102,6 @@ export const NetworkChain: FC<Props> = ({ children }) => {
     switchNetwork,
   ]);
 
-  console.log("LOCALCHAINID", localChainId);
-
   return Boolean(localChainId) ? (
     <>{children}</>
   ) : (

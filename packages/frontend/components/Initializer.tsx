@@ -9,6 +9,9 @@ type Props = {
 export const Initializer: FC<Props> = ({ children }) => {
   const { isLoading: isLoadingCollateralTypes } = useCollateralTypes();
   const { isLoading: isLoadingOwnerAccounts } = useOwnerAccounts();
+  console.log("isLoadingOwnerAccounts: ", isLoadingOwnerAccounts);
+
+  console.log("isLoadingCollateralTypes", isLoadingCollateralTypes);
 
   const isLoading = isLoadingCollateralTypes || isLoadingOwnerAccounts;
 
