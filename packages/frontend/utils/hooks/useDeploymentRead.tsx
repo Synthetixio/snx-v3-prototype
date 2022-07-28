@@ -22,7 +22,5 @@ export const useDeploymentRead = (contractName: string, config: ConfigType) => {
     chainId: contract?.chainId,
   });
 
-  console.log("2", contract, isLoading, data);
-
   return { isLoading, data };
 };
