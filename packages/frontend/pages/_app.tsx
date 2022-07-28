@@ -33,6 +33,7 @@ const wagmiClient = createClient({
 });
 
 function Synthetix({ Component, pageProps }: AppProps) {
+  console.log("CHAINS", chains);
   return (
     <RecoilRoot>
       <WagmiConfig client={wagmiClient}>
