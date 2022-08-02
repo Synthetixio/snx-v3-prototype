@@ -6,13 +6,21 @@ import {
 } from "../../../components/accounts/StakingPositions/types";
 import Subnav from "../../../components/accounts/Subnav/index";
 import { collateralTypesState } from "../../../state";
-import { CollateralType, fundsData } from "../../../utils/constants";
+import {
+  CollateralType,
+  contracts,
+  CONTRACT_ACCOUNT,
+  fundsData,
+} from "../../../utils/constants";
 import { useSynthetixProxyEvent, useSynthetixRead } from "../../../utils/hooks";
-import { Container, Box, Heading } from "@chakra-ui/react";
+import { useContract } from "../../../utils/hooks/useContract";
+import { Container, Box, Heading, Button } from "@chakra-ui/react";
+import { utils } from "ethers";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
+import { useContractWrite } from "wagmi";
 
 const getCollateralType = (
   address: string,
@@ -93,6 +101,19 @@ export default function Account() {
     },
   });
 
+  const snxProxy = useContract(contracts.ACCOUNT_MODULE);
+
+  const { data, isError, isLoading, write } = useContractWrite({
+    addressOrName: snxProxy?.address,
+    contractInterface: snxProxy?.abi,
+    functionName: "grantRole",
+    args: [
+      "5520509172",
+      utils.formatBytes32String("stake"),
+      "0x9b12d2A80fad64A5499e70bf74447C352c99fD46",
+    ],
+  });
+
   return (
     <Box>
       <Head>
@@ -101,6 +122,9 @@ export default function Account() {
       </Head>
       <Container maxW="container.sm">
         <Box>
+          <Button isLoading={isLoading} onClick={() => write()}>
+            Hello
+          </Button>
           <Subnav />
           <StakingPositions data={stakingPositions} />
           <Heading size="md" mb="3">

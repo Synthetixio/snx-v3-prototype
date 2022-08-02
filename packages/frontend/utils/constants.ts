@@ -95,6 +95,9 @@ export const getChainNameById = (chainId: number) => {
 export const MAINNET_CHAIN_ID = 1;
 export const LOCALHOST_CHAIN_ID = chain.hardhat.id;
 
-export const CONTRACT_SYNTHETIX_PROXY = "synthetix.Proxy";
-export const CONTRACT_ACCOUNT = "synthetix.Account";
-export const CONTRACT_MULTICALL = "Multicall";
+export const contracts = {
+  SYNTHETIX_PROXY: "synthetix.Proxy",
+  ACCOUNT: "synthetix.Account",
+  ACCOUNT_MODULE: "synthetix.AccountModule",
+  MULTICALL: "Multicall",
+};

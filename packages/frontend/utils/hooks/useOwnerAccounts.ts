@@ -1,5 +1,5 @@
 import { accountsState } from "../../state";
-import { CONTRACT_ACCOUNT } from "../constants";
+import { contracts } from "../constants";
 import { useContract } from "./useContract";
 import { useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -32,7 +32,7 @@ export const useOwnerAccounts = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { address } = useAccount();
   const { chain: activeChain } = useNetwork();
-  const accountContract = useContract(CONTRACT_ACCOUNT);
+  const accountContract = useContract(contracts.ACCOUNT);
 
   const { data, refetch } = useContractRead({
     addressOrName: accountContract?.address,

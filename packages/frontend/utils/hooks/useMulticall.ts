@@ -1,7 +1,7 @@
-import { CONTRACT_MULTICALL, CONTRACT_SYNTHETIX_PROXY } from "../constants";
+import { contracts } from "../constants";
 import { useContract } from "./useContract";
-import ethers, { CallOverrides, Contract, constants } from "ethers";
-import { useEffect, useMemo, useState } from "react";
+import ethers, { CallOverrides, Contract } from "ethers";
+import { useEffect, useState } from "react";
 import { useContractWrite, useWaitForTransaction } from "wagmi";
 
 // contact, funcion name, arguments
@@ -46,10 +46,10 @@ export const useMulticall = (
   >([]);
 
   // for synthetix multicall
-  const snxProxy = useContract(CONTRACT_SYNTHETIX_PROXY);
+  const snxProxy = useContract(contracts.SYNTHETIX_PROXY);
 
   // for regular multicall
-  const multicall = useContract(CONTRACT_MULTICALL);
+  const multicall = useContract(contracts.MULTICALL);
 
   let callContract: ethers.Contract | undefined,
     callFunc: string | undefined,

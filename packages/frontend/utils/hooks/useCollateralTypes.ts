@@ -1,18 +1,11 @@
 import { collateralTypesState } from "../../state";
-import {
-  CollateralType,
-  CONTRACT_SYNTHETIX_PROXY,
-  localCollateralTypes,
-  LOCALHOST_CHAIN_ID,
-} from "../constants";
+import { contracts, localCollateralTypes } from "../constants";
 import { getContract, useContract } from "./useContract";
 import { useSynthetixRead } from "./useDeploymentRead";
-import tokenList from "@uniswap/default-token-list";
-import { utils } from "ethers";
 import { BigNumber } from "ethers";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
-import { useContractReads, useNetwork, useProvider } from "wagmi";
+import { useContractReads, useProvider } from "wagmi";
 
 type CollateralMetadataType = Array<[string, BigNumber, BigNumber, boolean]>;
 
@@ -26,7 +19,7 @@ export const useCollateralTypes = () => {
   const [isLoading, setIsLoading] = useState(true);
   const provider = useProvider();
 
-  const snxContract = useContract(CONTRACT_SYNTHETIX_PROXY);
+  const snxContract = useContract(contracts.SYNTHETIX_PROXY);
 
   // Get this list of collateral types from a network request, use deployments data for now
   // TODO: Rename this function on chain to getCollateralTypesId, getCollateralTypes can return an array of structs and we can skip the calls in the useContractReads call below
