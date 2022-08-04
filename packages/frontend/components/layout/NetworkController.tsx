@@ -28,7 +28,7 @@ export function NetworkController() {
 
   const { openConnectModal } = useConnectModal();
 
-  const chains = networkChains.length ? networkChains : supportedChains;
+  const chains = supportedChains;
   const localChain = chains.find(chain => chain.id === localChainId);
 
   return (
@@ -189,6 +189,7 @@ export function NetworkController() {
                     colorScheme="red"
                     onClick={openChainModal}
                     type="button"
+                    size={["sm", "sm", "sm", "md"]}
                   >
                     Wrong network
                   </Button>
@@ -200,6 +201,7 @@ export function NetworkController() {
                   _hover={{ bg: "gray.700" }}
                   onClick={openAccountModal}
                   type="button"
+                  size={["sm", "sm", "sm", "md"]}
                 >
                   {account.displayName}
                   {false && account?.displayBalance

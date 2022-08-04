@@ -218,21 +218,19 @@ export default function Stake({
         refetchAllowance(),
         refetchAccounts!({ cancelRefetch: Boolean(accountId) }),
       ]);
-      if (!Boolean(accountId)) {
-        router.push({
-          pathname: `/accounts/${newAccountId}`,
-          query: router.query,
-        });
-      } else {
-        // TODO: get language from noah
-        toast({
-          title: "Success",
-          description: "Your staked collateral amounts have been updated.",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-      }
+      router.push({
+        pathname: `/accounts/${accountId ?? newAccountId}/positions/${
+          selectedCollateralType.symbol
+        }-${selectedFundId}`,
+        query: router.query,
+      });
+      toast({
+        title: "Success",
+        description: "You’ve successfully staked collateral.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     },
     onError: e => {
       toast({
