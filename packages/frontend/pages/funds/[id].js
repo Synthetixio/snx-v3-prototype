@@ -2,7 +2,6 @@ import Head from 'next/head'
 import NextLink from "next/link";
 import { Container, Tag, Tooltip, Box, Heading, Text, Flex, Button, TableContainer, Table, Thead, Tr, Th, Tbody, Td } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
-import Position from '../../components/accounts/Position/index'
 import { useRouter } from "next/router";
 
 export default function Fund() {
