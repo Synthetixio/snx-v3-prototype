@@ -19,6 +19,8 @@ import {
 export default function Manage() {
   return (
     <Box mb="2">
+      {/* Thinking we have a mint/burn component and stake/unstake component, and then
+      you can click 'presets' to configure how you're interacting with them. */}
       <Box bg="gray.900" mb="12" p="6" borderRadius="12px">
         <Heading size="sm" mb="2">
           Maintain Your C-Ratio
@@ -82,7 +84,6 @@ export default function Manage() {
           </GridItem>
         </Grid>
       </Box>
-
       <Box bg="gray.900" mb="12" p="6" borderRadius="12px">
         <Heading size="md" mb="3">
           Manage Debt
