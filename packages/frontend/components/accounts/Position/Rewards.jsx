@@ -55,8 +55,8 @@ export default function Rewards() {
           Stake eSNX
         </Heading>
         <Text mb="4">
-          Convert eSNX to SNX by staking it. Select a longer vesting period to
-          for a better conversion rate between eSNX and SNX.
+          Convert eSNX to SNX by staking it. Select a longer vesting period for
+          a better conversion rate between eSNX and SNX.
         </Text>
         <SimpleGrid columns={2} spacing={6}>
           <Box>
@@ -164,8 +164,10 @@ export default function Rewards() {
         <Box background="whiteAlpha.300" textAlign="center" p="10" mb="3">
           Beautiful chart of vesting curve
         </Box>
-        Your escrowed SNX cannot unstaked until it vests. Staking additional
-        eSNX will update the schedule above.
+        <Text fontSize="sm">
+          Your escrowed SNX cannot be unstaked until it vests. Staking
+          additional eSNX will merge the new schedule into the schedule above.
+        </Text>
       </Box>
     </Box>
   );
