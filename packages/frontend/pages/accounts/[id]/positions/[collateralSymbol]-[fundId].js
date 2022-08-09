@@ -18,7 +18,7 @@ export default function StakingPosition() {
   return (
     <Container>
 
-      <Box mb="4">
+      <Box mb="6">
         <NextLink href={`/accounts/${id}/positions`} passHref>
           <Link
             fontSize="xs"
