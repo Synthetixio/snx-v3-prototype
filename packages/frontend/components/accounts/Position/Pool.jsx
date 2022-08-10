@@ -1,4 +1,8 @@
-import { ExternalLinkIcon, EditIcon } from "@chakra-ui/icons";
+import {
+  ExternalLinkIcon,
+  EditIcon,
+  QuestionOutlineIcon,
+} from "@chakra-ui/icons";
 import {
   Text,
   Box,
@@ -12,8 +16,7 @@ import {
   Tbody,
   Td,
   Heading,
-  Grid,
-  GridItem,
+  Button,
   InputGroup,
   InputLeftAddon,
   Input,
@@ -66,8 +69,13 @@ export default function Pool() {
             </Link>
           </NextLink>
           <span style={{ opacity: 0.8 }}>
-            &nbsp;&nbsp;|&nbsp;&nbsp;No Leverage
+            &nbsp;&nbsp;|&nbsp;&nbsp;231 Pool Shares
           </span>
+          <QuestionOutlineIcon
+            color="blue.400"
+            ml="1"
+            transform="translateY(-2px)"
+          />
         </Text>
       </Box>
 
@@ -265,7 +273,7 @@ export default function Pool() {
                 </InputGroup>
               </Box>
             </Flex>
-
+            {/*
             <Heading size="sm" mb="2" mt="6">
               Leverage
             </Heading>
@@ -294,6 +302,18 @@ export default function Pool() {
                 </Text>
               </GridItem>
             </Grid>
+  */}
+            <Heading size="sm" mb="2" mt="6">
+              Burn Pool Shares
+            </Heading>
+            <Text>
+              To leave the pool you’re currently in, you need to burn your pool
+              shares. <em>t.b.d.</em>
+            </Text>
+
+            <Button colorScheme="blue" w="100%" my="5">
+              Update Pool
+            </Button>
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -302,12 +322,8 @@ export default function Pool() {
         Market Exposure
       </Heading>
       <Text mb="4">
-        You’re currently backing the following markets. Your market exposure can
-        be altered by{" "}
-        <Link borderBottom="1px dotted rgba(255,255,255,0.6)">
-          the owner of this pool
-        </Link>
-        . To customize your market exposure,{" "}
+        You’re currently backing the following markets. Your exposure can change
+        based on market conditions. To customize the markets you’re exposed to,{" "}
         <Link fontWeight="semibold" color="blue.400">
           create your own pool
         </Link>
@@ -351,7 +367,12 @@ export default function Pool() {
                 sUSD
               </Text>
             </Td>
-            <Td fontSize="lg">100%</Td>
+            <Td>
+              0.2 sBTC
+              <Text fontSize="xs" opacity="0.8">
+                Max: 0.4 sBTC
+              </Text>
+            </Td>
           </Tr>
         </Tbody>
       </Table>
@@ -360,12 +381,10 @@ export default function Pool() {
       </Heading>
       <Text fontSize="sm" mb="12">
         If you’re concerned about maintaining your C-Ratio, you can hedge your
-        staking position. To become fully hedged, hold your position of your
-        staked value in each of the assets above or their non-synthetic
-        equivalent. (For example, if you have $2,000 staked and a 50% exposure
-        to sBTC, you would hold $1,000 BTC.) These assets will change in value
-        by the amount that you would need to restore your C-Ratio to its current
-        value.
+        staking position. To become fully hedged, make sure you’re always
+        holding your exposure to each of the assets above (or their
+        non-synthetic equivalents). These assets will change in value by the
+        amount that you would need to restore your C-Ratio to its current value.
       </Text>
     </Box>
   );
