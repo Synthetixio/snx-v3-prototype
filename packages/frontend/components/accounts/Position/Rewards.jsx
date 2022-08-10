@@ -25,7 +25,7 @@ export default function Rewards() {
 
   return (
     <Box>
-      <Text mb="6">
+      <Text mt="2" mb="6">
         In addition to fees, you’re earning eSNX rewards by backing synthetic
         assets with SNX tokens through the Spartan Council pool.
       </Text>
@@ -39,9 +39,7 @@ export default function Rewards() {
           leverage.
         </Text>
         <Flex alignItems="center">
-          <Button size="lg" colorScheme="green">
-            Claim 534.23 eSNX
-          </Button>
+          <Button colorScheme="blue">Claim 534.23 eSNX</Button>
           <Text ml="5" fontWeight="semibold" fontSize="sm">
             <Link color="blue.400">
               <QuestionOutlineIcon mr="1.5" transform="translateY(-1px)" />
@@ -56,9 +54,9 @@ export default function Rewards() {
         </Heading>
         <Text mb="4">
           Convert eSNX to SNX by staking it. Select a longer vesting period for
-          a better conversion rate between eSNX and SNX.
+          a better conversion rate from eSNX to SNX.
         </Text>
-        <SimpleGrid columns={2} spacing={6}>
+        <SimpleGrid columns={2} spacing={6} mb={5}>
           <Box>
             <Box bg="gray.900" mb="4" p="6" pb="4" borderRadius="12px">
               <form>
@@ -95,11 +93,11 @@ export default function Rewards() {
             <Checkbox defaultChecked>Claim and stake 534.23 eSNX</Checkbox>
           </Box>
           <Box>
-            <Text fontSize="sm" mb="1" fontWeight="semibold">
+            <Text fontSize="sm" mb="4" fontWeight="semibold">
               Select Vesting Period
             </Text>
             <Slider
-              mb="6"
+              mb="10"
               id="slider"
               defaultValue={5}
               min={0}
@@ -147,21 +145,27 @@ export default function Rewards() {
                 <SliderThumb />
               </Tooltip>
             </Slider>
-            <Text fontSize="sm" mb="3">
+            <Text>
               600 eSNX with a 30 day vesting period will be converted to{" "}
               <strong>400 staked SNX.</strong>
+              <QuestionOutlineIcon
+                ml="1.5"
+                transform="translateY(-2px)"
+                opacity="0.9"
+              />
             </Text>
-            <Button colorScheme="blue" w="100%" size="sm">
-              Stake 600 eSNX as 400 SNX
-            </Button>
           </Box>
         </SimpleGrid>
+
+        <Button colorScheme="blue" w="100%">
+          Stake 600 eSNX as 400 SNX
+        </Button>
       </Box>
       <Box mb="10">
         <Heading size="md" mb="3">
           Vesting Schedule
         </Heading>
-        <Box background="whiteAlpha.300" textAlign="center" p="10" mb="3">
+        <Box background="whiteAlpha.300" textAlign="center" p="14" mb="3">
           Beautiful chart of vesting curve
         </Box>
         <Text fontSize="sm">

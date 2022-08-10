@@ -35,7 +35,7 @@ export default function StakingPosition() {
       <Tabs isFitted>
         <TabList>
           <Tab>Manage Position</Tab>
-          <Tab>Back Synths</Tab>
+          <Tab>Pool Liquidity</Tab>
           <Tab>Claim Rewards</Tab>
         </TabList>
 

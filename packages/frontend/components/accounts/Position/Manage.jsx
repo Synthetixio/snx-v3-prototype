@@ -57,9 +57,11 @@ export default function Manage() {
 
       <Preview />
 
-      <Button colorScheme="blue" size="lg" width="100%" mb="2" mx="4">
-        Update Position
-      </Button>
+      <Box px="4">
+        <Button colorScheme="blue" size="lg" width="100%" mb="2">
+          Update Position
+        </Button>
+      </Box>
     </Box>
   );
 }
