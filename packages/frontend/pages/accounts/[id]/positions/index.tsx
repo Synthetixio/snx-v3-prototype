@@ -1,13 +1,16 @@
-import Stake from "../../../components/accounts/Stake/index";
-import StakingPositions from "../../../components/accounts/StakingPositions/index";
+import Stake from "../../../../components/accounts/Stake/index";
+import StakingPositions from "../../../../components/accounts/StakingPositions/index";
 import {
   StakingPositionOnChainType,
   StakingPositionType,
-} from "../../../components/accounts/StakingPositions/types";
-import Subnav from "../../../components/accounts/Subnav/index";
-import { collateralTypesState } from "../../../state";
-import { CollateralType, fundsData } from "../../../utils/constants";
-import { useSynthetixProxyEvent, useSynthetixRead } from "../../../utils/hooks";
+} from "../../../../components/accounts/StakingPositions/types";
+import Subnav from "../../../../components/accounts/Subnav/index";
+import { collateralTypesState } from "../../../../state";
+import { CollateralType, fundsData } from "../../../../utils/constants";
+import {
+  useSynthetixProxyEvent,
+  useSynthetixRead,
+} from "../../../../utils/hooks";
 import { Container, Box, Heading } from "@chakra-ui/react";
 import Head from "next/head";
 import { useRouter } from "next/router";

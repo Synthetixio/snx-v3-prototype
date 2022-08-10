@@ -218,21 +218,19 @@ export default function Stake({
         refetchAllowance(),
         refetchAccounts!({ cancelRefetch: Boolean(accountId) }),
       ]);
-      if (!Boolean(accountId)) {
-        router.push({
-          pathname: `/accounts/${newAccountId}`,
-          query: router.query,
-        });
-      } else {
-        // TODO: get language from noah
-        toast({
-          title: "Success",
-          description: "Your staked collateral amounts have been updated.",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-      }
+      router.push({
+        pathname: `/accounts/${accountId ?? newAccountId}/positions/${
+          selectedCollateralType.symbol
+        }-${selectedFundId}`,
+        query: router.query,
+      });
+      toast({
+        title: "Success",
+        description: "You’ve successfully staked collateral.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     },
     onError: e => {
       toast({
@@ -424,20 +422,6 @@ export default function Stake({
             <ModalCloseButton />
             <ModalBody>
               <EditPosition onClose={onCloseFund} />
-              {/*
-              <Heading size="sm" mb="3">Leverage</Heading>
-              <Grid templateColumns='repeat(12, 1fr)' gap={6} alignItems="center" mb="6">
-                <GridItem colSpan="3">
-                  <InputGroup>
-                    <InputLeftAddon bg="black">&times;</InputLeftAddon>
-                    <Input id='amount' type='amount' borderLeft="none" value="1" />
-                  </InputGroup>
-                </GridItem>
-                <GridItem colSpan="9">
-                  <Text fontSize="sm">Leveraging your staking position allows you to earn more rewards, but your c-ratio is subject to greater volatiity. <em>Use leverage with caution.</em></Text>
-                </GridItem>
-              </Grid>
-            */}
             </ModalBody>
           </ModalContent>
         </Modal>
@@ -445,94 +429,6 @@ export default function Stake({
       {!Boolean(accountId) && (
         <HowItWorks selectedCollateralType={selectedCollateralType} />
       )}
-      {/*
-      <Modal size="2xl" isOpen={isOpenLock} onClose={onCloseLock}>
-        <ModalOverlay />
-        <ModalContent bg="black" color="white">
-          <ModalHeader>Manage Lock [WIP]</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Grid templateColumns="repeat(2, 1fr)" gap={6} alignItems="center">
-              <GridItem mb="4">
-                Lock your staked SNX tokens to increase your rewards, fees, and
-                voting power. Benefits scale the longer you lock.
-              </GridItem>
-              <GridItem mb="4">
-                <Heading mb="1.5" size="sm">
-                  Locked SNX
-                </Heading>
-                <Progress
-                  mb="1"
-                  value="23"
-                  colorScheme="green"
-                  size="sm"
-                  borderRadius="4"
-                />
-                <Text fontSize="xs">
-                  Total Locked SNX: 2.3MM
-                  <br />
-                  SNX Floating Supply: 8.2MM
-                </Text>
-              </GridItem>
-            </Grid>
-
-            <Heading mb="2" size="md">
-              Lock Collateral
-            </Heading>
-
-            <Heading mb="2" size="md">
-              Extend Lock
-            </Heading>
-
-            <Grid mb="2" templateColumns="repeat(3, 1fr)" gap={4}>
-              <GridItem mb="4">
-                <FormControl>
-                  <FormLabel htmlFor="amount">Amount</FormLabel>
-                  <InputGroup size="sm">
-                    <Input id="amount" type="amount" />
-                    <InputRightAddon color="black">SNX</InputRightAddon>
-                  </InputGroup>
-                </FormControl>
-              </GridItem>
-              <GridItem mb="4">
-                <FormControl mb="6">
-                  <FormLabel htmlFor="name">Lock Duration</FormLabel>
-                  <ButtonGroup
-                    size="sm"
-                    isAttached
-                    colorScheme="blue"
-                    variant="outline"
-                  >
-                    <Button mr="-px">1W</Button>
-                    <Button mr="-px">1M</Button>
-                    <Button mr="-px">3M</Button>
-                    <Button mr="-px">6M</Button>
-                    <Button mr="-px">1Y</Button>
-                    <Button mr="-px">2Y</Button>
-                    <IconButton aria-label="Custom" icon={<CalendarIcon />} />
-                  </ButtonGroup>
-                </FormControl>
-              </GridItem>
-              <GridItem mb="4">
-                <Button size="sm" colorScheme="blue" w="100%" mt="8">
-                  Lock
-                </Button>
-              </GridItem>
-            </Grid>
-
-            <Heading mb="2" size="md">
-              Unlock
-            </Heading>
-
-            <Text>
-              You can unlock your collateral early, allowing you to unstake it,
-              but will incur a penalty of <strong>50%</strong>. The penalized
-              collateral is liquidated.
-            </Text>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-      */}
     </>
   );
 }
